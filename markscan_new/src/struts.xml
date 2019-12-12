@@ -1,0 +1,1301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.multipart.maxSize" value="12485760" />
+	<include file="struts-default.xml" />
+	<package name="default" extends="struts-default, json-default">
+
+		<action name="uploadAction"
+			class="com.markscan.project.classes.fileupload.FileUpload">
+
+			<interceptor-ref name="exception" />
+			<interceptor-ref name="alias" />
+			<interceptor-ref name="servletConfig" />
+			<interceptor-ref name="prepare" />
+			<interceptor-ref name="i18n" />
+			<interceptor-ref name="chain" />
+			<interceptor-ref name="debugging" />
+			<interceptor-ref name="profiling" />
+			<interceptor-ref name="scopedModelDriven" />
+			<interceptor-ref name="modelDriven" />
+			<interceptor-ref name="fileUpload">
+				<param name="maximumSize">10485760</param>
+				<!-- <param name="allowedTypes">text/plain</param> -->
+				<param name="allowedTypes">application/vnd.ms-excel,text/csv,
+					application/msexcel, application/x-msexcel,
+					application/x-ms-excel,
+					application/x-excel, application/x-dos_ms_excel,
+					application/xls,
+					application/x-xls,
+					application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</param>
+				<!-- <param name="allowedTypes">text/csv</param> -->
+			</interceptor-ref>
+			<interceptor-ref name="checkbox" />
+			<interceptor-ref name="staticParams" />
+			<interceptor-ref name="actionMappingParams" />
+			<interceptor-ref name="params">
+				<param name="excludeParams"> dojo\..*,^struts\..*</param>
+			</interceptor-ref>
+			<interceptor-ref name="conversionError" />
+			<interceptor-ref name="validation">
+				<param name="excludeMethods"> input,back,cancel,browse</param>
+			</interceptor-ref>
+			<interceptor-ref name="workflow">
+				<param name="excludeMethods"> input,back,cancel,browse</param>
+			</interceptor-ref>
+
+			<result name="success">/jsp/success.jsp</result>
+			<result name="input">/jsp/error_fileupload.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="alreadyFile">/jsp/alreadyFile.jsp</result>
+		</action>
+
+		<!-- **********youtube upload***************** -->
+
+		<action name="ftpImport"
+			class="com.markscan.project.classes.fileupload.FileUpload" method="ScreenShotUpload_pre">
+			<result name="success">/jsp/ftpUpload.jsp</result>
+		</action>
+
+		<action name="uploadFTPData"
+			class="com.markscan.project.classes.fileupload.FileUpload" method="ScreenShotUpload">
+
+			<interceptor-ref name="exception" />
+			<interceptor-ref name="alias" />
+			<interceptor-ref name="servletConfig" />
+			<interceptor-ref name="prepare" />
+			<interceptor-ref name="i18n" />
+			<interceptor-ref name="chain" />
+			<interceptor-ref name="debugging" />
+			<interceptor-ref name="profiling" />
+			<interceptor-ref name="scopedModelDriven" />
+			<interceptor-ref name="modelDriven" />
+			<interceptor-ref name="fileUpload">
+				<param name="maximumSize">10485760</param>
+				<!-- <param name="allowedTypes">text/plain</param> -->
+				<param name="allowedTypes">application/vnd.ms-excel,text/csv,
+					application/msexcel, application/x-msexcel,
+					application/x-ms-excel,
+					application/x-excel, application/x-dos_ms_excel,
+					application/xls,
+					application/x-xls,
+					application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</param>
+				<!-- <param name="allowedTypes">text/csv</param> -->
+			</interceptor-ref>
+			<interceptor-ref name="checkbox" />
+			<interceptor-ref name="staticParams" />
+			<interceptor-ref name="actionMappingParams" />
+			<interceptor-ref name="params">
+				<param name="excludeParams"> dojo\..*,^struts\..*</param>
+			</interceptor-ref>
+			<interceptor-ref name="conversionError" />
+			<interceptor-ref name="validation">
+				<param name="excludeMethods"> input,back,cancel,browse</param>
+			</interceptor-ref>
+			<interceptor-ref name="workflow">
+				<param name="excludeMethods"> input,back,cancel,browse</param>
+			</interceptor-ref>
+
+			<result name="success">/jsp/success.jsp</result>
+			<result name="input">/jsp/error_fileupload.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="alreadyFile">/jsp/alreadyFile.jsp</result>
+		</action>
+
+		<!-- ***************old file upload******************** -->
+
+		<!-- <action name="uploadAction_old" class="com.markscan.project.classes.fileupload.FileUpload_backup16nov2017"> 
+			<interceptor-ref name="exception" /> <interceptor-ref name="alias" /> <interceptor-ref 
+			name="servletConfig" /> <interceptor-ref name="prepare" /> <interceptor-ref 
+			name="i18n" /> <interceptor-ref name="chain" /> <interceptor-ref name="debugging" 
+			/> <interceptor-ref name="profiling" /> <interceptor-ref name="scopedModelDriven" 
+			/> <interceptor-ref name="modelDriven" /> <interceptor-ref name="fileUpload"> 
+			<param name="maximumSize">10485760</param> <param name="allowedTypes">text/plain</param> 
+			<param name="allowedTypes">application/vnd.ms-excel,text/csv, application/msexcel, 
+			application/x-msexcel, application/x-ms-excel, application/x-excel, application/x-dos_ms_excel, 
+			application/xls, application/x-xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</param> 
+			<param name="allowedTypes">text/csv</param> </interceptor-ref> <interceptor-ref 
+			name="checkbox" /> <interceptor-ref name="staticParams" /> <interceptor-ref 
+			name="actionMappingParams" /> <interceptor-ref name="params"> <param name="excludeParams"> 
+			dojo\..*,^struts\..*</param> </interceptor-ref> <interceptor-ref name="conversionError" 
+			/> <interceptor-ref name="validation"> <param name="excludeMethods"> input,back,cancel,browse</param> 
+			</interceptor-ref> <interceptor-ref name="workflow"> <param name="excludeMethods"> 
+			input,back,cancel,browse</param> </interceptor-ref> <result name="success">/jsp/success.jsp</result> 
+			<result name="input">/jsp/error_fileupload.jsp</result> <result name="login">/jsp/sessionOut.jsp</result> 
+			<result name="error">/jsp/error.jsp</result> <result name="alreadyFile">/jsp/alreadyFile.jsp</result> 
+			</action> -->
+		<!-- ********** email upload************************** -->
+
+
+		<action name="emailImport"
+			class="com.markscan.project.classes.fileupload.FileUpload" method="emailupload_pre">
+			<result name="success">/jsp/emailUpload.jsp</result>
+		</action>
+
+
+		<action name="eamiluploadAction"
+			class="com.markscan.project.classes.fileupload.FileUpload" method="emailUpload">
+
+			<interceptor-ref name="exception" />
+			<interceptor-ref name="alias" />
+			<interceptor-ref name="servletConfig" />
+			<interceptor-ref name="prepare" />
+			<interceptor-ref name="i18n" />
+			<interceptor-ref name="chain" />
+			<interceptor-ref name="debugging" />
+			<interceptor-ref name="profiling" />
+			<interceptor-ref name="scopedModelDriven" />
+			<interceptor-ref name="modelDriven" />
+			<interceptor-ref name="fileUpload">
+				<param name="maximumSize">10485760</param>
+				<!-- <param name="allowedTypes">text/plain</param> -->
+				<param name="allowedTypes">application/vnd.ms-excel,text/csv,
+					application/msexcel, application/x-msexcel,
+					application/x-ms-excel,
+					application/x-excel, application/x-dos_ms_excel,
+					application/xls,
+					application/x-xls,
+					application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</param>
+				<!-- <param name="allowedTypes">text/csv</param> -->
+			</interceptor-ref>
+			<interceptor-ref name="checkbox" />
+			<interceptor-ref name="staticParams" />
+			<interceptor-ref name="actionMappingParams" />
+			<interceptor-ref name="params">
+				<param name="excludeParams"> dojo\..*,^struts\..*</param>
+			</interceptor-ref>
+			<interceptor-ref name="conversionError" />
+			<interceptor-ref name="validation">
+				<param name="excludeMethods"> input,back,cancel,browse</param>
+			</interceptor-ref>
+			<interceptor-ref name="workflow">
+				<param name="excludeMethods"> input,back,cancel,browse</param>
+			</interceptor-ref>
+
+			<result name="success">/jsp/emailUploadsuccess.jsp</result>
+			<result name="input">/jsp/error_fileupload.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+		<!-- ===== playwire upload============= -->
+
+		<action name="playwireUploadPre"
+			class="com.markscan.project.classes.fileupload.FileUpload" method="playwireUpload_pre">
+			<result name="success">/jsp/playwireUpload.jsp</result>
+		</action>
+
+
+		<!-- <action name="playwireUploadAction" class="com.markscan.project.classes.PlayWire_Convert" 
+			method="PlayWireLinkConvert"> <interceptor-ref name="exception" /> <interceptor-ref 
+			name="alias" /> <interceptor-ref name="servletConfig" /> <interceptor-ref 
+			name="prepare" /> <interceptor-ref name="i18n" /> <interceptor-ref name="chain" 
+			/> <interceptor-ref name="debugging" /> <interceptor-ref name="profiling" 
+			/> <interceptor-ref name="scopedModelDriven" /> <interceptor-ref name="modelDriven" 
+			/> <interceptor-ref name="fileUpload"> <param name="maximumSize">10485760</param> 
+			<param name="allowedTypes">text/plain</param> <param name="allowedTypes">application/vnd.ms-excel,text/csv, 
+			application/msexcel, application/x-msexcel, application/x-ms-excel, application/x-excel, 
+			application/x-dos_ms_excel, application/xls, application/x-xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</param> 
+			<param name="allowedTypes">text/csv</param> </interceptor-ref> <interceptor-ref 
+			name="checkbox" /> <interceptor-ref name="staticParams" /> <interceptor-ref 
+			name="actionMappingParams" /> <interceptor-ref name="params"> <param name="excludeParams"> 
+			dojo\..*,^struts\..*</param> </interceptor-ref> <interceptor-ref name="conversionError" 
+			/> <interceptor-ref name="validation"> <param name="excludeMethods"> input,back,cancel,browse</param> 
+			</interceptor-ref> <interceptor-ref name="workflow"> <param name="excludeMethods"> 
+			input,back,cancel,browse</param> </interceptor-ref> <result name="success">/jsp/playwireResult.jsp</result> 
+			<result name="input">/jsp/error_fileupload.jsp</result> <result name="login">/jsp/sessionOut.jsp</result> 
+			<result name="error">/jsp/error.jsp</result> </action> -->
+		<!-- playwire single link convert -->
+		<!-- <action name="Single_playwire_convert" class="com.markscan.project.classes.PlayWire_Convert" 
+			method="Single_playwire_convert"> <result name="success">/jsp/playwireUpload.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			</action> -->
+
+		<!-- ===== action perform / login=== -->
+
+		<action name="home" class="com.markscan.project.classes.ActionPerform"
+			method="start">
+			<result name="success">/jsp/login.jsp</result>
+		</action>
+
+		<action name="signin"
+			class="com.markscan.project.classes.session.LoginAndSession" method="execute">
+			<result name="success">/jsp/welcome.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="logout"
+			class="com.markscan.project.classes.session.LoginAndSession" method="logout">
+			<result name="success">/jsp/logout.jsp</result>
+		</action>
+		<action name="sessionOut"
+			class="com.markscan.project.classes.session.LoginAndSession" method="sessionOut">
+			<result name="success">/jsp/sessionOut.jsp</result>
+		</action>
+
+
+		<action name="homepage" class="com.markscan.project.classes.ActionPerform"
+			method="signin">
+			<!-- <result name="success">/jsp/projectDashboard.jsp</result> -->
+			<result name="success">/jsp/loginsuccess.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+		</action>
+
+		<action name="extractorAction" class="com.markscan.project.classes.Reporting"
+			method="execute">
+			<!-- <interceptor-ref name="params" /> <interceptor-ref name="execAndWait" 
+				/> -->
+			<result name="success">/jsp/reporting.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<!-- <result name="wait">/intercepter/load.jsp</result> -->
+		</action>
+		<action name="getReport" class="com.markscan.project.classes.Reporting"
+			method="getReport">
+			<result name="success">/jsp/reporting.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<!-- <result type="stream"> <param name="contentType">"application/vnd.ms-excel"</param> 
+				<param name="inputName">excelStream</param> <param name="contentDisposition">contentDisposition</param> 
+				<param name="bufferSize">1024</param> </result> -->
+		</action>
+
+		<action name="dataExtraction" class="com.markscan.project.classes.Reporting"
+			method="execute">
+			<result name="success">/jsp/dataExtraction.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<action name="dataExtracted" class="com.markscan.project.classes.Reporting"
+			method="dataExtracted">
+			<result name="success">/jsp/dataExtraction.jsp</result>
+		</action>
+
+		<!-- === json data=== -->
+		<action name="ajaxAction0" class="com.markscan.project.classes.AjaxJsonAction">
+			<result type="json">/jsp/reporting.jsp</result>
+		</action>
+		
+		<action name="ajaxAction1" class="com.markscan.project.classes.AjaxJsonAction"
+			method="execute1">
+			<result type="json">/jsp/reporting.jsp</result>
+		</action>
+		<action name="ajaxAction2" class="com.markscan.project.classes.AjaxJsonAction"
+			method="execute3">
+			<result type="json">/jsp/reporting.jsp</result>
+		</action>
+		
+		<!-- ****************************Static keyword********************* -->
+		<action name="ajaxAction3" class="com.markscan.project.classes.AjaxJsonAction"
+			method="execute4">
+			 <result type="json">/jsp/reporting.jsp</result> 
+		</action>
+
+		<!-- **** data import***** -->
+		<action name="dataImport" class="com.markscan.project.classes.ActionPerform"
+			method="dataImport">
+			<result name="success">/jsp/fileUpload.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<!-- <action name="dataImport_old" class="com.markscan.project.classes.ActionPerform" 
+			method="dataImport"> <result name="success">/jsp/fileUpload2.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> </action> -->
+
+		<!-- ==== dash board === -->
+
+
+		<!-- <action name="signin" class="com.markscan.project.classes.ActionPerform" 
+			method="signin"> <result name="success">/jsp/loginsuccess.jsp</result> <result 
+			name="login">/jsp/wronglogin.jsp</result> </action> -->
+
+		<action name="projectDashboard" class="com.markscan.project.classes.ProjectDashBoard"
+			method="dashboard">
+			<!-- <interceptor-ref name="params" /> <interceptor-ref name="execAndWait" 
+				/> -->
+			<result name="success">/jsp/projectDashboard.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="wait">/intercepter/process.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="editProject" class="com.markscan.project.classes.ProjectDashBoard"
+			method="editProject">
+			<result name="success">/jsp/editProject.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<action name="projectUpdate" class="com.markscan.project.classes.ProjectDashBoard"
+			method="projectUpdate">
+			<result name="success">/jsp/projectDashboard.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+
+		<action name="updateProjectPre" class="com.markscan.project.classes.Reporting">
+			<result name="success">/jsp/updateProject.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+
+
+		<action name="closeProject" class="com.markscan.project.classes.ProjectDashBoard"
+			method="closeProject">
+			<result name="success">/jsp/projectDashboard.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+
+		<action name="addNewProject" class="com.markscan.project.classes.Reporting"
+			method="execute">
+			<!-- <interceptor-ref name="params" /> <interceptor-ref name="execAndWait" 
+				/> -->
+			<result name="success">/jsp/addNewProject.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<!-- <result name="wait">/intercepter/load.jsp</result> -->
+		</action>
+
+		<action name="createProject" class="com.markscan.project.classes.Reporting"
+			method="createProject">
+			<!-- <interceptor-ref name="params" /> <interceptor-ref name="execAndWait" 
+				/> -->
+			<result name="success">/jsp/addNewProject.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<!-- <result name="wait">/intercepter/load.jsp</result> -->
+		</action>
+
+
+		<!-- ************* project/ bot query setup************** -->
+		<action name="psetup" class="com.markscan.project.classes.ProjSetup">
+			<result name="success">/jsp/psetup.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<!-- 
+		<action name="keywrdSetup" class="com.markscan.project.classes.ProjSetup"
+			method="pSetup">
+			<result name="success">/jsp/psetup1.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		 -->
+		<action name="keywrdStore" class="com.markscan.project.classes.ProjSetup"
+			method="setupStore">
+			<result name="success">/jsp/botSuccess.jsp</result> <!-- here we add next page of bot start. -->
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="deletefilter" class="com.markscan.project.classes.ProjSetup"
+			method="deleteFilterPre">
+			<result name="success">/jsp/deleteFilter.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="deletefilterperform" class="com.markscan.project.classes.ProjSetup"
+			method="deleteFilter">
+			<result name="success">/jsp/deleteFilter.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="addKeyphrase" class="com.markscan.project.classes.ProjSetup">
+			<result name="success">/jsp/addKeyphrase.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="addKeyphraseSave" class="com.markscan.project.classes.ProjSetup"
+			method="addKeyphraseSave">
+			<result name="success">/jsp/addKeyphrase.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="siteAddDel" class="com.markscan.project.classes.ProjSetup"
+			method="executeBLS">
+			<result name="success">/jsp/bls.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="saveBLS" class="com.markscan.project.classes.ProjSetup"
+			method="saveBLS">
+			<result name="success">/jsp/bls.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="delete_bls" class="com.markscan.project.classes.ProjSetup"
+			method="deleteBLS">
+			<result name="success">/jsp/bls.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<!-- ========= bot status/ empty bot .. / query status..... -->
+
+		<action name="botstatus" class="com.markscan.project.classes.BotStatus">
+			<result name="success">/jsp/botStatus.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<action name="delbotqueue" class="com.markscan.project.classes.BotStatus"
+			method="deletePendingBOTsetupQuery">
+			<result name="success">/jsp/botStatus.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+
+		<!-- ******************* quality check *********************************** -->
+		<action name="pmqc" class="com.markscan.project.classes.QualityCheck">
+			<result name="success">/jsp/pmqc.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<action name="pmqcPerform" class="com.markscan.project.classes.QualityCheck"
+			method="pmQC">
+			<result name="success">/jsp/pqcDataLoad.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<action name="ajaxActionInv" class="com.markscan.project.classes.QualityCheck"
+			method="invalidLink">
+			<result name="success">/jsp/pqcDataLoad.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+
+		<action name="updatePMQCtable" class="com.markscan.project.classes.QualityCheck"
+			method="pmQCaction">
+			<!-- <result name="success">/jsp/pmqc.jsp</result> -->
+			<result name="success">/jsp/pqcDataLoad.jsp</result>
+			<result name="pmhome">/jsp/pmqc.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="nullpointer">/jsp/nullpointer.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<!-- <action name="invalidLink" class="com.markscan.project.classes.QualityCheck" 
+			method="invalidLink"> <result name="success">/jsp/pqcDataLoad.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> </action> -->
+		<action name="opsqc" class="com.markscan.project.classes.QualityCheck">
+			<result name="success">/jsp/opsqc.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<action name="opsqcPerform" class="com.markscan.project.classes.QualityCheck"
+			method="opsQC">
+			<result name="success">/jsp/opsqcDataLoad.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<!-- <action name="ajaxActionInvOPS" class="com.markscan.project.classes.QualityCheck" 
+			method="opsinvalidLink"> <result name="success">/jsp/opsqcDataLoad.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> </action> -->
+		<action name="updateOPSQCtable" class="com.markscan.project.classes.QualityCheck"
+			method="opsQCaction">
+			<!-- <result name="success">/jsp/pmqc.jsp</result> -->
+			<result name="success">/jsp/opsqcDataLoad.jsp</result>
+			<result name="pmhome">/jsp/opsqc.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<!-- <result name="masterEmail">/jsp/masteremailpre.jsp</result> -->
+		</action>
+
+		<action name="invalidmark" class="com.markscan.project.classes.QualityCheck"
+			method="invalidMark">
+			<result name="success">/jsp/markInvalid.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="invalid_marked" class="com.markscan.project.classes.QualityCheck"
+			method="invalid_Marked">
+			<result name="success">/jsp/markInvalid.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<!-- =========== master email /email import============== -->
+		<action name="masterEmail" class="com.markscan.project.classes.QualityCheck">
+			<!-- <result name="success">/jsp/pmqc.jsp</result> -->
+			<result name="success">/jsp/masterEmailb4Prw.jsp</result>
+			<!-- <result name="pmhome">/jsp/opsqc.jsp</result> -->
+			<result name="login">/jsp/sessionOut.jsp</result>
+
+			<!-- <result name="masterEmail">/jsp/masteremailpre.jsp</result> -->
+		</action>
+
+		<action name="masterEmailchooseProject" class="com.markscan.project.classes.QualityCheck"
+			method="masterEmailchooseProject">
+			<!-- <result name="success">/jsp/pmqc.jsp</result> -->
+			<result name="success">/jsp/masteremailpre.jsp</result>
+			<!-- <result name="pmhome">/jsp/opsqc.jsp</result> -->
+			<result name="login">/jsp/sessionOut.jsp</result>
+
+			<!-- <result name="masterEmail">/jsp/masteremailpre.jsp</result> -->
+		</action>
+
+
+		<action name="masterEmailAndImport" class="com.markscan.project.classes.QualityCheck"
+			method="masterEmailAndImport">
+			<!-- <result name="success">/jsp/pmqc.jsp</result> -->
+			<result name="success">/jsp/opsqcDataLoad.jsp</result>
+			<result name="masterEmail">/jsp/masteremailpre.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+
+			<!-- <result name="masterEmail">/jsp/masteremailpre.jsp</result> -->
+		</action>
+
+		<!-- **************** google tracker******************** -->
+		<action name="gtracker" class="com.markscan.project.classes.QualityCheck">
+			<result name="success">/jsp/googleTracker.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="gtrackerAction" class="com.markscan.project.classes.QualityCheck"
+			method="googletrackerExportData">
+			<result name="success">/jsp/googleTracker.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+
+		<!-- ==== content replacement===== -->
+
+		<action name="contentReplacePre" class="com.markscan.project.classes.QualityCheck"
+			method="contentReplacePre">
+			<result name="success">/jsp/contentReplacementPre.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+
+		<action name="contentReplace" class="com.markscan.project.classes.QualityCheck"
+			method="contentReplace">
+			<result name="success">/jsp/contentReplacementPre.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<action name="contentReplaceUpdate" class="com.markscan.project.classes.QualityCheck"
+			method="contentReplaceUpdate">
+			<result name="success">/jsp/welcome.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="linktakedown" class="com.markscan.project.classes.QualityCheck"
+			method="linktakedown">
+			<result name="success">/jsp/linkdown.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="linktakedownUpdate" class="com.markscan.project.classes.QualityCheck"
+			method="linktakedownUpdate">
+			<result name="success">/jsp/linkdown.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+
+
+		<!-- =========== user and user privilege.................. -->
+
+		<action name="updatePasswd" class="com.markscan.project.classes.UserAndPrivilege"
+			method="updatePasswd">
+			<result name="json">/jsp/loginsuccess.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="adduser" class="com.markscan.project.classes.UserAndPrivilege"
+			method="addUser">
+			<result name="success">/jsp/admin/addUser.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="addUserPost" class="com.markscan.project.classes.UserAndPrivilege"
+			method="addUserPost">
+			<result name="success">/jsp/admin/addUser.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+		<action name="edituser" class="com.markscan.project.classes.UserAndPrivilege"
+			method="edituser">
+			<result name="success">/jsp/admin/editUser.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="editUserDone" class="com.markscan.project.classes.UserAndPrivilege"
+			method="editUserDone">
+			<result name="success">/jsp/admin/editUser.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+		<action name="accessPuser" class="com.markscan.project.classes.UserAndPrivilege"
+			method="userPrivilage">
+			<result name="success">/jsp/admin/userPrivilage.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="grantPuser" class="com.markscan.project.classes.UserAndPrivilege"
+			method="userPrivilageGrant">
+			<result name="success">/jsp/admin/userPrivilage.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="revokePuser" class="com.markscan.project.classes.UserAndPrivilege"
+			method="revokePrivilage">
+			<result name="success">/jsp/admin/userPrivilageRevoke.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="revokeP" class="com.markscan.project.classes.UserAndPrivilege"
+			method="revokePMid">
+			<result name="success">/jsp/admin/userPrivilageRevoke.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="revokePDone" class="com.markscan.project.classes.UserAndPrivilege"
+			method="revokePrivilageExecute">
+			<result name="success">/jsp/admin/userPrivilageRevoke.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+
+
+		<!-- ... gary / whiteList -->
+
+		<action name="graywhite" class="com.markscan.project.classes.AdminControl">
+			<result name="success">/jsp/admin/graywhite.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<!-- <action name="addwlist" class="com.markscan.project.classes.AdminControl"
+			method="addWhiteList">
+			<result name="success">/jsp/admin/graywhite.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action> 
+       <action name="addwlist2" class="com.markscan.project.classes.AdminControl"
+			method="addWhiteList_two">
+			<result name="success">/jsp/admin/graywhite.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="glist" class="com.markscan.project.classes.AdminControl"
+			method="addGrayList">
+			<result name="success">/jsp/admin/graywhite.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="wInsta" class="com.markscan.project.classes.AdminControl"
+			method="addInstaList">
+			<result name="success">/jsp/admin/graywhite.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="wYT" class="com.markscan.project.classes.AdminControl"
+			method="addYTList">
+			<result name="success">/jsp/admin/graywhite.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>-->
+
+
+
+		<action name="greylist" class="com.markscan.project.classes.AdminControl"
+			method="greyList">
+			<result name="success">/jsp/graylist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="whitelist" class="com.markscan.project.classes.AdminControl"
+			method="whiteList">
+			<result name="success">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="whitelist2" class="com.markscan.project.classes.AdminControl"
+			method="whiteList2">
+			<result name="success">/jsp/whitelist2.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="whiteInsta" class="com.markscan.project.classes.AdminControl"
+			method="whiteList_Instagram">
+			<result name="success">/jsp/whiteInsta.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="whiteYT" class="com.markscan.project.classes.AdminControl"
+			method="whiteList_YT">
+			<result name="success">/jsp/yt_white.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+		<!-- ...... email qc........... -->
+		<action name="emailQC"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="emailQCPre">
+			<result name="success">/jsp/qcEmail.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="ajaxActionA"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="emailQCinvalid">
+			<result type="json">/jsp/qcEmail.jsp</result>
+		</action>
+		<action name="ajaxActionB"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="emailQCEdit">
+			<result type="json">/jsp/qcEmail.jsp</result>
+		</action>
+		<action name="updateEmailQC"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="emailQC">
+			<result name="success">/jsp/qcEmail.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<!-- ......... email shoot...................... -->
+
+		<action name="findModuleEmail"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="findModuleEmail">
+			<result name="success">/jsp/findEmailModule.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="findModuleEmaildetails"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="findModuleEmail_details">
+			<result name="success">/jsp/mailShootDataLoad.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="emailShootWithDetails"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="email_ShootWith_details">
+			<result name="success">/jsp/findEmailModule.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="emailStatus"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="emailStatus">
+			<result name="success">/jsp/emailStatus.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+		<!-- client create/ update -->
+
+		<action name="client_pre"
+			class="com.markscan.project.classes.saveupdate.Client_type">
+			<result name="success">/jsp/Client.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="saveOrUpdateUser"
+			class="com.markscan.project.classes.saveupdate.Client_type" method="saveOrUpdateUser">
+			<result name="success">/jsp/Client.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="listUser" method="listClient"
+			class="com.markscan.project.classes.saveupdate.Client_type">
+			<result name="success">/jsp/Client.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="editUser" method="edit"
+			class="com.markscan.project.classes.saveupdate.Client_type">
+			<result name="success">/jsp/Client.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<!-- enforcement content replacement -->
+		<action name="EnforcementContentReplacement" method="start"
+			class="com.markscan.project.classes.enforcement.Enforcement">
+			<result name="success">/jsp/EnforcementContentReplacement.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="e_content_replace" method="EnforcementContentReplacement_search"
+			class="com.markscan.project.classes.enforcement.Enforcement">
+			<result name="success">/jsp/EnforcementContentReplacement.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<!-- add new mail and update -->
+
+
+		<action name="emailAddUpdate" method="emailAddUpdatePre"
+			class="com.markscan.project.classes.enforcement.Enforcement">
+			<result name="success">/jsp/emailAddUpdate.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="editmail" method="editmail"
+			class="com.markscan.project.classes.enforcement.Enforcement">
+			<result name="success">/jsp/emailAddUpdate.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="saveOrUpdateMail"
+			class="com.markscan.project.classes.enforcement.Enforcement" method="saveOrUpdateMail">
+			<result name="success">/jsp/emailAddUpdate.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<!-- source status -->
+		<action name="source_Status_pre" class="com.markscan.project.classes.DataCrawle">
+			<result name="success">/jsp/SourceStatus.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="getSourceStatus" class="com.markscan.project.classes.Reporting"
+			method="getSourceStatus">
+			<result name="success">/jsp/SourceStatus_data.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<!-- black list integration..... -->
+
+		<!-- <action name="blacklistpre" class="com.markscan.project.classes.blacklisttool.BlackListToolQueryData"> 
+			<result name="success">/jsp/blacklistSetup.jsp</result> <result name="login">/jsp/sessionOut.jsp</result> 
+			</action> <action name="queryFire" class="com.markscan.project.classes.blacklisttool.BlackListToolQueryData" 
+			method="start"> <result name="success">/jsp/verifyBlackListData.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			<result name="errorMsg">/jsp/errorMessage.jsp</result> </action> <action 
+			name="exportblacklistpre" class="com.markscan.project.classes.Reporting" 
+			method="execute"> <result name="success">/jsp/exportblacklist.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			<result name="errorMsg">/jsp/errorMessage.jsp</result> </action> <action 
+			name="exportBlackListToolData" class="com.markscan.project.classes.blacklisttool.BlackListToolQueryData" 
+			method="blackListDataExport"> <result name="success">/jsp/exportblacklist.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			<result name="errorMsg">/jsp/errorMessage.jsp</result> </action> -->
+		
+
+		<!-- admin dashboard -->
+
+		<action name="dashboard" class="com.markscan.project.classes.AdminDashBoard"
+			method="execute">
+			<result name="success">/jsp/admin/adminDashboard.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+		</action>
+
+		<action name="dashboardEnfo" class="com.markscan.project.classes.AdminDashBoard"
+			method="executeEnforcement">
+			<result name="success">/jsp/admin/adminDashboardEnfo.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+		</action>
+
+
+		<action name="adminDashAction" class="com.markscan.project.classes.AdminDashBoard"
+			method="report">
+			<!-- <result name="success">/jsp/admin/employeeReport.jsp</result> -->
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="empReport">/jsp/admin/employeeReport.jsp</result>
+			<result name="clientReport">/jsp/admin/clientReport.jsp</result>
+			<result name="allEmpReport">/jsp/admin/AllemployeeReport.jsp</result>
+		</action>
+
+		<action name="adminDashEnfoAction" class="com.markscan.project.classes.AdminDashBoard"
+			method="reportEnfo">
+			<!-- <result name="success">/jsp/admin/employeeReport.jsp</result> -->
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="empReportEnfo">/jsp/admin/employeeReportEnfo.jsp</result>
+			<result name="clientReportEnfo">/jsp/admin/clientReportEnfo.jsp</result>
+			<result name="allEmpReportEnfo">/jsp/admin/AllemployeeReportEnfo.jsp</result>
+		</action>
+
+
+
+		<!-- ************* ip lookup..................... -->
+
+		<action name="ipLookup" class="com.markscan.project.classes.LookUp"
+			method="ipExecute">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/iplookup.jsp</result>
+		</action>
+
+		<action name="getIPlookup" class="com.markscan.project.classes.LookUp"
+			method="ipLookup">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/iplookup.jsp</result>
+			<result name="success">/jsp/iplookupDetail.jsp</result>
+		</action>
+
+
+		<action name="domainLookup" class="com.markscan.project.classes.LookUp"
+			method="domainExecute">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/domainlookup.jsp</result>
+		</action>
+
+		<action name="getdomainlookup" class="com.markscan.project.classes.LookUp"
+			method="findDomainLookup">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/domainlookupDetail.jsp</result>
+		</action>
+
+		<action name="whois" class="com.markscan.project.classes.LookUp"
+			method="whoisExecute">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/whoislookup.jsp</result>
+		</action>
+
+		<action name="getWhoislookup" class="com.markscan.project.classes.LookUp"
+			method="whoisLookup">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/whoislookupDetails.jsp</result>
+		</action>
+
+		<!-- ============= IWL/ black list tool data.................. -->
+		<action name="bl_dataQC"
+			class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+			method="blackListData_QC">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/bl_QC.jsp</result>
+		</action>
+
+		<action name="ajaxActionB_bl"
+			class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+			method="qcUpdate">
+			<result type="json">/jsp/bl_QC.jsp</result>
+		</action>
+
+		<action name="bl_dataQCprfrm"
+			class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+			method="blackListData_QCperform">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/bl_QC.jsp</result>
+		</action>
+		<action name="bl_dataUPLOAD"
+			class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+			method="blackListData_UPLOAD">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/bl_QC.jsp</result>
+		</action>
+
+		<action name="bl_dataEXPORTpre"
+			class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+			method="blackListData_ExportPre">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/bl_EXPORTpre.jsp</result>
+		</action>
+		<action name="bl_dataEXPORT"
+			class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+			method="blackListData_Export">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/bl_EXPORTpre.jsp</result>
+		</action>
+
+
+		<!-- youtube upload -->
+		<action name="ytUpload" class="com.markscan.project.classes.QualityCheck"
+			method="youtubeUpload">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/youtubeUpload.jsp</result>
+		</action>
+
+		<action name="ytUploading"
+			class="com.markscan.project.classes.fileupload.FileUpload" method="youtubeUploading">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/success.jsp</result>
+		</action>
+
+		<!-- ====== zip extraction============= -->
+		<action name="zipextractorAction" class="com.markscan.project.classes.Reporting"
+			method="zip_data_extractJSP">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/zipExport.jsp</result>
+		</action>
+
+		<action name="ajaxAction_date" class="com.markscan.project.classes.AjaxJsonAction"
+			method="executeDate">
+			<result type="json">/jsp/zipExport.jsp</result>
+		</action>
+
+		<action name="zipdataExtracted" class="com.markscan.project.classes.Reporting"
+			method="serverURLHeaderAuthPHPTest">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/zipExport.jsp</result>
+		</action>
+
+
+
+		<!-- test pj -->
+
+
+
+		<action name="one" class="com.markscan.project.classes.Test_pj">
+			<result name="success">/jsp/bls.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+		</action>
+		<action name="two" class="com.pj.test.NewTest">
+			<result name="perror">/jsp/privilegeError.jsp</result>
+		</action>
+		
+		
+		
+		<!-- New Addition start  -->
+		
+		<action name="getDetailsTypeWise" class="com.markscan.project.classes.GetDetailsClientPTWise">
+			<result name="success">/jsp/showClients.jsp</result>
+		</action>
+		
+		<action name="deletemail" method="deletemail"
+			class="com.markscan.project.classes.enforcement.Enforcement">
+			<result name="success">/jsp/emailAddUpdate.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		
+		<action name="getdashboardDtls" class="com.markscan.project.classes.ProjectDashBoard"
+			method="getdashboardDtls">
+			<!-- <interceptor-ref name="params" /> <interceptor-ref name="execAndWait" 
+				/> -->
+			<result name="success">/jsp/projectDashboard.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="wait">/intercepter/process.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		
+		
+		
+		<action name="getAllClient" class="com.markscan.project.classes.ClientDetailsAction"
+		method="getAllClient">
+			<result type="json">/js/custom/custom.js</result>
+		</action>
+	<!-- Subham 27.11.2019 -->
+	
+		<action name="getWhiteListClientWise" class="com.markscan.project.classes.AdminControlNew"
+			method="getWhiteListClientWise">
+			 <result name="success" type="json">/jsp/whitelist.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		
+		<action name="getGreylistClientWise" class="com.markscan.project.classes.AdminControlGreyList"
+			method="getGreylistClientWise">
+			 <result name="success" type="json">/jsp/graylist.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		
+		<action name="getSocialMediaClientWise" class="com.markscan.project.classes.AdminControlSocialList"
+			method="getSocialMediaClientWise">
+			<result name="success" type="json">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		 
+		<action name="getInstaClientWise" class="com.markscan.project.classes.AdminControlInstagramList"
+			method="getInstaClientWise">
+			<result name="success" type="json">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="getYTClientWise" class="com.markscan.project.classes.AdminControlYoutubeList"
+			method="getYTClientWise">
+			<result name="success" type="json">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		
+		<!--
+		 <action name="getGreylistClientWise" class="com.markscan.project.classes.AdminControl"
+			method="getGreylistClientWise">
+			<result name="success" type="json">/js/custom.js</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		
+		
+		<action name="getSocialMediaClientWise" class="com.markscan.project.classes.AdminControl"
+			method="getSocialMediaClientWise">
+			<result name="success" type="json">/js/custom.js</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="getInstaClientWise" class="com.markscan.project.classes.AdminControl"
+			method="getInstaClientWise">
+			<result name="success" type="json">/js/custom.js</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="getYTClientWise" class="com.markscan.project.classes.AdminControl"
+			method="getYTClientWise">
+			<result name="success" type="json">/js/custom.js</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action> -->
+		
+		
+		<action name="addwlist" class="com.markscan.project.classes.AdminControl"
+			method="addWhiteList">
+			<result name="success">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="addwlist2" class="com.markscan.project.classes.AdminControl"
+			method="addWhiteList_two">
+			<result name="success">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="glist" class="com.markscan.project.classes.AdminControl"
+			method="addGrayList">
+			<result name="success">/jsp/graylist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="wInsta" class="com.markscan.project.classes.AdminControl"
+			method="addInstaList">
+			<result name="success">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="wYT" class="com.markscan.project.classes.AdminControl"
+			method="addYTList">
+			<result name="success">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		
+		<action name="getProjectDtlsIdWise" class="com.markscan.project.classes.ProjectDashBoard"
+			method="getProjectDtlsIdWise">
+			<result name="success">/jsp/EditNewProject.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		
+		<action name="updateProject" class="com.markscan.project.classes.Reporting"
+			method="updateProject">
+			<result name="success">/jsp/EditNewProject.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<!-- <result name="wait">/intercepter/load.jsp</result> -->
+		</action>
+		<!--  Subham 10.12.2019 -->
+		<action name="editInternetWhiteList" class="com.markscan.project.classes.EditWhiteList"
+		method="editInternetWhiteList">
+		<result name="success" type="json" >/js/custom/custom.js</result>
+		<result name="login">/jsp/sessionOut.jsp</result>
+		<result name="perror">/jsp/privilegeError.jsp</result>
+		<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="deleteInternetWhiteList" class="com.markscan.project.classes.DeleteWhiteList"
+		method="deleteInternetWhiteList">
+		<result name="success" type="json" >/js/custom/custom.js</result>
+		<result name="login">/jsp/sessionOut.jsp</result>
+		<result name="perror">/jsp/privilegeError.jsp</result>
+		<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="editGreyList" class="com.markscan.project.classes.EditGreyList"
+		method="editGreyList">
+		<result name="success" type="json" >/js/custom/custom.js</result>
+		<result name="login">/jsp/sessionOut.jsp</result>
+		<result name="perror">/jsp/privilegeError.jsp</result>
+		<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="deleteGreyList" class="com.markscan.project.classes.DeleteGreyList"
+		method="deleteGreyList">
+		<result name="success" type="json" >/js/custom/custom.js</result>
+		<result name="login">/jsp/sessionOut.jsp</result>
+		<result name="perror">/jsp/privilegeError.jsp</result>
+		<result name="error">/jsp/error.jsp</result>
+		</action>
+
+	</package>
+</struts>

@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.YT_video_detail"
+		table="yt_video_detail">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="crawle_url2_id"></property>
+		<property name="video_id"></property>
+		<property name="caption"></property>
+		<property name="channelId"></property>
+		
+		<property name="channelTitle"></property>
+		<property name="commentCount"></property>
+		<property name="definition"></property>
+		<property name="dimension"></property>
+		
+		<property name="dislikeCount"></property>
+		<property name="duration"></property>
+		<property name="etag"></property>
+		<property name="favoriteCount"></property>
+		
+		<property name="kind"></property>
+		<property name="licensedContent"></property>
+		<property name="likeCount"></property>
+		<property name="liveBroadcastContent"></property>
+		
+		<property name="projection"></property>
+		<property name="publishedAt"></property>
+		<property name="title"></property>
+		<property name="viewCount"></property>
+		
+		<property name="description"></property>
+		<property name="defaultLanguage"></property>
+		<property name="tag"></property>
+
+	</class>
+
+</hibernate-mapping>

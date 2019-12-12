@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Productivity_property_wise" table="productivity_property_wise">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="created_on" />
+		<property name="project_id" />
+		
+		<property name="user_id" />
+		
+		
+		<property name="source_count" />
+		
+		<property name="infringing_count" />
+		<property name="duplicate" />
+		<property name="white_list" />
+		
+		<property name="grey_list" />
+		<property name="invalid" />
+		<property name="deleted" />
+		<property name="youtube" />
+		
+		<property name="social_media" />
+<property name="periscope" />
+		<property name="vk" />
+				<property name="twitter" />
+		<property name="instagram" />
+				<property name="facebook" />
+<property name="client_id" />
+
+	</class>
+	
+
+</hibernate-mapping>

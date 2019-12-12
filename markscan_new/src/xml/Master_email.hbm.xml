@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Master_email" table="master_email">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="created_on" />
+		
+		<property name="email" />
+		<property name="domain_name" />
+		<property name="host_name" />
+		<property name="isp_name" />
+		<property name="reg_name" />
+		<property name="email_type" />
+		<property name="other" />
+		<property name="user_id" />
+		
+
+
+	</class>
+
+</hibernate-mapping>

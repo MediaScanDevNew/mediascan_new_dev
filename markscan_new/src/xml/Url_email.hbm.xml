@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+          <hibernate-mapping>
+          <class name="com.markscan.project.beans.Url_email" table="url_email3">
+          <id name="id">
+          <generator class="increment"></generator>
+          </id>
+          
+          <property name="wid" ></property>
+          <property name="date_time"></property>
+          <property name="email" ></property>
+          <property name="url" ></property>
+          <property name="send" ></property>
+          <property name="crawle_url2_id" ></property>
+          <property name="project_id" ></property>
+          <property name="send_email_time" ></property>
+          <property name="email_type" ></property>
+          <property name="domain_name" ></property>
+          <property name="email_error" ></property>
+          <property name="email_error_time" ></property>
+          <property name="email_error_new" ></property>
+          <property name="isp_ipaddress" ></property>
+          <property name="qc_new" ></property>
+          <property name="user_id" ></property>
+          <property name="renotification_id" ></property>
+          </class>
+          
+          </hibernate-mapping>

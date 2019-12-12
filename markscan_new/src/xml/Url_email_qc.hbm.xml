@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+          <hibernate-mapping>
+          <class name="com.markscan.project.beans.Url_email_qc" table="url_email_qc">
+          <id name="id">
+          <generator class="increment"></generator>
+          </id>
+          
+          <property name="url_email_id" ></property>
+          <property name="email_qc"></property>
+          <property name="email_qc_by" ></property>
+          <property name="email_qc_time" ></property>
+          <property name="email_send_by_email_id" ></property>
+          <property name="email_send_by" ></property>
+          <property name="email_send_time" ></property>
+          <property name="choose_email_template" ></property>
+          <property name="invalid" ></property>
+          <property name="invalid_by" ></property>
+          <property name="invalid_date" ></property>
+          
+          <property name="edit" ></property>
+          <property name="edit_by" ></property>
+          <property name="edit_field" ></property>
+          <property name="edit_date" ></property>
+          
+            <property name="notice_id" ></property>
+          <property name="configure_mail_id" ></property>
+          <property name="notice_date" ></property>
+          <property name="created_on" ></property>
+          </class>
+          
+          </hibernate-mapping>

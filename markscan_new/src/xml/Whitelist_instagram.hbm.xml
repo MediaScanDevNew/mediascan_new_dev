@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 
+	3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Whitelist_instagram"
+		table="whitelist_instagram">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="taken_by_id"></property>
+		<property name="created_on"></property>
+		<property name="project_type"></property>
+		<property name="created_by"></property>
+		<property name="insta_link"></property>
+		<property name="clientId"></property>
+	</class>
+
+</hibernate-mapping>

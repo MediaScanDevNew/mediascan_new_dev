@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Markscan_users" table="markscan_users">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="status" />
+		<property name="isSuperUser" />
+		<property name="name" />
+		<property name="created_on" />
+		<property name="updated_on" />
+		<property name="password" />
+		<property name="user_name" />
+		<property name="email" />
+		<property name="team" />
+
+
+	</class>
+
+</hibernate-mapping>

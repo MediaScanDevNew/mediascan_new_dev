@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Master_crawle_url" table="master_crawle_url">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="stored_project_setup_id" />
+		<property name="df_perform" />
+		<property name="is_valid" />
+		<property name="user_id" />
+		<property name="project_id" />
+		<property name="pipe_id" />
+		<property name="is_new" />
+		<property name="url_new" />
+		<property name="run_id" />
+		<property name="link_logger" />
+		<property name="metatags_filter_new" />
+		<property name="meta_tags_new" />
+		<property name="meta_new" />
+		<property name="crawle_url2" />
+		<property name="machine" />
+		<property name="created_on" />
+		<property name="url_query" />
+		<property name="domain_name" />
+		<property name="url_status" />
+		<property name="surl_status" />
+		<property name="w_list" />
+
+	</class>
+
+</hibernate-mapping>

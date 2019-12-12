@@ -1,0 +1,31 @@
+@CHARSET "ISO-8859-1";
+
+div
+{
+	margin-left: 320px;	
+	margin-top:-25px;
+	font-family: cursive;
+    font-size: 13px;
+    font-style: initial;
+    margin-left: 320px;
+}
+
+.tdLabel
+{
+	width:150px;
+	
+}
+select
+{
+	width:200px;
+}
+h3
+{
+	font-size: 25px;
+	
+}
+
+td {
+    height: 30px;
+    vertical-align: bottom;
+}

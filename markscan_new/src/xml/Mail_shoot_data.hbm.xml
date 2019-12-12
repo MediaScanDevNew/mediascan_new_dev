@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Mail_shoot_data" table="mail_shoot_data">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="notice_id" />
+		
+		<property name="url_email_id_group" />
+		<property name="project_name" />
+		<property name="project_id" />
+		<property name="attachment_name" />
+		<property name="actual_hosted_site" />
+		<property name="project_type" />
+		<property name="email_type" />
+		<property name="client_address" />
+		<property name="ip_address" />
+		<property name="channel_name" />
+		<property name="domain" />
+		<property name="url_group" />
+		<property name="email_module" />
+		<property name="user_id" />
+		<property name="date_time" />
+		<property name="crawle_url_Id" />
+		<property name="email_address" />
+		<property name="clientSubject" />
+		<property name="client_name" />
+
+
+	</class>
+
+</hibernate-mapping>

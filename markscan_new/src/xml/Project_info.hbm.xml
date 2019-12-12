@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Project_info" table="project_info">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="project_name" />
+		<property name="project_complete" />
+		<property name="created_on" />
+		<property name="complete_on" />
+		<property name="file_attach_link" />
+		<property name="actual_hosted_site" />
+		<property name="project_type" />
+		<property name="start_date" />
+		<property name="end_date" />
+		<property name="project_state_machine_wise" />
+		<property name="closed" />
+		<property name="client_type" />
+		<property name="channel_name" />
+		<property name="created_by" />
+		<property name="language" />
+		<property name="realeasingDate" />
+		<property name="ttime" />
+		<property name="property_category" />
+		<property name="current_value" />
+		<property name="archive_value" />
+		<property name="last_updated_on" />
+	</class>
+
+</hibernate-mapping>

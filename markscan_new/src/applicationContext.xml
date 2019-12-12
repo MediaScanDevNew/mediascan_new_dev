@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="mydataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+
+   <!--
+		<property name="url"
+			value="jdbc:mysql://172.168.1.6:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
+
+		<property name="username" value="myuser"></property>
+
+		<property name="password" value="P@$$@123++pj"></property>
+ 
+        <property name="url"
+			value="jdbc:mysql://localhost:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
+
+		<property name="username" value="root"></property>
+
+		<property name="password" value="root"></property>
+     
+
+ <property name="url"
+			value="jdbc:mysql://172.168.1.25:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
+
+		<property name="username" value="myuser1"></property>
+
+		<property name="password" value="M@123rkscan"></property>
+       -->
+        <property name="url"
+			value="jdbc:mysql://localhost:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
+
+		<property name="username" value="root"></property>
+
+		<property name="password" value=""></property>
+     
+
+		<property name="maxActive" value="35" />
+		<property name="initialSize" value="10" />
+		<property name="maxIdle" value="10" />
+		<property name="minIdle" value="2" />
+		<property name="maxWait" value="5000" />
+		<property name="TestWhileIdle" value="true" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="SELECT 1" />
+		<!-- <property name="hibernate.connection.CharSet" value="utf8mb4" /> -->
+		<!-- <property name="hibernate.connection.characterEncoding" value="utf8" 
+			/> -->
+
+	</bean>
+
+	<bean id="mysessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="mydataSource"></property>
+
+
+		<property name="mappingResources">
+			<list>
+				<!-- <value>Txn_tbl.hbm.xml</value> -->
+				<value>xml/Crawle_url2.hbm.xml</value>
+				<value>xml/Project_info.hbm.xml</value>
+				<value>xml/Markscan_projecttype.hbm.xml</value>
+				<value>xml/Client_master.hbm.xml</value>
+				<value>xml/Markscan_users.hbm.xml</value>
+				<value>xml/Keyword_filter.hbm.xml</value>
+				<value>xml/Keyword_filter_extension_master.hbm.xml</value>
+				<value>xml/Markscan_pipe.hbm.xml</value>
+				<value>xml/Markscan_machine.hbm.xml</value>
+				<value>xml/Stored_project_setup.hbm.xml</value>
+				<value>xml/Stored_project_setup1.hbm.xml</value>
+				<value>xml/Master_crawle_url.hbm.xml</value>
+				<value>xml/Qc_record.hbm.xml</value>
+				<value>xml/Module_wise_email_template.hbm.xml</value>
+				<value>xml/Module_wise_mail_send.hbm.xml</value>
+				<value>xml/User_module_previlege.hbm.xml</value>
+				<value>xml/Module_detail.hbm.xml</value>
+				<value>xml/Whitelist_two.hbm.xml</value>
+				<value>xml/Greylist.hbm.xml</value>
+				<value>xml/Whitelist.hbm.xml</value>
+				<value>xml/Master_email.hbm.xml</value>
+				<value>xml/Url_email.hbm.xml</value>
+				<value>xml/Url_email_qc.hbm.xml</value>
+				<value>xml/Url_email_edit.hbm.xml</value>
+				<value>xml/Enforcement_mail_id.hbm.xml</value>
+				<value>xml/Mail_shoot_data.hbm.xml</value>
+				<value>xml/Productivity_user_wise.hbm.xml</value>
+				<value>xml/BlacklistTool_Data.hbm.xml</value>
+				<value>xml/productivity_property_wise.hbm.xml</value>
+				<value>xml/productivity_client_wise.hbm.xml</value>
+				<value>xml/Productivity_enfo_user_wise.hbm.xml</value>
+				<value>xml/Blacklist_sites.hbm.xml</value>
+				<value>xml/BL_infringing_source.hbm.xml</value>
+				<value>xml/Whitelist_instagram.hbm.xml</value>
+				<value>xml/YT_video_detail.hbm.xml</value>
+				<value>xml/Whitelist_yt.hbm.xml</value>
+				<value>xml/Tv_content_tdays.hbm.xml</value>
+				<value>xml/Domain_mst.hbm.xml</value>
+				<value>xml/Project_content_tdays.hbm.xml</value>
+			</list>
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<!-- <prop key="hibernate.cache.use_query_cache">false</prop> -->
+
+			</props>
+		</property>
+	</bean>
+
+	<bean id="template" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="mysessionFactory"></property>
+	</bean>
+
+	<!-- <bean id="template1" class="org.springframework.orm.hibernate3.HibernateTemplate"> 
+		<property name="sessionFactory" ref="mysessionFactory"></property> </bean> -->
+	<!-- test -->
+
+
+
+	<bean id="bfactry" class="com.markscan.project.hbm.HbmTmplateBeanFactory">
+		<property name="template1" ref="template"></property>
+	</bean>
+
+
+	<bean id="login" class="com.markscan.project.dao.UsersDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d" class="com.markscan.project.dao.Txn_tblDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="dash" class="com.markscan.project.dao.Crawle_url2Dao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d1" class="com.markscan.project.dao.Project_infoDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d2" class="com.markscan.project.dao.Project_infoDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d3" class="com.markscan.project.dao.Keyword_filterDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d4"
+		class="com.markscan.project.dao.Keyword_filter_extension_masterDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d5" class="com.markscan.project.dao.Markscan_pipeDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d6" class="com.markscan.project.dao.Markscan_machineDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	
+	<!--  
+	<bean id="d7" class="com.markscan.project.dao.Stored_project_setupDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	-->
+	<bean id="d7" class="com.markscan.project.dao.Stored_project_setup1Dao">
+		<property name="template" ref="template"></property>
+	</bean>
+	
+	<bean id="d8" class="com.markscan.project.dao.Markscan_projecttypeDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d9" class="com.markscan.project.dao.Markscan_usersDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d10" class="com.markscan.project.dao.Client_masterDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d11" class="com.markscan.project.dao.PreStoredKeyPhraseDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d12" class="com.markscan.project.dao.Master_crawle_urlDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d13" class="com.markscan.project.dao.Qc_recordDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d14" class="com.markscan.project.dao.Module_wise_email_templateDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d15" class="com.markscan.project.dao.Module_wise_mail_sendDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d16" class="com.markscan.project.dao.User_module_previlegeDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d17" class="com.markscan.project.dao.Module_detailDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d18" class="com.markscan.project.dao.Whitelist_twoDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d19" class="com.markscan.project.dao.GreylistDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d20" class="com.markscan.project.dao.WhitelistDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d21" class="com.markscan.project.dao.Master_emailDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d22" class="com.markscan.project.dao.Url_emailDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d23" class="com.markscan.project.dao.Url_email_qcDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d24" class="com.markscan.project.dao.Url_email_editDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d25" class="com.markscan.project.dao.Enforcement_mail_idDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d26" class="com.markscan.project.dao.Mail_shoot_dataDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d27" class="com.markscan.project.dao.Productivity_user_wiseDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d28" class="com.markscan.project.dao.BlacklistTool_DataDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d29" class="com.markscan.project.dao.Productivity_property_wiseDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d30" class="com.markscan.project.dao.Productivity_client_wiseDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d31" class="com.markscan.project.dao.Productivity_enfo_user_wiseDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d32" class="com.markscan.project.dao.Blacklist_sitesDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d33" class="com.markscan.project.dao.BL_infringing_sourceDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d34" class="com.markscan.project.dao.Whitelist_instagramDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d35" class="com.markscan.project.dao.YT_video_detailDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d36" class="com.markscan.project.dao.Whitelist_ytDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d37" class="com.markscan.project.dao.Tv_content_tdaysDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	
+	<bean id="d38" class="com.markscan.project.dao.Domain_masterDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	
+	<bean id="d39" class="com.markscan.project.dao.Project_content_tdaysDao">
+		<property name="template" ref="template"></property>
+	</bean>
+
+
+
+</beans>

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   		 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Crawle_url2" table="crawle_url4">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="is_valid" />
+		<property name="status" />
+		<property name="user_id" />
+		<property name="project_id" />
+		<property name="notification_send" />
+		<property name="type" />
+		<property name="verified" />
+		<property name="site_down" />
+		<property name="verified_notificationsend" />
+		<property name="is_new" />
+		<property name="run_id" />
+		<property name="link_logger" />
+		<property name="pipe_id" />
+		<property name="send_crawl" />
+		<property name="copy_right_company_info_id" />
+		<property name="google_dmca_new" />
+		<property name="track_user_id" />
+		<property name="w_list_perform" />
+		<property name="wid" />
+		<property name="crawle_url2" />
+		<property name="created_on" />
+		<property name="updated_on" />
+		<property name="note1" />
+		<property name="url_query" />
+		<property name="domain_name" />
+		<property name="ipadd" />
+		<property name="link_logger_srclink" />
+		<property name="note2" />
+		<property name="link_type" />
+		<property name="is_Manual" />
+		<property name="c_new" />
+		<property name="w_list" />
+		<property name="qc_new" />
+		<property name="filter_new" />
+		<property name="image_path" />
+	</class>
+
+</hibernate-mapping>

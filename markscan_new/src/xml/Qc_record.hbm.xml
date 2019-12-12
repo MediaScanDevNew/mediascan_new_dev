@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Qc_record" table="qc_record">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="crawl_url2_id" />
+		<property name="project_id" />
+		<property name="user_id_pm" />
+		<property name="user_id_ops" />
+		<property name="pmqc_time" />
+		<property name="opsqc_time" />
+		<property name="is_valid" />
+		<property name="del_by" />
+		<property name="is_valid_time" />
+		<property name="is_valid_reason" />
+		<property name="del_time" />
+		<property name="del_reason" />
+		
+		<property name="m_id" />
+		<property name="m_date" />
+		<property name="m_perform" />
+		
+		<property name="gt_user_id" />
+		<property name="gt_date" />
+		<property name="gt_perform" />
+		
+		<property name="browser_name" />
+		<property name="browser_version" />
+		<property name="client_id" />
+		<property name="created_on" />
+		<property name="bypass_link" />
+		
+		<property name="link_logger" />
+		<property name="take_down" />
+		<property name="take_down_by" />
+		<property name="take_down_time" />
+		
+		<property name="ss_uploader_id" />
+		<property name="ss_upload_time" />
+		<property name="ss_file_path" />
+		
+	</class>
+
+</hibernate-mapping>

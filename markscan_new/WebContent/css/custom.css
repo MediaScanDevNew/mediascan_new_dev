@@ -1,0 +1,23 @@
+.example{
+	color:green;
+	font-weight:600;
+}
+.mar-top-6{
+	margin-top: 6px;
+}
+.font-14{
+	font-size:14px;
+}
+.pointer{
+	cursor: pointer;
+}
+.border-0{
+	border-radius: 0px;
+}
+.none {
+    display : none;
+}
+.error{
+	color: red;
+    font-weight: 600;
+}

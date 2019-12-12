@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   		 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+          <hibernate-mapping>
+          <class name="com.markscan.project.beans.BlacklistTool_Data" table="blacklistTool_Data">
+          <id name="id">
+          <generator class="increment"></generator>
+          </id>
+          <property name="projectid"></property>
+          <property name="userid" ></property>
+          <property name="souce_link_not_found" ></property>
+          <property name="row_in_use" ></property>
+          <property name="domain" ></property>
+          <property name="search_keyword" ></property>
+          <property name="infringing_link_by_date" ></property>
+          <property name="infringing_link" ></property>
+          <property name="source_link" ></property>
+          <property name="created_on" ></property>
+          <property name="updated_on" ></property>
+          <property name="email" ></property>
+          <property name="ipaddress_source" ></property>
+          <property name="ipaddress_infringing" ></property>
+          <property name="source_domain" ></property>
+          </class>
+          
+          </hibernate-mapping>
