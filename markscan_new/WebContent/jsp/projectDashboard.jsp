@@ -81,7 +81,7 @@
 	    <div class="col-md-3 col-sm-3">
 	      <s:select name="p_type" list="project_type_Data" cssClass="form-control"
 						id="p_type" headerKey="" value="%{p_type}" headerValue="Select"
-						label="Select Project Type" listKey="id" listValue="name" />
+						label="Select Property Type" listKey="id" listValue="name" />
 	    </div>
 	    <label for="client_name" class="col-md-1 col-sm-1 col-form-label">Client Name:</label>
 	    <div class="col-md-3 col-sm-3">
@@ -138,9 +138,9 @@
 
 
 
-											<th>Project Type</th>
+											<th>Property Type</th>
 											<th>Client Name</th>
-											<th>Project Name [Project Id]</th>
+											<th>Property Name[Id]</th>
 											<th>Channel Name</th>
 											<th>LOA</th>
 											<th>Official URL</th>

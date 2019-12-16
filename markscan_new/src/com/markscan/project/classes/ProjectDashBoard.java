@@ -165,7 +165,8 @@ public class ProjectDashBoard extends ActionSupport {
 					
 					
 					pdaysDao = (Project_content_tdaysDao) factory.getBean("d39");
-					days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectName='"+bean.getProject_name()+"'");
+					//days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectName='"+bean.getProject_name().replaceAll("'", "''")+"'");
+					days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectId="+bean.getId());
 					String d2[] =new String[days1.size()];
 					
 					for(int j=0; j<days1.size();j++)
@@ -435,7 +436,8 @@ public class ProjectDashBoard extends ActionSupport {
 					
 					
 					daysDao = (Tv_content_tdaysDao) factory.getBean("d37");
-					String sql ="select telecast_days from Tv_content_tdays where projectName='"+project_name+"'";
+					//String sql ="select telecast_days from Tv_content_tdays where projectName='"+project_name+"'";
+					String sql ="select telecast_days from Tv_content_tdays where projectId="+id+"";
 					System.out.println("Days ------------------->"+sql);
 					days =daysDao.viewRecord(sql);
 					String d1[] =new String[days.size()];
@@ -446,7 +448,8 @@ public class ProjectDashBoard extends ActionSupport {
 					}
 					
 					pdaysDao = (Project_content_tdaysDao) factory.getBean("d39");
-					days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectName='"+project_name+"'");
+					//days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectName='"+project_name.replaceAll("'", "''")+"'");
+					days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectId="+id+"");
 					String d2[] =new String[days1.size()];
 					
 					for(int j=0; j<days1.size();j++)

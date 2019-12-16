@@ -6,9 +6,19 @@ $(document).ready(function() {
 	}, function(jsonResponse) {
 		var select = $('#clientId');
 		select.find('option').remove();
+		let cliArr=[];
 		$.each(jsonResponse.stateMap, function(key, value) {
-			$('<option>').val(key).text(value).appendTo(select);
+		cliArr.push({id:key,value:value});
+		// $('<option>').val(key).text(value).appendTo(select);
 		});
+		cliArr.shift();
+		cliArr.sort(function (x,y) {
+		return ((x.value == y.value) ? 0 : ((x.value > y.value) ? 1 : -1 ));
+		});
+		cliArr.unshift({id:"0",value:"Select Client"});
+		for(let i=0;i<cliArr.length;i++){
+		$('<option>').val(cliArr[i].id).text(cliArr[i].value).appendTo(select);
+		}
 	});
 //	$(document).contextmenu({
 //	    delegate: ".dataTable td",
@@ -145,6 +155,29 @@ function onClientChangeWhiteList(){
 				      className: "none"
 				    }
 				  ],
+				  dom: 'Bfrtip',
+				  buttons: [
+					  {
+						  extend: "copy",
+						  className: "btn-sm"
+						},
+						{
+						  extend: "csv",
+						  className: "btn-sm"
+						},
+						{
+						  extend: "excel",
+						  className: "btn-sm"
+						},
+						{
+						  extend: "pdfHtml5",
+						  className: "btn-sm"
+						},
+						{
+						  extend: "print",
+						  className: "btn-sm"
+						},
+					  ],
 			   columns: [
 				   { data: "id"}, 
 			       { data: "domainName"}, 

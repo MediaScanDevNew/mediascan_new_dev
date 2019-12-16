@@ -181,7 +181,7 @@
             </div>
             <label for="client_name" class="col-sm-1 col-md-1 control-label">Client Name:</label>
             <div class="col-sm-3 col-md-3">
-                <s:textfield name="client_name" id="client_name" cssClass="form-control"
+                <s:textfield name="client_name" id="client_name" cssClass="myclass"
                              label="Client Name"  value='%{client_name}' />
             </div>
 
@@ -288,9 +288,9 @@
                         [<s:property value="id"/>]
                     </td>
                     <td><s:property value="domainName"/></td>
-                    <td><s:property value="end_date"/></td>
+                    <%-- <td><s:property value="end_date"/></td> --%>
                     <td><s:property value="note1"/></td>
-                    <td><s:property value="note1"/></td>
+                    <%-- <td><s:property value="note1"/></td> --%>
                     <td><s:property value="date__c"/></td>
                     <td><s:url id="editURL" action="editUser">
                         <s:param name="id" value="%{id}"></s:param>

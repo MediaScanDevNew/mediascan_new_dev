@@ -30,6 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.json.JSONArray;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -192,7 +193,7 @@ public class Reporting extends ActionSupport {
 			Tv_content_tdays tcd =null;
 			Project_content_tdaysDao pdao = null;
 			Domain_masterDao dmo= null;
-			
+			ArrayList<Integer> al = new ArrayList<Integer>();
 			System.out.println("**********************Language******************************"+language);
 			try {
 				dao = (Project_infoDao) factory.getBean("d1");
@@ -216,8 +217,12 @@ public class Reporting extends ActionSupport {
 					msg ="Please enter link of LOA.";
 				}else if(realeasingDate.trim().length() <1){
 					msg ="Please enter releasing date.";
-				}else if((projecttype ==4 || projecttype == 5) && property_category.equals("0")){
+				}else if((projecttype !=4 && projecttype != 5) && property_category.equals("0")){
 					msg ="Please select proper property category.";
+				}else if(property_category.equals("Current") && current_value.trim().length() <1){
+					msg ="Please enter current value.";
+				}else if(property_category.equals("Archive") && ServletActionContext.getRequest().getParameterValues("archives").length ==0){
+					msg ="Please enter archives value.";
 				}else {
 					if(actual_hosted_site.trim().length() > 1){
 						lst = dmo.viewRecord("select dm.id,dm.domain_nm from Domain_Mst dm  where dm.deleteflag='0'");
@@ -232,6 +237,19 @@ public class Reporting extends ActionSupport {
 							}
 							if(!flag){
 								msg ="Hosted site is not registered.";
+								HttpServletRequest request = ServletActionContext.getRequest();
+								request.setAttribute("projecttype", projecttype);
+								request.setAttribute("clientname", clientname);
+								if(ServletActionContext.getRequest().getParameterValues("days")!= null && ServletActionContext.getRequest().getParameterValues("days").length > 0){
+								   JSONArray mJSONArray = new JSONArray(Arrays.asList(ServletActionContext.getRequest().getParameterValues("days")));	
+								   request.setAttribute("mJSONArray", mJSONArray);
+								}
+								
+								if(ServletActionContext.getRequest().getParameterValues("archives")!= null && ServletActionContext.getRequest().getParameterValues("archives").length > 0){
+									   JSONArray mJSONArray1 = new JSONArray(Arrays.asList(ServletActionContext.getRequest().getParameterValues("archives")));	
+									   request.setAttribute("mJSONArray1", mJSONArray1);
+								}
+								
 								execute();
 								return SUCCESS;
 							}
@@ -240,9 +258,21 @@ public class Reporting extends ActionSupport {
 					
 					
 					lst = null;
-					lst = dao.viewRecord("select pi.id,pi.project_name from Project_info pi where pi.client_type='"+clientname+"' and pi.project_name='"+propertyName_name+"'");
+					lst = dao.viewRecord("select pi.id,pi.project_name from Project_info pi where pi.client_type='"+clientname+"' and pi.project_name='"+propertyName_name.replaceAll("'", "''")+"'");
 					if(lst.size() > 0){
 						msg ="Same property name already exist for this client.";
+						HttpServletRequest request = ServletActionContext.getRequest();
+						request.setAttribute("projecttype", projecttype);
+						request.setAttribute("clientname", clientname);
+						if(ServletActionContext.getRequest().getParameterValues("days")!= null && ServletActionContext.getRequest().getParameterValues("days").length > 0){
+						   JSONArray mJSONArray = new JSONArray(Arrays.asList(ServletActionContext.getRequest().getParameterValues("days")));	
+						   request.setAttribute("mJSONArray", mJSONArray);
+						}
+						
+						if(ServletActionContext.getRequest().getParameterValues("archives")!= null && ServletActionContext.getRequest().getParameterValues("archives").length > 0){
+							   JSONArray mJSONArray1 = new JSONArray(Arrays.asList(ServletActionContext.getRequest().getParameterValues("archives")));	
+							   request.setAttribute("mJSONArray1", mJSONArray1);
+						}
 						execute();
 						return SUCCESS;
 					}
@@ -310,71 +340,53 @@ public class Reporting extends ActionSupport {
 					
 					}
 					
-					
 					if((projecttype !=4 || projecttype !=5) && (archives!=null))
 					{
-						System.out.println("S1 value ------------->"+archives);
+						//System.out.println("S1 value ------------->"+archives); 
+						
 						for(String s1:archives)
 						{   
 							System.out.println("S1 value ------------->"+s1);
 							Project_content_tdays pcd = new Project_content_tdays();
 							pcd.setProjectName(propertyName_name);
 							pcd.setProjecttype(projecttype);
+							//pcd.setProjectId(pi.getId());
 							pcd.setArchive_days(s1);
 							pdao.saveData(pcd);
+							al.add(pcd.getId()); 
 							
 						}
 					
 					}
 					
 					dao.saveData(pi);
+					int save_id = pi.getId();
+					if(!al.isEmpty()){
+						for(Integer i : al){
+							String query1="Update Project_content_tdays set projectId="+save_id+" where id="+i+"";
+							pdao.customUpdateProject(query1);
+						 }
+					}
 					msg = "project created successfully...";
-					
-					
-					
-					
 				}
 			
-				String days[] =ServletActionContext.getRequest().getParameterValues("days");
-				if((projecttype==4 || projecttype==5)&& (days!=null))
-				{
-					//System.out.println("*****************************Demo PRoject*************"+propertyName_name);
-					String query1 ="select id from Project_info where project_name='"+propertyName_name+"'";
-					Project_infoDao dao1;
-				   //String days[] =ServletActionContext.getRequest().getParameterValues("days");
-				try {
-					
-				dao1 = (Project_infoDao) factory.getBean("d1");
-				List<Project_info> pid=  dao1.viewRecord(query1);
-				/*int projectid;
-				for(Project_info pid1 :pid)
-				{
-					projectid =pid1.getId();
-					//System.out.println("*****************************Project Id********"+projectid);
-				}
-					
-				//System.out.println("***************************days********"+days.toString());	
-				for(String s1:days)
-				{
-					//System.out.println("***************************days********"+s1);	
-				}
-				*/
-				
-				}
-				
-				catch(Exception e)
-				{ 
-					msg = "project create failed...";
-					e.printStackTrace();
-				}
-				
-				}
 				HttpServletRequest request = ServletActionContext.getRequest();
 				request.setAttribute("projecttype", projecttype);
+				request.setAttribute("clientname", clientname);
+				request.setAttribute("property_category", property_category);
+				if(ServletActionContext.getRequest().getParameterValues("days") !=null && ServletActionContext.getRequest().getParameterValues("days").length > 0){
+					JSONArray mJSONArray = new JSONArray(Arrays.asList(ServletActionContext.getRequest().getParameterValues("days")));	
+				    request.setAttribute("mJSONArray", mJSONArray);
+				}
+				if(ServletActionContext.getRequest().getParameterValues("archives")!= null && ServletActionContext.getRequest().getParameterValues("archives").length > 0){
+					   JSONArray mJSONArray1 = new JSONArray(Arrays.asList(ServletActionContext.getRequest().getParameterValues("archives")));	
+					   request.setAttribute("mJSONArray1", mJSONArray1);
+				}
+				
 				execute();
+				System.out.println("in side project create page end...............");	
 
 			} catch (Exception e) {
-				System.out.println("***********111111111111111111111****************days*****111111111111111***");	
 				e.printStackTrace();
 				msg = "project not created...";
 				return ERROR;
@@ -1177,7 +1189,7 @@ public class Reporting extends ActionSupport {
 			Tv_content_tdays tcd =null;
 			Project_content_tdaysDao pdao = null;
 			Domain_masterDao dmo= null;
-			
+			ArrayList<Integer> al = new ArrayList<Integer>();
 			System.out.println("+++++++++++++++++++++++++++++++++ Update ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");	
 			try {
 				dao = (Project_infoDao) factory.getBean("d1");
@@ -1199,8 +1211,12 @@ public class Reporting extends ActionSupport {
 					msg ="Please enter channel name.";
 				}else if(file_attach_link.trim().length() < 1 ){
 					msg ="Please enter link of LOA.";
-				}else if((projecttype !=4 || projecttype != 5) && property_category.equals("0")){
+				}else if((projecttype !=4 && projecttype != 5) && property_category.equals("0")){
 					msg ="Please select proper property category.";
+				}else if(property_category.equals("Current") && current_value.trim().length() <1){
+					msg ="Please enter current value.";
+				}else if(property_category.equals("Archive") && ServletActionContext.getRequest().getParameterValues("archives").length ==0){
+					msg ="Please enter archives value.";
 				}else {
 					if(actual_hosted_site.trim().length() > 1){
 						lst = dmo.viewRecord("select dm.id,dm.domain_nm from Domain_Mst dm  where dm.deleteflag='0'");
@@ -1232,7 +1248,7 @@ public class Reporting extends ActionSupport {
 					}
 					
 					String channel_name_initial="";
-					if(channel_name.trim().length() > 1){
+					if(channel_name!=null && channel_name.trim().length() > 1){
 						if(capsFlag1.equalsIgnoreCase("1")){
 							channel_name_initial = convert(channel_name);
 						}else{
@@ -1255,13 +1271,18 @@ public class Reporting extends ActionSupport {
 					
 					sql = sql + " where id='"+id+"'";
 					dao.customUpdateProject(sql);
-					System.out.println("update sql ---+++++++++++++++++++++++++++++++++++++++++-->"+sql);
+					
+					
+					String query1="delete from Tv_content_tdays where projectId="+id+"";
+					tdao.customUpdateProject(query1);
+					
+					String query2="delete from Project_content_tdays where projectId="+id+"";
+					pdao.customUpdateProject(query2);
+					System.out.println("delete Project_content_tdays sql +++++++++++++++++-->"+query2);
+					
 					
 					if((projecttype==4 || projecttype==5) && (days!=null))
 					{
-						
-						String query1="delete from Tv_content_tdays where projectId='"+id+"'";
-						tdao.customUpdateProject(query1);
 						for(String s1:days)
 						{
 							
@@ -1277,8 +1298,7 @@ public class Reporting extends ActionSupport {
 					
 					if((projecttype !=4 || projecttype !=5) && (archives!=null))
 					{
-						String query1="delete from Project_content_tdays where projectId='"+id+"'";
-						pdao.customUpdateProject(query1);
+						
 						System.out.println("S1 value ------------->"+archives);
 						for(String s1:archives)
 						{   
@@ -1288,12 +1308,17 @@ public class Reporting extends ActionSupport {
 							pcd.setProjecttype(projecttype);
 							pcd.setArchive_days(s1);
 							pdao.saveData(pcd);
+							al.add(pcd.getId()); 
 							
 						}
 					
 					}
-					
-					
+					if(!al.isEmpty()){
+						for(Integer i : al){
+							String query3="Update Project_content_tdays set projectId="+id+" where id="+i+"";
+							pdao.customUpdateProject(query3);
+						 }
+					}
 					msg = "project data update successfully...";
 					
 					
@@ -1368,7 +1393,8 @@ public class Reporting extends ActionSupport {
 					
 					
 					daysDao = (Tv_content_tdaysDao) factory.getBean("d37");
-					String sql ="select telecast_days from Tv_content_tdays where projectName='"+project_name+"'";
+					//String sql ="select telecast_days from Tv_content_tdays where projectName='"+project_name.replaceAll("'", "''")+"'";
+					String sql ="select telecast_days from Tv_content_tdays where projectId="+id+"";
 					//System.out.println("Days ------------------->"+sql);
 					days =daysDao.viewRecord(sql);
 					String d1[] =new String[days.size()];
@@ -1381,7 +1407,8 @@ public class Reporting extends ActionSupport {
 					
 					
 					pdaysDao = (Project_content_tdaysDao) factory.getBean("d39");
-					days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectName='"+project_name+"'");
+					//days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectName='"+project_name.replaceAll("'", "''")+"'");
+					days1 =pdaysDao.viewRecord("select archive_days from Project_content_tdays where projectId="+id+"");
 					String d2[] =new String[days1.size()];
 					
 					for(int j=0; j<days1.size();j++)
@@ -1488,6 +1515,7 @@ public class Reporting extends ActionSupport {
 	private String capsFlag1 =null;
 	Tv_content_tdaysDao daysDao =null;
 	List days =null;
+	List archives =null;
 	String date = null;
 	BeanFactory factory1 = null;
 	

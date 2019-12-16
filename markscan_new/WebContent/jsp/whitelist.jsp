@@ -68,10 +68,10 @@
                                 <select class="form-control" id="typeId" name="platformTypeId"
                                         onchange="onPlatformChange()">
                                     <option value="0">Select Platform</option>
-                                    <option value="in">Internet</option>
                                     <option value="fb">Facebook</option>
-                                    <option value="tw">Twitter</option>
                                     <option value="insta">Instagram</option>
+                                    <option value="in">Internet</option>
+                                    <option value="tw">Twitter</option>
                                     <option value="yt">You Tube</option>
                                 </select>
                                 <p class="example" id="example">

@@ -71,7 +71,7 @@ public class Client_type extends ActionSupport {
 					//p_type = 0;
 				}
 				lst = null;
-				lst = dao2.viewRecord("select id, module from Module_wise_email_template where id>20");
+				lst = dao2.viewRecord("select id, module from Module_wise_email_template where id>20 order by module");
 				module_Data = new ArrayList<>();
 				for (int i = 0; i < lst.size(); i++) {
 					Module_wise_email_template url2 = new Module_wise_email_template();
@@ -111,18 +111,20 @@ public class Client_type extends ActionSupport {
 			if (id == 0) {
 				try {
 					cm = new Client_master();
-					String[] mail_domain_arr = client_email.split("@");
-					String mail_dmain = mail_domain_arr[1];
-					
-					if (client_name.trim().length() < 1) {
+					String mail_dmain = null;
+					if(client_email !=null && !client_email.isEmpty()){
+						String[] mail_domain_arr = client_email.split("@");
+						mail_dmain = mail_domain_arr[1];
+					}
+					if (client_name!=null && client_name.trim().length() < 1) {
 						msg = "Error... Client name never be empty......";
 					} else if (e_module == 0) {
 						msg = "Error... Select Email module...";
 					} else if (p_type == 0) {
 						msg = "Error... Select Project Type...";
-					}else if(client_address.trim().length() < 1){
+					}else if(client_address !=null && client_address.trim().length() < 1){
 						msg = "Error... Client address never be empty...";
-					}else if(client_email.trim().length() <1){
+					}else if(client_email !=null && client_email.trim().length() <1){
 						msg = "Error... Client email never be empty...";
 					}
 					else if(!isValid(client_email)) {
@@ -202,15 +204,27 @@ public class Client_type extends ActionSupport {
 					session2=null;
 				}return SUCCESS;
 			} else {
+				
+				String mail_dmain = null;
+				if(client_email !=null && !client_email.isEmpty()){
+					String[] mail_domain_arr = client_email.split("@");
+					mail_dmain = mail_domain_arr[1];
+				}
 
-				if (client_name.trim().length() < 1) {
+				if (client_name!=null && client_name.trim().length() < 1) {
 					msg = "Error... Client name never be empty......";
 				} else if (e_module == 0) {
 					msg = "Error... Select Email module...";
 				} else if (p_type == 0) {
 					msg = "Error... Select Project Type...";
+				}else if(client_address !=null && client_address.trim().length() < 1){
+					msg = "Error... Client address never be empty...";
+				}else if(client_email !=null && client_email.trim().length() <1){
+					msg = "Error... Client email never be empty...";
 				}else if(!isValid(client_email)) {
 					msg = "Error... error on email format.......";
+				}else if(!mail_dmain.equalsIgnoreCase("markscan.co.in")){
+					msg = "Error... mail domain not matched....";
 				} else {
 					try {
 						

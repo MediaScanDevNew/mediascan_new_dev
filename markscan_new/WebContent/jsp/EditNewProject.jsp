@@ -252,11 +252,11 @@ System.out.println("days2 value in jsp page ----------+++++++++++++++++++++-----
 			
 			
 			<s:textfield name="propertyName_name" id="propertyName_name" placeholder="Property Name" label="Property Name" value="%{project_name}"> </s:textfield> &nbsp;
-			<s:checkbox name="checkMe" id="initCaps" label=""/>
+			<s:checkbox name="checkMe" id="initCaps" label="Initial Caps OFF"/>
 			
 			<s:textfield name="file_attach_link" placeholder="LoA (Letter of Authorization)" label="LoA (Letter of Authorization)" value="%{file_attach_link}"> </s:textfield>
 			
-			<s:textfield name="actual_hosted_site" placeholder="Actual Hosted Site" label="Official URL" value="%{actual_hosted_site}"> </s:textfield>
+			<s:textfield name="actual_hosted_site" placeholder="Official URL" label="Official URL" value="%{actual_hosted_site}"> </s:textfield>
 			<!-- 
 			<s:textfield name="language" placeholder="Language" label="Language" value=""> </s:textfield>
 			 -->
@@ -310,7 +310,7 @@ for(String obj:al)
 	<tr>
 	 <td>
 	   <s:textfield name="channel_name" id="channel_name" placeholder="Channel Name" label="Channel Name" value="%{channel_name}"> </s:textfield>
-	   <s:checkbox name="checkMe" id="initCaps1" label=""/>
+	   <s:checkbox name="checkMe" id="initCaps1" label="Initial Caps OFF"/>
 	 </td>
 	</tr>
 	<tr><td></td><td><s:submit value="Update Project"></s:submit></td></tr>
@@ -359,7 +359,7 @@ for(String obj:al)
 	<tr>
 	 <td>
 	   <s:textfield name="channel_name" id="channel_name" placeholder="Channel Name" label="Channel Name" value="%{channel_name}"> </s:textfield>
-	   <s:checkbox name="checkMe" id="initCaps1" label=""/>
+	   <s:checkbox name="checkMe" id="initCaps1" label="Initial Caps OFF"/>
 	 </td>
 	</tr>
 	<tr><td></td><td><s:submit value="Update Project"></s:submit></td></tr>

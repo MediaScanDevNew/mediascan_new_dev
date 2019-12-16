@@ -200,7 +200,7 @@ $(document).ready(function() { // for tv show name
 				$('#tv_content_tbl').show();
 				$('#others_content_tbl').hide();
 				$('#others_content_tbl_dtls').hide();
-				$('#property_category').value('0')
+				$('#property_category').val('0')
 				$('#channel_name').val('')
 				
 			}else{
@@ -259,17 +259,17 @@ $(document).ready(function() { // for tv show name
 				cssStyle="width: 170px;" value="%{projecttype}"/>
 
 			<s:select id="clientname" name="clientname" list="#{'0':'Select Client'}"
-				label="Select Client" cssStyle="width: 170px;" value="%{clientname}"/>
+				label="Select Client" cssStyle="width: 170px;" value=""/>
 			<%-- 
 			<s:select id="Language" placeholder="Select Language" list="#{'0':'Select Language'}" label="Select Language" cssStyle="width: 170px;" > </s:select>
 			--%>
 			
 			<s:textfield name="propertyName_name" id="propertyName_name" placeholder="Property Name" label="Property Name" value="%{propertyName_name}" cssClass="myclass"> </s:textfield> &nbsp;
-			<s:checkbox name="checkMe" id="initCaps" label="" />
+			<s:checkbox name="checkMe" id="initCaps" label="Initial Caps OFF" />
 			
-			<s:textfield name="file_attach_link" placeholder="LoA (Letter of Authorization)" label="LoA (Letter of Authorization)" value="%{file_attach_link}"> </s:textfield>
+			<s:textfield name="file_attach_link" id="file_attach_link" placeholder="LoA (Letter of Authorization)" label="LoA (Letter of Authorization)" value="%{file_attach_link}"> </s:textfield>
 			
-			<s:textfield name="actual_hosted_site" placeholder="Actual Hosted Site" label="Official URL" value="%{actual_hosted_site}"> </s:textfield>
+			<s:textfield name="actual_hosted_site" id="actual_hosted_site" placeholder="Official URL" label="Official URL" value="%{actual_hosted_site}"> </s:textfield>
 			<!-- 
 			<s:textfield name="language" placeholder="Language" label="Language" value=""> </s:textfield>
 			 -->
@@ -295,21 +295,21 @@ $(document).ready(function() { // for tv show name
 	 <s:textfield style="width: 110px;" name="telecastTime" label="Telecast Time" id="telecastTime1" value="%{telecastTime}"/></td></tr>
 	<tr>
 	<td style="width: 25%;">Telecast Days </td>
-	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" value="sun">Sun</td>
-	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" value="mon">Mon</td>
-	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" value="tue">Tue</td>
-	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" value="wed">Wed</td>
+	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" id="sun" value="sun">Sun</td>
+	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" id="mon" value="mon">Mon</td>
+	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" id="tue" value="tue">Tue</td>
+	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" id="wed" value="wed">Wed</td>
 	</tr>
 	<tr>
-	 <td></td><td style="width: 110px;">&nbsp;<input type="checkbox" name="days" value="thu">Thu</td>
-	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" value="fri">Fri</td>
-	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" value="sat">Sat</td>
+	 <td></td><td style="width: 110px;">&nbsp;<input type="checkbox" id="thu" name="days" value="thu">Thu</td>
+	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" id="fri" value="fri">Fri</td>
+	<td style="width: 110px;">&nbsp;<input type="checkbox" name="days" id="sat" value="sat">Sat</td>
 	<td style="width: 110px;">&nbsp;</td>
 	</tr>
 	<tr>
 	   <td>
 		<s:textfield name="channel_name" id="channel_name" placeholder="Channel Name" label="Channel Name" value="%{channel_name}" cssClass="myclass"> </s:textfield>
-		<s:checkbox name="checkMe" id="initCaps1" label="" />
+		<s:checkbox name="checkMe" id="initCaps1" label="Initial Caps OFF" />
 	   </td>
 	</tr>
 	<tr><td></td><td><s:submit value="Create Project"></s:submit></td></tr>		
@@ -366,15 +366,15 @@ $(document).ready(function() { // for tv show name
 											</s:textfield>
 
 										</td> --%>
-										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" value="sun">Sun</td>
-										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" value="mon">Mon</td>
-										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" value="tue">Tue</td>
-										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" value="wed">Wed</td>
+										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" id="Asun" value="sun">Sun</td>
+										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" id="Amon" value="mon">Mon</td>
+										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" id="Atue" value="tue">Tue</td>
+										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" id="Awed" value="wed">Wed</td>
 										</tr>
 										<tr>
-										 <td></td><td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" value="thu">Thu</td>
-										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" value="fri">Fri</td>
-										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" value="sat">Sat</td>
+										 <td></td><td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" id="Athu" value="thu">Thu</td>
+										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" id="Afri" value="fri">Fri</td>
+										<td style="width: 110px;">&nbsp;<input type="checkbox" name="archives" id="Asat" value="sat">Sat</td>
 										<td style="width: 110px;">&nbsp;</td>
 									</tr>
 								</tbody>
@@ -450,12 +450,24 @@ $(document).ready(function() { // for tv show name
 				for(let i=0;i<cliArr.length;i++){
 				$('<option>').val(cliArr[i].id).text(cliArr[i].value).appendTo(select);
 				}
+				
+				
 
 			});
-		}
+		}// end if condition
 	});
 	</script>
 	
+	<%
+	  if(request.getAttribute("clientname")!=null){
+	%>
+		<script type="text/javascript">
+			var client_val;
+			client_val = "<%=request.getAttribute("clientname")%>";
+			$('#selectBox > option').eq(client_val).attr('selected','selected')
+			
+		</script>
+	<%} %>
 	<%
 	  if(request.getAttribute("projecttype")!=null){
 	%>
@@ -465,15 +477,66 @@ $(document).ready(function() { // for tv show name
 				$('#tv_content_tbl').show();
 				$('#others_content_tbl').hide();
 				$('#others_content_tbl_dtls').hide();
-				
-			}else if(pType !='0'){
-			 $('#others_content_tbl').show();
-			 $('#tv_content_tbl').hide();
+			}else if(pType !='4' || pType !='5'){
+				$('#others_content_tbl').show();
+				$('#others_content_tbl_dtls').show();
+				$('#tv_content_tbl').hide();
 			}else{
 			 
 			}
 		</script>
 	<%} %>
+	
+	
+	<%
+	  if(request.getAttribute("mJSONArray")!=null){
+		  
+	%>
+	   <script type="text/javascript">
+	      var days_arr = <%=request.getAttribute("mJSONArray") %>;
+	       for(i =0;i < days_arr.length;i++){
+	    	  $('#'+days_arr[i]).attr('checked','checked'); 
+	      } 
+	      
+	  
+	   </script>
+	<%} %>
+	
+	
+	<%
+	  if(request.getAttribute("mJSONArray1")!=null){
+		  
+	%>
+	   <script type="text/javascript">
+	      var days_arr = <%=request.getAttribute("mJSONArray1") %>;
+	       for(i =0;i < days_arr.length;i++){
+	    	  $('#A'+days_arr[i]).attr('checked','checked'); 
+	      } 
+	      
+	  
+	   </script>
+	<%} %>
+	
+   <%
+	  if(request.getAttribute("property_category")!=null){
+		  
+	%>
+	
+	<script type="text/javascript">
+	      var category = "<%=request.getAttribute("property_category") %>";
+	      if(category =='Current'){
+	    	  $('#current_td').show();
+	    	  $('#archive_td').hide();
+	      }else{
+	    	  $('#archive_td').show();
+	    	  $('#current_td').hide(); 
+	      }
+	      
+	  
+	   </script>
+	
+	<%} %>
+	
 </body>
 </html>
 
