@@ -1,7 +1,10 @@
 package com.markscan.project.classes;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +29,7 @@ import com.markscan.project.dao.Tv_content_tdaysDao;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class ProjectDashBoard extends ActionSupport {
-
+    private SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final Logger logger = Logger.getLogger(ProjectDashBoard.class);
 	HttpSession session2 = null;
 	BeanFactory factory = null;
@@ -106,7 +109,7 @@ public class ProjectDashBoard extends ActionSupport {
 					lst = dao.getData("Select pi.id,pi.project_name,pi.created_on ,"
 							// + "pi.start_date,pi.end_date,"
 							+ "cm.client_name, mpt.name, pi.file_attach_link, pi.actual_hosted_site , pi.channel_name, pi.ttime,"
-							+ "pi.language,pi.realeasingDate,pi.property_category,pi.current_value,pi.archive_value,pi.last_updated_on "
+							+ "pi.language,pi.realeasingDate,pi.property_category,pi.current_value,pi.archive_value,pi.last_updated_on"
 							+ " from Project_info pi, Client_master cm, Markscan_projecttype mpt "
 							+ " where mpt.id="+p_type+" and cm.id = pi.client_type and mpt.id = pi.project_type and  pi.closed = ?", 0);
 				}else{
@@ -116,7 +119,8 @@ public class ProjectDashBoard extends ActionSupport {
 							+ "cm.client_name, mpt.name, pi.file_attach_link, pi.actual_hosted_site , pi.channel_name, pi.ttime,"
 							+ "pi.language,pi.realeasingDate,pi.property_category,pi.current_value,pi.archive_value,pi.last_updated_on"
 							+ " from Project_info pi, Client_master cm, Markscan_projecttype mpt "
-							+ " where mpt.id="+p_type+" and cm.id="+client_name+" and cm.id = pi.client_type and mpt.id = pi.project_type and  pi.closed = ?", 0);
+							+ " where mpt.id="+p_type+" and cm.id="+client_name+" and cm.id = pi.client_type and mpt.id = "
+							+ "pi.project_type and  pi.closed = ?", 0);
 				
 					
 				}
@@ -150,7 +154,32 @@ public class ProjectDashBoard extends ActionSupport {
 					bean.setProperty_category((String) obj[11]);
 					bean.setArchive_value((String) obj[13]);
 					bean.setCurrent_value((String) obj[12]);
-					bean.setCloseFlag(0);
+					String update_dt = "";
+					update_dt = (String) obj[14];
+					if(update_dt !=null && !update_dt.isEmpty()){
+						bean.setLast_updated_on(update_dt.substring(0,update_dt.indexOf(".")));
+						String dateBeforeString = update_dt;
+						Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+						String dateAfterString = myFormat.format(timestamp);
+						
+						Date dateBefore = myFormat.parse(dateBeforeString);
+					    Date dateAfter = myFormat.parse(dateAfterString);
+					    long difference = dateAfter.getTime() - dateBefore.getTime();
+					    int daysBetween = (int) (difference / (1000*60*60*24));
+					    //System.out.println("Days difference is -------------------->"+daysBetween);
+						if(daysBetween >=30){
+							bean.setCloseFlag(0);
+						}else{
+							bean.setCloseFlag(1);
+						}
+					}else{
+						bean.setLast_updated_on(update_dt);
+						bean.setCloseFlag(1);
+					}
+					
+					//System.out.println("close Flag value is -------------------->"+bean.getCloseFlag());
+					
+					
 					
 					daysDao = (Tv_content_tdaysDao) factory.getBean("d37");
 					days =daysDao.viewRecord("select telecast_days from Tv_content_tdays where projectId="+bean.getId());

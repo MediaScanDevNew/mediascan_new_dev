@@ -81,39 +81,10 @@
 							    </div>
 							    <button type="submit" class="btn btn-success" >Submit</button>
 							</form>
-							<%-- <div class="form-group row">
-							    <label for="clientId" class="col-md-2 col-md-offset-3 col-sm-2 col-sm-offset-3 col-form-label">Select Client:</label>
-							    <div class="col-md-4 col-sm-4">
-							      <select class="form-control" id="clientId">
-
-								    </select>
-							    </div>
-							  </div>
-							  <div class="form-group row">
-							    <label for="typeId" class="col-md-2 col-md-offset-3 col-sm-2 col-sm-offset-3 col-form-label">Type of Platform:</label>
-							    <div class="col-md-4 col-sm-4">
-							      <select class="form-control" id="typeId" onchange="onPlatformChange()">
-								      <option value="0">Select Platform</option>
-								      <option value="in">Internet</option>
-								      <option value="fb">Facebook</option>
-								      <option value="tw">Twitter</option>
-								      <option value="insta">Instagram</option>
-								      <option value="yt">You Tube</option>
-								    </select>
-							    </div>
-							    <p class="col-md-3 col-sm-3 example" id="example">
-							    </p>
-							  </div>
-							  <div class="form-group row">
-							    <label for="url" class="col-md-2 col-md-offset-3 col-sm-2 col-sm-offset-3 col-form-label">Add URL</label>
-							    <div class="col-md-4 col-sm-4">
-							      <input type="text" class="form-control" id="url" placeholder="Add URL">
-							    </div>
-							  </div>
-							  <div class=" col-sm-offset-6">
-							  <button type="button" class="btn btn-success">Submit</button>
-							  </div>
- --%>							<div class="x_content">
+							<% if(request.getAttribute("clientId") !=null){%>
+	                       		 <div style="color: red;font-style:italic;font-size: medium;"><%=(String)request.getAttribute("msg") %></div>
+	                        <%} %>
+							 <div class="x_content">
 
 								<table id="gLists"
 									class="table table-striped table-bordered">
@@ -248,6 +219,38 @@
 	<script src="report_table/custom.min.js"></script>
 	<script src="js/custom/message.js"></script>
 	<script src="js/custom/custom.js"></script>
+	
+	<% if(request.getAttribute("clientId") !=null){%>
+    
+    <script type="text/javascript">
+      $(function() {
+    	  $.getJSON('getAllClient', {
+    		}, function(jsonResponse) {
+    			var select = $('#clientId');
+    			select.find('option').remove();
+    			let cliArr=[];
+    			$.each(jsonResponse.stateMap, function(key, value) {
+    			cliArr.push({id:key,value:value});
+    			// $('<option>').val(key).text(value).appendTo(select);
+    			});
+    			cliArr.shift();
+    			cliArr.sort(function (x,y) {
+    			return ((x.value == y.value) ? 0 : ((x.value > y.value) ? 1 : -1 ));
+    			});
+    			cliArr.unshift({id:"0",value:"Select Client"});
+    			for(let i=0;i<cliArr.length;i++){
+    			$('<option>').val(cliArr[i].id).text(cliArr[i].value).appendTo(select);
+    			}
+    			
+    			$('#clientId').val('<%=(String)request.getAttribute("clientId")%>');
+    		    onClientChangeGrayList();
+    		});
+     }); 
+      
+      
+ </script>
+
+<% }%>
 </body>
 </html>
 

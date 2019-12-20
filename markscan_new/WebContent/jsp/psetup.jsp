@@ -241,33 +241,15 @@ table.three {
 					//alert(count)
 					var pi="pip"+i;
 					data1 ='<tr><td>'+i+':<input type ="text" id='+i+' size=60 name= '+i+'  /></td><td><select name="'+pi+'">'+optiondata+'</select></td></tr>';
-					//alert("Key: "+key+"   value: "+value);
-					//var $text12 =$("#"+key);
-					//$text12.html(("<input type='text' id ='"+key+"' name='"+value+"'value='"+value+"'/> <br>"))
-					//$text12.html(("Harry GGN <br>"));
-					//alert("Reponse data123............");
-					//alert("Key: " +key+"   value: "+value);
-				
-				
-				//$('<ul>').appendTo("Harry GGN");
 					$("#kywrds12").append(data1);
-					//count =count+1;
-
-				
-				
-				//$("#kywrds").append(data1);
-				
-						}
+					
+				}
 		         data2 ='<input type ="text" id="count"  name= "count" value='+count+' /><br>';
 				$("#kywrds").append(data2);
 					
 			
 			}
-			
-			
-			
-			    
-					});
+		});
 			
 	
 	});

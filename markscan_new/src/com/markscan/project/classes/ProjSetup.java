@@ -520,101 +520,69 @@ public class ProjSetup extends ActionSupport {
 	public String setupStore() {
 		// System.out.println(projecttype + "== prop name pj..." + pid);
 		session2 = ServletActionContext.getRequest().getSession(false);
-		
+
 		if (session2 == null || session2.getAttribute("login") == null) {
-			// System.out.println("if========='");
 			return LOGIN;
 		} else {
-			
-		
+
 			factory = LoginAndSession.getFactory();
-			HttpServletRequest request=ServletActionContext.getRequest();
-			System.out.println("*****************"+request.getParameter("count"));
-			int count =Integer.parseInt(request.getParameter("count"));
-			int count1=0;
-			String keywords=request.getParameter("keyword1").trim();
-			System.out.println("*********************************Keyword Type****************************"+keywords);
-			System.out.println("*********************************count data****************************"+count);
-			if(keywords.equals("Static Keyword"))
-			{
-			for(int i =1; i<=count;i++)
-			{
-				try{
-				keyph1 =request.getParameter(String.valueOf(i));
-				int pipe1 =Integer.parseInt(request.getParameter(keyph1));
-				logger.info("***************************pipe1 Values***************************"+pipe1);
-				logger.info("***************************Keys Values***************************"+keyph1);
-				if(keyph1!=null)
-				{
-					storeData((int) session2.getAttribute("uid"), factory, keyph1,pipe1 );
-					count1 =1;
+			HttpServletRequest request = ServletActionContext.getRequest();
+			int count = Integer.parseInt(request.getParameter("count"));
+			int count1 = 0;
+			String keywords = request.getParameter("keyword1").trim();
+			if (keywords.equals("Static Keyword")) {
+				for (int i = 1; i <= count; i++) {
+					try {
+						keyph1 = request.getParameter(String.valueOf(i));
+						int pipe1 = Integer.parseInt(request.getParameter(keyph1));
+						if (keyph1 != null) {
+							storeData((int) session2.getAttribute("uid"), factory, keyph1, pipe1);
+							count1 = 1;
+						}
+
+					} catch (Exception e) {
+						// keyph1=null;
+						System.out.println(e);
+						logger.info(e);
+						// return SUCCESS;
+
+					} finally {
+						keyph1 = null;
+						// return SUCCESS;
+
+					}
+
 				}
-				
-				//String str="1";
-				
-				
-				}catch(Exception e)
-				{
-					//keyph1=null;
-					System.out.println(e);
-					logger.info(e);
-					//return SUCCESS;
-					
-				}
-				finally
-				{
-					keyph1=null;
-					//return SUCCESS;
-					
-				}
-				
-				
 			}
-			}
-			
-			//**************************Dynamic Keyword
-			if(keywords.equals("Dynamic Keyword"))
-			{
-			for(int i =1; i<=count;i++)
-			{
-				try{
-					String pi="pip"+i;
-					logger.info("***************************pipe1 Values***************************"+pi);
-				keyph1 =request.getParameter(String.valueOf(i));
-				int pipe1 =Integer.parseInt(request.getParameter(pi));
-				logger.info("***************************pipe1 Values***************************"+pipe1);
-				logger.info("***************************Keys Values***************************"+keyph1);
-				if(keyph1.length()!=0)
-				{
-					storeData((int) session2.getAttribute("uid"), factory, keyph1,pipe1 );
-					count1 =1;
+
+			// **************************Dynamic Keyword
+			if (keywords.equals("Dynamic Keyword")) {
+				for (int i = 1; i <= count; i++) {
+					try {
+						String pi = "pip" + i;
+						keyph1 = request.getParameter(String.valueOf(i));
+						int pipe1 = Integer.parseInt(request.getParameter(pi));
+						if (keyph1.length() != 0) {
+							storeData((int) session2.getAttribute("uid"), factory, keyph1, pipe1);
+							count1 = 1;
+						}
+
+					} catch (Exception e) {
+
+						System.out.println(e);
+						logger.info(e);
+
+					} finally {
+						keyph1 = null;
+						// return SUCCESS;
+
+					}
+
 				}
-				
-				//String str="1";
-				
-				
-				}catch(Exception e)
-				{
-					//keyph1=null;
-					System.out.println(e);
-					logger.info(e);
-					//return SUCCESS;
-					
-				}
-				finally
-				{
-					keyph1=null;
-					//return SUCCESS;
-					
-				}
-				
-				
 			}
-			}
-			if(count1 ==1)
-			{
-				System.out.println("********************count1*********"+count1);
-				bstr =new BotStarter();
+			if (count1 == 1) {
+				System.out.println("********************count1*********" + count1);
+				bstr = new BotStarter();
 				try {
 					bstr.botRun("1");
 				} catch (SQLException e) {
@@ -622,121 +590,20 @@ public class ProjSetup extends ActionSupport {
 					e.printStackTrace();
 				}
 			}
-			
-			  /*
-			factory = LoginAndSession.getFactory();
 
-			try {
-				if (action1 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph1, mpipe1, machine1, preority1, bls1);
-				} else {
-					machine1 = null;
-					// mpipe1 = null;
-					keyph1 = null;
-				}
-				if (action2 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph2, mpipe2, machine2, preority2, bls2);
-				} else {
-					machine2 = null;
-					// mpipe2 = null;
-					keyph2 = null;
-				}
-				if (action3 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph3, mpipe3, machine3, preority3, bls3);
-				} else {
-					machine3 = null;
-					// mpipe3 = null;
-					keyph3 = null;
-				}
-				if (action4 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph4, mpipe4, machine4, preority4, bls4);
-				} else {
-					machine4 = null;
-					// mpipe4 = null;
-					keyph4 = null;
-				}
-				if (action5 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph5, mpipe5, machine5, preority5, bls5);
-				} else {
-					machine5 = null;
-					// mpipe5 = null;
-					keyph5 = null;
-				}
-				if (action6 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph6, mpipe6, machine6, preority6, bls6);
-				} else {
-					machine6 = null;
-					// mpipe6 = null;
-					keyph6 = null;
-				}
-				if (action7 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph7, mpipe7, machine7, preority7, bls7);
-				} else {
-					machine7 = null;
-					// mpipe7 = null;
-					keyph7 = null;
-				}
-				if (action8 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph8, mpipe8, machine8, preority8, bls8);
-				} else {
-					machine8 = null;
-					// mpipe8 = null;
-					keyph8 = null;
-				}
-				if (action9 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph9, mpipe9, machine9, preority9, bls9);
-				} else {
-					machine9 = null;
-					// mpipe9 = null;
-					keyph9 = null;
-				}
-				if (action0 == 1) {
-					storeData((int) session2.getAttribute("uid"), factory, keyph0, mpipe0, machine0, preority0, bls0);
-				} else {
-					machine0 = null;
-					// mpipe0 = null;
-					keyph0 = null;
-				}
-				execute();
-			} finally {
-				factory = null;
-				session2 = null;
-				keyph1 = null;
-				keyph2 = null;
-				keyph3 = null;
-				keyph4 = null;
-				keyph5 = null;
-				keyph6 = null;
-				keyph7 = null;
-				keyph8 = null;
-				keyph9 = null;
-				keyph0 = null;
-
-				machine1 = null;
-				machine2 = null;
-				machine3 = null;
-				machine4 = null;
-				machine5 = null;
-				machine6 = null;
-				machine7 = null;
-				machine8 = null;
-				machine9 = null;
-				machine0 = null;
-
-				return SUCCESS;
-			}
-			
-			*/
-			//return SUCCESS;
+			// return SUCCESS;
 			factory = null;
 			session2 = null;
 			logger.info("*********************************done****************");
 			return SUCCESS;
-			
-			
+
 		}
-		//return SUCCESS;
-	}
+
+	} // return setupStore;
+	
+	
+	
+	
 
 	int action0, action1, action2, action3, action4, action5, action6, action7, action8, action9, preority0, preority1,
 			preority2, preority3, preority4, preority5, preority6, preority7, preority8, preority9;

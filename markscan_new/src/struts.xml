@@ -1296,6 +1296,16 @@
 		<result name="perror">/jsp/privilegeError.jsp</result>
 		<result name="error">/jsp/error.jsp</result>
 		</action>
+		
+		
+		<!-- My addition  -->
+		<!-- <action name="getWhiteListClientWise1" class="com.markscan.project.classes.AdminControlNew"
+			method="getWhiteListClientWise">
+			 <result name="success">/jsp/whitelist.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action> -->
 
 	</package>
 </struts>

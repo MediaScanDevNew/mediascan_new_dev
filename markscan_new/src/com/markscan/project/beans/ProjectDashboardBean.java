@@ -6,7 +6,7 @@ public class ProjectDashboardBean {
 
 	int id,closeFlag;
 	String project_name, created_on, complete_on, file_attach_link, actual_hosted_site, start_date, end_date,
-			client_name, name, channel_name,ttime,language,realeasingDate,property_category,current_value,archive_value;
+			client_name, name, channel_name,ttime,language,realeasingDate,property_category,current_value,archive_value,last_updated_on;
 	String telecast_days[];
 	String archive_days[];
 	
@@ -168,6 +168,14 @@ public class ProjectDashboardBean {
 
 	public void setCloseFlag(int closeFlag) {
 		this.closeFlag = closeFlag;
+	}
+
+	public String getLast_updated_on() {
+		return last_updated_on;
+	}
+
+	public void setLast_updated_on(String last_updated_on) {
+		this.last_updated_on = last_updated_on;
 	}
 
 	

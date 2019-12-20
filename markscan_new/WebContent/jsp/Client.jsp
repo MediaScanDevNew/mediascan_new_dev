@@ -106,6 +106,9 @@
         	overflow:auto;
         	height:370px ;
         }
+        .black{
+        color:black;
+        }
     </style>
 </head>
 <body class="wide comments example">
@@ -169,7 +172,7 @@
     <input type="hidden" name="capsFlag" id="capsFlag" value="1">
 </s:form>
 --%>
-<div class="container-fluid">
+<div class="container-fluid black">
     <s:form action="saveOrUpdateUser" cssClass="mar-top-6 font-14" theme="simple">
         <s:hidden name="id" value="%{id}"/>
         <div class="form-group row">
@@ -181,19 +184,23 @@
             </div>
             <label for="client_name" class="col-sm-1 col-md-1 control-label">Client Name:</label>
             <div class="col-sm-3 col-md-3">
-                <s:textfield name="client_name" id="client_name" cssClass="myclass"
+                <s:textfield name="client_name" id="client_name" cssClass="myclass form-control"
                              label="Client Name"  value='%{client_name}' />
             </div>
-
-            <label for="email_mod" class="col-sm-1 col-md-1 control-label">Email Module :</label>
+			<div class="col-sm-4 col-md-4">
+                    <label>
+                        <s:checkbox name="checkMe" id="initCaps" label=""/> Initial Caps OFF
+                    </label>
+            </div>
+            
+        </div>
+        <div class="form-group row">
+			<label for="email_mod" class="col-sm-1 col-md-1 control-label">Email Module :</label>
             <div class="col-sm-3 col-md-3">
                 <s:select name="e_module" list="module_Data" id="email_mod"
                           headerKey="0" value="%{e_module}" headerValue="Select" label="Select a Module" cssClass="form-control"
                           listKey="id" listValue="module" />
             </div>
-        </div>
-        <div class="form-group row">
-
             <label for="client_address" class="col-sm-1 col-md-1 control-label">Client Address :</label>
             <div class="col-sm-3 col-md-3">
                 <s:textarea name="client_address" id="client_address"
@@ -205,16 +212,10 @@
                 <s:textfield name="client_email" id="client_email" cssClass="form-control"
                              label="Client Email" value='%{client_email}'  />
             </div>
-            <div class="col-sm-2 col-md-2">
-                <div class="checkbox">
-                    <label>
-                        <s:checkbox name="checkMe" id="initCaps" label=""/> Initial Caps
-                    </label>
-                </div>
-            </div>
-            <s:submit cssClass="col-sm-1 col-md-1 btn btn-success border-0"/>
+            
+            
         </div>
-
+		<s:submit cssClass="col-md-offset-5 col-sm-offset-5 col-sm-2 col-md-2 btn btn-success border-0"/>
 
         <input type="hidden" name="capsFlag" id="capsFlag" value="1">
     </s:form>
@@ -288,9 +289,9 @@
                         [<s:property value="id"/>]
                     </td>
                     <td><s:property value="domainName"/></td>
-                    <%-- <td><s:property value="end_date"/></td> --%>
+                    <td><s:property value="end_date"/></td>
                     <td><s:property value="note1"/></td>
-                    <%-- <td><s:property value="note1"/></td> --%>
+                    <td><s:property value="note1"/></td>
                     <td><s:property value="date__c"/></td>
                     <td><s:url id="editURL" action="editUser">
                         <s:param name="id" value="%{id}"></s:param>

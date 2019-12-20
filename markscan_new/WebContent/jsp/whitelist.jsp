@@ -55,7 +55,7 @@
                 <div class="clearfix"></div>
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
-                        <form class="form-group row" id="addWhiteList" onsubmit="addWhiteListUrl(this)">
+                        <form class="form-group row" id="addWhiteList" onsubmit="addWhiteListUrl(this);">
                             <label for="clientId" class="col-md-1 col-sm-1 col-form-label">Select Client:</label>
                             <div class="col-md-2 col-sm-2">
                                 <select class="form-control" id="clientId" name="clientId"
@@ -68,10 +68,15 @@
                                 <select class="form-control" id="typeId" name="platformTypeId"
                                         onchange="onPlatformChange()">
                                     <option value="0">Select Platform</option>
+                                    <option value="dm">Daily Motion</option>
                                     <option value="fb">Facebook</option>
                                     <option value="insta">Instagram</option>
                                     <option value="in">Internet</option>
+                                    <option value="pin">Pinterest</option>
+                                    <option value=re>Reddit</option>
+                                    <option value="ti">TikTok</option>
                                     <option value="tw">Twitter</option>
+                                    <option value="vi">Vimeo</option>
                                     <option value="yt">You Tube</option>
                                 </select>
                                 <p class="example" id="example">
@@ -84,7 +89,9 @@
                             <button type="submit" class="btn btn-success">Submit</button>
                         </form>
                         
-                        
+                        <% if(request.getAttribute("clientId") !=null){%>
+                       		 <div style="color: red;font-style:italic;font-size: medium;"><%=(String)request.getAttribute("msg") %></div>
+                        <%} %>
                         <div class="x_content">
 
                             <table id="wLists"
@@ -220,6 +227,45 @@
 <script src="report_table/custom.min.js"></script>
 <script src="js/custom/message.js"></script>
 <script src="js/custom/custom.js"></script>
+
+
+
+<% if(request.getAttribute("clientId") !=null){%>
+    
+    <script type="text/javascript">
+      $(function() {
+    	  $.getJSON('getAllClient', {
+    		}, function(jsonResponse) {
+    			var select = $('#clientId');
+    			select.find('option').remove();
+    			let cliArr=[];
+    			$.each(jsonResponse.stateMap, function(key, value) {
+    			cliArr.push({id:key,value:value});
+    			// $('<option>').val(key).text(value).appendTo(select);
+    			});
+    			cliArr.shift();
+    			cliArr.sort(function (x,y) {
+    			return ((x.value == y.value) ? 0 : ((x.value > y.value) ? 1 : -1 ));
+    			});
+    			cliArr.unshift({id:"0",value:"Select Client"});
+    			for(let i=0;i<cliArr.length;i++){
+    			$('<option>').val(cliArr[i].id).text(cliArr[i].value).appendTo(select);
+    			}
+    			
+    			$('#clientId').val('<%=(String)request.getAttribute("clientId")%>');
+    		    $('#typeId').val('<%=(String)request.getAttribute("platformTypeId")%>');
+    		    onPlatformChange();
+    		});
+     }); 
+      
+      
+ </script>
+
+<% }%>
+
+
+
+
 </body>
 </html>
 

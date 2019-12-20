@@ -201,11 +201,19 @@ $(document).ready(function() { // for tv show name
 				$('#others_content_tbl').hide();
 				$('#others_content_tbl_dtls').hide();
 				$('#property_category').val('0')
-				$('#channel_name').val('')
+				$('input[name="archives"]').each(function() {
+					this.checked = false;
+				});
+				$('#current_value').val('');
 				
 			}else{
 				$('#others_content_tbl').show();
 				$('#tv_content_tbl').hide();
+				$('input[name="days"]').each(function() {
+					this.checked = false;
+				});
+				$('#channel_name').val('');
+				$('#telecastTime1').val('');
 			}
 		});
 		
@@ -216,7 +224,9 @@ $(document).ready(function() { // for tv show name
 			if(pCategory =='Current'){
 				$('#current_td').show();
 				$('#archive_td').hide();
-				$('#archive_value').val('');
+				$('input[name="archives"]').each(function() {
+					this.checked = false;
+				});
 			}else{
 				$('#archive_td').show();
 				$('#current_td').hide();
@@ -228,9 +238,8 @@ $(document).ready(function() { // for tv show name
 		
 		
 });
+</script>
 
-
-	</script>
 
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -258,8 +267,10 @@ $(document).ready(function() { // for tv show name
 				headerValue="Select Project Type" label="Select Project Type"
 				cssStyle="width: 170px;" value="%{projecttype}"/>
 
-			<s:select id="clientname" name="clientname" list="#{'0':'Select Client'}"
-				label="Select Client" cssStyle="width: 170px;" value=""/>
+			 <s:select id="clientname" name="clientname" list="#{'0':'Select Client'}"
+				label="Select Client" cssStyle="width: 170px;" value="88"/> 
+				
+			
 			<%-- 
 			<s:select id="Language" placeholder="Select Language" list="#{'0':'Select Language'}" label="Select Language" cssStyle="width: 170px;" > </s:select>
 			--%>
@@ -451,23 +462,20 @@ $(document).ready(function() { // for tv show name
 				$('<option>').val(cliArr[i].id).text(cliArr[i].value).appendTo(select);
 				}
 				
-				
+				var client_val;
+				client_val = "<%=request.getAttribute("clientname")%>";
+				if(client_val !='0'){
+					$('#clientname').val(client_val);
+					
+				}
 
 			});
 		}// end if condition
 	});
 	</script>
 	
-	<%
-	  if(request.getAttribute("clientname")!=null){
-	%>
-		<script type="text/javascript">
-			var client_val;
-			client_val = "<%=request.getAttribute("clientname")%>";
-			$('#selectBox > option').eq(client_val).attr('selected','selected')
-			
-		</script>
-	<%} %>
+	
+	
 	<%
 	  if(request.getAttribute("projecttype")!=null){
 	%>
@@ -477,11 +485,41 @@ $(document).ready(function() { // for tv show name
 				$('#tv_content_tbl').show();
 				$('#others_content_tbl').hide();
 				$('#others_content_tbl_dtls').hide();
+				
+				$('input[name="archives"]').each(function() {
+					this.checked = false;
+				});
+				$('#current_value').val('');
+				
+				$('input[name="days"]').each(function() {
+					this.checked = false;
+				});
+				
 			}else if(pType !='4' || pType !='5'){
 				$('#others_content_tbl').show();
 				$('#others_content_tbl_dtls').show();
 				$('#tv_content_tbl').hide();
+				
+				$('input[name="days"]').each(function() {
+					this.checked = false;
+				});
+				$('#channel_name').val('');
+				$('#telecastTime1').val('');
 			}else{
+				
+				$('#others_content_tbl').hide();
+				$('#others_content_tbl_dtls').hide();
+				$('#tv_content_tbl').hide();
+				
+				$('input[name="days"]').each(function() {
+					this.checked = false;
+				});
+				$('#channel_name').val('');
+				$('#telecastTime1').val('');
+				$('input[name="archives"]').each(function() {
+					this.checked = false;
+				});
+				$('#current_value').val('');
 			 
 			}
 		</script>
@@ -527,16 +565,49 @@ $(document).ready(function() { // for tv show name
 	      if(category =='Current'){
 	    	  $('#current_td').show();
 	    	  $('#archive_td').hide();
-	      }else{
+	    	  $('input[name="archives"]').each(function() {
+					this.checked = false;
+				});
+				
+	      }else if(category =='Archive'){
 	    	  $('#archive_td').show();
 	    	  $('#current_td').hide(); 
+	    	  $('#current_value').val('');
+	      }else{
+	    	  $('#current_td').hide();
+	    	  $('#archive_td').hide();
+	    	  $('input[name="archives"]').each(function() {
+					this.checked = false;
+				});
+	    	  $('#current_value').val('');
 	      }
+	      
 	      
 	  
 	   </script>
 	
 	<%} %>
-	
+<script type="text/javascript">
+(function($) {
+	  $.fn.inputFilter = function(inputFilter) {
+	    return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+	      if (inputFilter(this.value)) {
+	        this.oldValue = this.value;
+	        this.oldSelectionStart = this.selectionStart;
+	        this.oldSelectionEnd = this.selectionEnd;
+	      } else if (this.hasOwnProperty("oldValue")) {
+	        this.value = this.oldValue;
+	        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+	      } else {
+	        this.value = "";
+	      }
+	    });
+	  };
+	}(jQuery));
+$("#current_value").inputFilter(function(value) {
+	  return /^-?\d*$/.test(value); });
+
+</script>	
 </body>
 </html>
 

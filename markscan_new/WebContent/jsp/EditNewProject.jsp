@@ -168,11 +168,20 @@ $(document).ready(function() { // for tv show name
 				$('#tv_content_tbl').show();
 				$('#others_content_tbl').hide();
 				$('#others_content_tbl_dtls').hide();
-				$('#property_category').value('0')
+				$('#property_category').value('0');
+				$('input[name="archives"]').each(function() {
+					this.checked = false;
+				});
+				$('#current_value').val('');
 				
 			}else{
 				$('#others_content_tbl').show();
 				$('#tv_content_tbl').hide();
+				$('input[name="days"]').each(function() {
+					this.checked = false;
+				});
+				$('#channel_name').val('');
+				$('#telecastTime1').val('');
 			}
 		});
 		
@@ -183,7 +192,9 @@ $(document).ready(function() { // for tv show name
 			if(pCategory =='Current'){
 				$('#current_td').show();
 				$('#archive_td').hide();
-				$('#archive_value').val('');
+				$('input[name="archives"]').each(function() {
+					this.checked = false;
+				});
 			}else{
 				$('#archive_td').show();
 				$('#current_td').hide();
@@ -552,6 +563,29 @@ for(String obj:al)
 
 	<s:textfield value="%{msg}" cssStyle="color: red; width : 400px;" readonly="true" ></s:textfield>
 </body>
+
+
+<script type="text/javascript">
+(function($) {
+	  $.fn.inputFilter = function(inputFilter) {
+	    return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+	      if (inputFilter(this.value)) {
+	        this.oldValue = this.value;
+	        this.oldSelectionStart = this.selectionStart;
+	        this.oldSelectionEnd = this.selectionEnd;
+	      } else if (this.hasOwnProperty("oldValue")) {
+	        this.value = this.oldValue;
+	        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+	      } else {
+	        this.value = "";
+	      }
+	    });
+	  };
+	}(jQuery));
+$("#current_value").inputFilter(function(value) {
+	  return /^-?\d*$/.test(value); });
+
+</script>	
 </html>
 
  

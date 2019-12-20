@@ -1,8 +1,13 @@
 package com.markscan.project.classes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -68,7 +73,7 @@ public class AdminControl extends ActionSupport {
 	}
 	
 	public String addWhiteList() {
-//		System.out.println("============== inside addWhiteList==================");
+		System.out.println("========222222222222====== inside addWhiteList========2222222222222==========");
 		session2 = ServletActionContext.getRequest().getSession();
 		logger.info(session2);
 		if (session2 == null || session2.getAttribute("login") == null) {
@@ -82,12 +87,9 @@ public class AdminControl extends ActionSupport {
 				if (wlistData.trim().length() < 1) {
 					msg = "WhiteList Field never be blank";
 				} else {
-//					System.out.println("============== inside addWhiteList set data==================");
 					wd.setDomain_name(wlistData);
 					wd.setCreated_by((int) session2.getAttribute("uid"));
 					wd.setClientId(clientId);
-//					System.out.println("wlistData --------------->"+wlistData);
-//					System.out.println("clientId ------------ > "+clientId);
 					dao.saveData(wd);
 					msg = "WhiteList [[  " + wlistData + "  ]] Added";
 				}
@@ -104,7 +106,11 @@ public class AdminControl extends ActionSupport {
 				factory = null;
 				session2 = null;
 			}
-
+			HttpServletRequest request = ServletActionContext.getRequest();
+			request.setAttribute("clientId", clientId);
+			request.setAttribute("platformTypeId", platformTypeId);
+			request.setAttribute("msg", msg);
+			
 			return SUCCESS;
 		}
 	}
@@ -145,7 +151,11 @@ public class AdminControl extends ActionSupport {
 				factory = null;
 				session2 = null;
 			}
-
+			
+			HttpServletRequest request = ServletActionContext.getRequest();
+			request.setAttribute("clientId", clientId);
+			request.setAttribute("platformTypeId", platformTypeId);
+			request.setAttribute("msg", msg);
 			return SUCCESS;
 		}
 	}
@@ -184,6 +194,11 @@ public class AdminControl extends ActionSupport {
 				factory = null;
 				session2 = null;
 			}
+			
+			HttpServletRequest request = ServletActionContext.getRequest();
+			request.setAttribute("clientId", clientId);
+			//request.setAttribute("platformTypeId", platformTypeId);
+			request.setAttribute("msg", msg);
 
 			return SUCCESS;
 		}
@@ -236,7 +251,11 @@ public class AdminControl extends ActionSupport {
 				factory = null;
 				session2 = null;
 			}
-
+			
+			HttpServletRequest request = ServletActionContext.getRequest();
+			request.setAttribute("clientId", clientId);
+			request.setAttribute("platformTypeId", platformTypeId);
+			request.setAttribute("msg", msg);
 			return SUCCESS;
 		}
 	}
@@ -285,6 +304,11 @@ public class AdminControl extends ActionSupport {
 				factory = null;
 				session2 = null;
 			}
+			
+			HttpServletRequest request = ServletActionContext.getRequest();
+			request.setAttribute("clientId", clientId);
+			request.setAttribute("platformTypeId", platformTypeId);
+			request.setAttribute("msg", msg);
 
 			return SUCCESS;
 		}

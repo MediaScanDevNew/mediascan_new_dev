@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class Reporting extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 	HttpSession session2 = null;
 	Object[] obj = null;
-	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public String execute() { // templete configuration.....
 
@@ -221,8 +222,12 @@ public class Reporting extends ActionSupport {
 					msg ="Please select proper property category.";
 				}else if(property_category.equals("Current") && current_value.trim().length() <1){
 					msg ="Please enter current value.";
-				}else if(property_category.equals("Archive") && ServletActionContext.getRequest().getParameterValues("archives").length ==0){
-					msg ="Please enter archives value.";
+				}else if(property_category.equals("Archive") && ServletActionContext.getRequest().getParameterValues("archives")== null){
+					  msg ="Please enter archives value.";
+				}else if((projecttype ==4 || projecttype == 5) && !language.equals("English") && telecastTime.trim().length() <1 ){
+					  msg ="Please enter telecast time.";
+				}else if((projecttype ==4 || projecttype == 5) && !language.equals("English") && ServletActionContext.getRequest().getParameterValues("days")== null){
+					  msg ="Please enter telecast days.";
 				}else {
 					if(actual_hosted_site.trim().length() > 1){
 						lst = dmo.viewRecord("select dm.id,dm.domain_nm from Domain_Mst dm  where dm.deleteflag='0'");
@@ -231,7 +236,8 @@ public class Reporting extends ActionSupport {
 							boolean flag=false;
 							for(int i= 0; i < lst.size();i++){
 								obj = (Object[]) lst.get(i);
-								if(actual_hosted_site.contains(obj[1].toString()) || obj[1].toString().contains(actual_hosted_site)){
+								String domain_nm = obj[1].toString();
+								if(actual_hosted_site.contains(domain_nm)){ //|| obj[1].toString().contains(actual_hosted_site)
 									flag=true;
 								}
 							}
@@ -299,6 +305,7 @@ public class Reporting extends ActionSupport {
 					String days[] =ServletActionContext.getRequest().getParameterValues("days");
 					String archives[] =ServletActionContext.getRequest().getParameterValues("archives");
 					
+					Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 					
 					pi.setProject_name(propertyName_name_initial);
 					pi.setChannel_name(channel_name_initial);
@@ -317,6 +324,7 @@ public class Reporting extends ActionSupport {
 					pi.setRealeasingDate(realeasingDate);
 					pi.setProperty_category(property_category);
 					pi.setCurrent_value(current_value);
+					pi.setLast_updated_on(sdf.format(timestamp));
 					
 					
 					
@@ -367,6 +375,17 @@ public class Reporting extends ActionSupport {
 							pdao.customUpdateProject(query1);
 						 }
 					}
+					
+					if(save_id > 0){
+						file_attach_link ="";
+						propertyName_name ="";
+						actual_hosted_site = "";
+						language = "Select Language";
+						realeasingDate = "";
+						clientname = 0;
+						property_category = "0";
+						projecttype =0;
+					}
 					msg = "project created successfully...";
 				}
 			
@@ -382,6 +401,7 @@ public class Reporting extends ActionSupport {
 					   JSONArray mJSONArray1 = new JSONArray(Arrays.asList(ServletActionContext.getRequest().getParameterValues("archives")));	
 					   request.setAttribute("mJSONArray1", mJSONArray1);
 				}
+				
 				
 				execute();
 				System.out.println("in side project create page end...............");	
@@ -1198,7 +1218,7 @@ public class Reporting extends ActionSupport {
 				dmo = (Domain_masterDao) factory.getBean("d38");
 				pdao = (Project_content_tdaysDao) factory.getBean("d39");
 				
-				if (propertyName_name.trim().length() < 1) {
+				if (propertyName_name !=null && propertyName_name.trim().length() < 1) {
 					msg = "Property Name cannot be blank.";
 				}else if(language.trim().length()<1)
 				{
@@ -1213,10 +1233,14 @@ public class Reporting extends ActionSupport {
 					msg ="Please enter link of LOA.";
 				}else if((projecttype !=4 && projecttype != 5) && property_category.equals("0")){
 					msg ="Please select proper property category.";
-				}else if(property_category.equals("Current") && current_value.trim().length() <1){
+				}else if(property_category!=null && property_category.equals("Current") && current_value.trim().length() <1){
 					msg ="Please enter current value.";
-				}else if(property_category.equals("Archive") && ServletActionContext.getRequest().getParameterValues("archives").length ==0){
+				}else if(property_category!=null && property_category.equals("Archive") && ServletActionContext.getRequest().getParameterValues("archives")== null){
 					msg ="Please enter archives value.";
+				}else if((projecttype ==4 || projecttype == 5) && !language.equals("English") && telecastTime.trim().length() <1 ){
+					  msg ="Please enter telecast time.";
+				}else if((projecttype ==4 || projecttype == 5) && !language.equals("English") && ServletActionContext.getRequest().getParameterValues("days")== null){
+					  msg ="Please enter telecast days.";
 				}else {
 					if(actual_hosted_site.trim().length() > 1){
 						lst = dmo.viewRecord("select dm.id,dm.domain_nm from Domain_Mst dm  where dm.deleteflag='0'");
@@ -1225,7 +1249,12 @@ public class Reporting extends ActionSupport {
 							boolean flag=false;
 							for(int i= 0; i < lst.size();i++){
 								obj = (Object[]) lst.get(i);
-								if(actual_hosted_site.contains(obj[1].toString()) || obj[1].toString().contains(actual_hosted_site)){
+								String domain_nm = obj[1].toString();
+//								System.out.println("The domain site is ----------->"+domain_nm);
+//								System.out.println("The hosted site is ----------->"+actual_hosted_site);
+//								System.out.println("Contains sequence 'ing': " + actual_hosted_site.contains(domain_nm));
+								
+								if(actual_hosted_site.contains(domain_nm)){  //|| obj[1].toString().contains(actual_hosted_site)
 									flag=true;
 								}
 							}

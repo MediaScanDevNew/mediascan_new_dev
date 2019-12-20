@@ -145,16 +145,17 @@
 											<th>LOA</th>
 											<th>Official URL</th>
 											<th>Language</th>
-											 <th>Releasing Date</th>
+											<th>Releasing Date</th>
 											<th>Telecast Time</th>
 											<th>Telecast Days</th>
-											 <th>Projects</th>
-											 <th>Current Value(weeks)</th>
-											 <th>Archive Value(days)</th>
+											<th>Projects</th>
+											<th>Current Value(weeks)</th>
+											<th>Archive Value(days)</th>
+											<th>Last Updated On</th>
 											<th>Edit</th>
 											<th>Close</th>
-										
-											
+
+
 										</tr>
 									</thead>
 
@@ -181,7 +182,7 @@
 												<td><s:property  value="property_category" /></td>
 												<td><s:property  value="current_value" /></td>
 												<td><s:property  value="archive_days" /></td>
-												
+												<td><s:property  value="last_updated_on" /></td>
 												
 												<%-- <td><s:property value="created_on" /></td> --%>
 												<td>
@@ -191,7 +192,7 @@
 												</td>
 
 												<td>
-												  <s:if test="%{projecttype ==0}">
+												  <s:if test="%{closeFlag ==0}">
 												      <s:a href="javascript:void(0);" onclick="checkingClose('%{id}')">Close</s:a>
 												  </s:if>
 												</td>

@@ -61,6 +61,7 @@ let greyTable;
  */
 function onPlatformChange(){
 	let val=$('#typeId').val();
+	console.log(val);
 	if(val === "in"){
 		$('#example').html(INTERNET_EX);
 	}else if(val === "fb"){
@@ -71,6 +72,16 @@ function onPlatformChange(){
 		$('#example').html(INSTA_EX);
 	}else if(val === "yt"){
 		$('#example').html(YOUTUBE_EX);
+	}else if(val === "dm"){
+		$('#example').html(DM_EX);
+	}else if(val === "pin"){
+		$('#example').html(PIN_EX);
+	}else if(val === "re"){
+		$('#example').html(REDDIT_EX);
+	}else if(val === "ti"){
+		$('#example').html(TIK_EX);
+	}else if(val === "vi"){
+		$('#example').html(VIM_EX);
 	}else{
 		$('#example').html("");
 	}
@@ -113,7 +124,7 @@ function addWhiteListUrl(form){
 		if(platformId === "in"){
 			form.action="addwlist";
 			form.method="post";
-		}else if(platformId === "fb" || platformId === "tw"){
+		}else if(platformId === "fb" || platformId === "tw" ){
 			form.action="addwlist2";
 			form.method="post";
 		}else if(platformId === "insta"){
@@ -122,6 +133,70 @@ function addWhiteListUrl(form){
 		}else if(platformId === "yt"){
 			form.action="wYT";
 			form.method="post";
+		}else if( platformId === "dm"){
+			if(url.indexOf(DAILYMOTION)> -1){
+				let sub=url.substring(DAILYMOTION.length,url.length);
+				if(sub.length>0){
+					form.action="addwlist2";
+					form.method="post";
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper dailymotion link');
+			}
+		}else if(platformId === "pin"){
+			if(url.indexOf(PINTEREST)> -1){
+				let sub=url.substring(PINTEREST.length,url.length);
+				if(sub.length>0){
+					form.action="addwlist2";
+					form.method="post";
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper Pinterest link');
+			}
+		}else if(platformId === "re"){
+			if(url.indexOf(REDDIT)> -1){
+				let sub=url.substring(REDDIT.length,url.length);
+				if(sub.length>0){
+					form.action="addwlist2";
+					form.method="post";
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper REDDIT link');
+			}
+		}else if(platformId === "ti"){
+			if(url.indexOf(TIKTOK)> -1){
+				let sub=url.substring(TIKTOK.length,url.length);
+				if(sub.length>0){
+					if(sub[0]!== '@'){
+						alert('Uploader details missing.It must be start with @');
+					}else{
+					form.action="addwlist2";
+					form.method="post";
+					}
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper TIKTOK link');
+			}
+		}else if(platformId === "vi"){
+			if(url.indexOf(VIMEO)> -1){
+				let sub=url.substring(VIMEO.length,url.length);
+				if(sub.length>0){
+					form.action="addwlist2";
+					form.method="post";
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper VIMEO link');
+			}
 		}
 	}
 }
@@ -130,14 +205,16 @@ function addWhiteListUrl(form){
  * @returns
  */
 function onClientChangeWhiteList(){
+	
 	let clientId=$('#clientId').val();
 	let platformId=$('#typeId').val();
+	
 	if(platformId !== "0" && clientId !== "0"){
 		let path;
 		if(platformId === "in"){
 			path ='getWhiteListClientWise';
 		}
-		else if(platformId === "fb" || platformId === "tw"){
+		else if(platformId === "fb" || platformId === "tw" || platformId === "dm" || platformId === "pin" ||platformId === "re"||platformId === "ti"||platformId === "vi"){
 			path ='getSocialMediaClientWise';
 		}else if(platformId === "insta"){
 			path ='getInstaClientWise';
@@ -147,7 +224,7 @@ function onClientChangeWhiteList(){
 //		console.log('path:: '+path);
 		 table = $('#wLists').DataTable({
 			   ajax: {
-			       url: path+"?clientId="+clientId,
+			       url: path+"?clientId="+clientId+"&platformTypeId="+platformId,
 			       dataSrc: 'showData'
 			   },
 			   columnDefs: [
@@ -311,17 +388,83 @@ function deleteGreyList(){
 function editWhite(){
 	console.log($('#rowId').val(),$('#domain').val());
 	const id=$('#rowId').val();
-	const domain =$('#domain').val();
-	if(domain.trim() ===""){
+	const url =$('#domain').val();
+	const platformId=$('#typeId').val()
+	if(url.trim() ===""){
 		alert('Domain field can not be blank');
 	}else{
-		$('#editModal').modal('hide');
-		$.getJSON('editInternetWhiteList', {
-			'id':id,domain_name:domain,platformType:$('#typeId').val()
-		}, function(jsonResponse) {
-			console.log(JSON.stringify(jsonResponse))
-			$("#"+id).parent().parent().find("td:eq(1)").text(domain);
-		});
+		let success=false;
+		if( platformId === "dm"){
+			if(url.indexOf(DAILYMOTION)> -1){
+				let sub=url.substring(DAILYMOTION.length,url.length);
+				if(sub.length>0){
+					success=true;
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper dailymotion link');
+			}
+		}else if(platformId === "pin"){
+			if(url.indexOf(PINTEREST)> -1){
+				let sub=url.substring(PINTEREST.length,url.length);
+				if(sub.length>0){
+					success=true;
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper Pinterest link');
+			}
+		}else if(platformId === "re"){
+			if(url.indexOf(REDDIT)> -1){
+				let sub=url.substring(REDDIT.length,url.length);
+				if(sub.length>0){
+					success=true;
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper REDDIT link');
+			}
+		}else if(platformId === "ti"){
+			if(url.indexOf(TIKTOK)> -1){
+				let sub=url.substring(TIKTOK.length,url.length);
+				if(sub.length>0){
+					if(sub[0]!== '@'){
+						alert('Uploader details missing.It must be start with @');
+					}else{
+						success=true;
+					}
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper TIKTOK link');
+			}
+		}else if(platformId === "vi"){
+			if(url.indexOf(VIMEO)> -1){
+				let sub=url.substring(VIMEO.length,url.length);
+				if(sub.length>0){
+					success=true;
+				}else{
+					alert('Uploader details missing');
+				}
+			}else{
+				alert('This is not a proper VIMEO link');
+			}
+		}else if(platformId === "in" || platformId === "fb" || platformId === "tw" ||platformId === "insta" || platformId === "yt" ){
+			success=true;
+		}
+		if(success){
+			$('#editModal').modal('hide');
+			$.getJSON('editInternetWhiteList', {
+				'id':id,domain_name:url,platformType:platformId
+			}, function(jsonResponse) {
+//				console.log(JSON.stringify(jsonResponse))
+				$("#"+id).parent().parent().find("td:eq(1)").text(url);
+			});
+		}
 	}
 //	$.ajax({
 //		  type: "POST",

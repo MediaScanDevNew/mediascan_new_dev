@@ -72,7 +72,7 @@ public class EditWhiteList extends ActionSupport {
 						String query=null;
 						if(platformType.equalsIgnoreCase("in")){
 							query="update Whitelist set domain_name='"+domain_name+"' where id="+id;
-						}else if(platformType.equalsIgnoreCase("fb") || platformType.equalsIgnoreCase("tw")){
+						}else if(platformType.equalsIgnoreCase("fb") || platformType.equalsIgnoreCase("tw")|| platformType.equalsIgnoreCase("vi")|| platformType.equalsIgnoreCase("ti")|| platformType.equalsIgnoreCase("re")|| platformType.equalsIgnoreCase("pin")|| platformType.equalsIgnoreCase("dm")){
 							query="update Whitelist_two set link='"+domain_name+"' where id="+id;
 						}else if(platformType.equalsIgnoreCase("insta")){
 							query="update Whitelist_instagram set insta_link='"+domain_name+"' where id="+id;
