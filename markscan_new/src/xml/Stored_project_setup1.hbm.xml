@@ -22,6 +22,9 @@
 		<property name="bing"></property>
 		<property name="pipe"></property>
 		
+		
+		<property name="duckduckgo"></property>
+		<property name="russiaGo"></property>
 
 	</class>
 

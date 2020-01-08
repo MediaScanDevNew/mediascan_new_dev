@@ -165,7 +165,7 @@ table.three {
 			
 			if((keyword1 =="Static Keyword") && (pname1!="Select Property"))
 				{
-				alert(keyword1);
+				//alert(keyword1);
 			
 			$.getJSON('ajaxAction3', {
 				//ktype : keyword1,
@@ -182,32 +182,20 @@ table.three {
 				//alert("Reponse data............."+jsonResponse.stateMap1);
 				//alert("Reponse data1............");
 				var count =1;
-				var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>Google India</option>'
-				+'<option value=5>Google Canada</option><option value=6>Google Com</option><option value=7>Google Spane</option><option value=8>Google Nepal</option><option value=9>Google Bangladesh</option><option value=10>Google UAE</option><option value=11>Google Australia</option><option value=12>Google japan</option>'
-				+'<option value=13>Google USA</option><option value=14>Google Pakistan</option><option value=15>Google UK</option><option value=16>Google Netherlands</option>'
+				var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>DuckDuckGo</option><option value=5>RussiaGo</option><option value=6>Google India</option>'
+					+'<option value=7>Google Canada</option><option value=8>Google Com</option><option value=9>Google Spane</option><option value=10>Google Nepal</option><option value=11>Google Bangladesh</option><option value=12>Google UAE</option><option value=13>Google Australia</option><option value=14>Google japan</option>'
+					+'<option value=15>Google USA</option><option value=16>Google Pakistan</option><option value=17>Google UK</option><option value=18>Google Netherlands</option>'
 				$.each(jsonResponse.stateMap1, function(key, value) {
-					//alert("Reponse data123.............");
 					var keys1 =pname1+' '+value;
-					//alert(count)
 					data1 ='<tr><td><input type ="checkbox" id='+count+' size=50 name= '+count+' value= "'+keys1+ '" />'+keys1+'</td><td><select name="'+keys1+ '">'+optiondata+'</select></td></tr>';
-					//alert("Key: "+key+"   value: "+value);
-					//var $text12 =$("#"+key);
-					//$text12.html(("<input type='text' id ='"+key+"' name='"+value+"'value='"+value+"'/> <br>"))
-					//$text12.html(("Harry GGN <br>"));
-					//alert("Reponse data123............");
-					//alert("Key: " +key+"   value: "+value);
-				
-				
-				//$('<ul>').appendTo("Harry GGN");
+					$('<ul>').appendTo("Harry GGN");
 					$("#kywrds12").append(data1);
 					count =count+1;
 
 				
 				});
-				//$("#kywrds").append(data1);
 				
-				
-		         data2 ='<input type ="text" id= "count"  name= "count" value= "'+count+'" /><br>';
+				data2 ='<input type ="text" id= "count"  name= "count" value= "'+count+'" /><br>';
 				$("#kywrds").append(data2);
 			});
 			
@@ -215,33 +203,17 @@ table.three {
 			
 			if(keyword1 =="Dynamic Keyword")
 			{
-			alert(keyword1);
-			 
-				
-				//$('#ajaxResponse').text(jsonResponse.dummyMsg);
-				//alert("Reponse data............"+jsonResponse);
-			//var select = $('#keyword1');
-			var data1='';
-			var data2 ='';
-			//alert("Test*************");
-				//select.find('ul').remove();
-				//alert("Reponse data............."+jsonResponse.stateMap1);
-				//alert("Reponse data1............");
-				//var count =1;
-				var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>Google India</option>'
-				+'<option value=5>Google Canada</option><option value=6>Google Com</option><option value=7>Google Spane</option><option value=8>Google Nepal</option><option value=9>Google Bangladesh</option><option value=10>Google UAE</option><option value=11>Google Australia</option><option value=12>Google japan</option>'
-				+'<option value=13>Google USA</option><option value=14>Google Pakistan</option><option value=15>Google UK</option><option value=16>Google Netherlands</option>'
-				//$.each(jsonResponse.stateMap1, function(key, value) {
-					//alert("Test*************");
-					var count =15;
+				var data1='';
+				var data2 ='';
+				var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>DuckDuckGo</option><option value=5>RussiaGo</option><option value=6>Google India</option>'
+					+'<option value=7>Google Canada</option><option value=8>Google Com</option><option value=9>Google Spane</option><option value=10>Google Nepal</option><option value=11>Google Bangladesh</option><option value=12>Google UAE</option><option value=13>Google Australia</option><option value=14>Google japan</option>'
+					+'<option value=15>Google USA</option><option value=16>Google Pakistan</option><option value=17>Google UK</option><option value=18>Google Netherlands</option>'
+				    var count =15;
 					for(var i=1;i<=count;i++)
 						{
-					//alert("Reponse data123.............");
-					//var keys1 =pname1+' '+value;
-					//alert(count)
-					var pi="pip"+i;
-					data1 ='<tr><td>'+i+':<input type ="text" id='+i+' size=60 name= '+i+'  /></td><td><select name="'+pi+'">'+optiondata+'</select></td></tr>';
-					$("#kywrds12").append(data1);
+						var pi="pip"+i;
+						data1 ='<tr><td>'+i+':<input type ="text" id='+i+' size=60 name= '+i+'  /></td><td><select name="'+pi+'">'+optiondata+'</select></td></tr>';
+						$("#kywrds12").append(data1);
 					
 				}
 		         data2 ='<input type ="text" id="count"  name= "count" value='+count+' /><br>';

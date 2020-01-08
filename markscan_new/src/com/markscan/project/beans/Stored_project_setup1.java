@@ -1,7 +1,7 @@
 package com.markscan.project.beans;
 
 public class Stored_project_setup1 {
-	int id,  userId, projectId, completed,   google, yahoo, bing,pipe;
+	int id,  userId, projectId, completed,   google, yahoo, bing,pipe,duckduckgo,russiaGo;
 	String keyphrase,  created_on;
 
 	public Stored_project_setup1() {
@@ -88,6 +88,24 @@ public class Stored_project_setup1 {
 		this.created_on = created_on;
 	}
 
+	public int getDuckduckgo() {
+		return duckduckgo;
+	}
+
+	public void setDuckduckgo(int duckduckgo) {
+		this.duckduckgo = duckduckgo;
+	}
+
+	public int getRussiaGo() {
+		return russiaGo;
+	}
+
+	public void setRussiaGo(int russiaGo) {
+		this.russiaGo = russiaGo;
+	}
+
+	
+	
 	
 	
 
