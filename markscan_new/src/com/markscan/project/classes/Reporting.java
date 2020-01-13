@@ -62,6 +62,9 @@ import com.markscan.project.dao.Tv_content_tdaysDao;
 import com.markscan.project.dao.Url_emailDao;
 import com.opensymphony.xwork2.ActionSupport;
 
+
+
+
 public class Reporting extends ActionSupport {
 
 	private static final Logger logger = Logger.getLogger(Reporting.class);
@@ -130,6 +133,9 @@ public class Reporting extends ActionSupport {
 				url2 = null;
 				lst = null;
 				dao = null;
+				
+				TheMovieDb mvDb = new TheMovieDb();
+				mvDb.getEnglishTvShowDtails();
 
 			} catch (Exception e) {
 				logger.error("get user error ", e);
@@ -212,7 +218,7 @@ public class Reporting extends ActionSupport {
 					msg ="Please select Project Type.";
 				}else if(clientname == 0){
 					msg ="Please select Client Type.";
-				}else if((projecttype ==4 || projecttype == 5) && channel_name.trim().length() <1){ // for TV show & Sports
+				}else if((projecttype ==4 || projecttype == 5) && !language.equals("English") && channel_name.trim().length() <1){ // for TV show & Sports
 					msg ="Please enter channel name.";
 				}else if(file_attach_link.trim().length() <1 ){
 					msg ="Please enter link of LOA.";
@@ -237,7 +243,7 @@ public class Reporting extends ActionSupport {
 							for(int i= 0; i < lst.size();i++){
 								obj = (Object[]) lst.get(i);
 								String domain_nm = obj[1].toString();
-								if(actual_hosted_site.contains(domain_nm)){ //|| obj[1].toString().contains(actual_hosted_site)
+								if(actual_hosted_site.contains(domain_nm) || domain_nm.contains(actual_hosted_site)){ //|| obj[1].toString().contains(actual_hosted_site)
 									flag=true;
 								}
 							}
