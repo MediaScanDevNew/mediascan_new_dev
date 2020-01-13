@@ -1,0 +1,132 @@
+
+NOV/26/2019:::::
+----------------------------------------------------------------------
+DROP TABLE IF EXISTS `domain_mst`;
+
+CREATE TABLE `domain_mst` (
+  
+`id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain_nm` varchar(500) DEFAULT NULL,
+  
+`deleteflag` int(1) NOT NULL,
+  `createdate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `domain_mst`
+--
+LOCK TABLES `domain_mst` WRITE;
+INSERT INTO `domain_mst` VALUES (1,'https://www.hotstar.com/in',0,'2019-11-20 12:10:14'),
+(2,'https://www.zee5.com',0,'2019-11-20 12:10:49');
+
+
+---------------------------------------------------------------------------------------------------
+
+
+
+ALTER TABLE `webinforcement_demo`.`project_info` 
+--ADD COLUMN `property_category` VARCHAR(45) NULL DEFAULT NULL AFTER `ttime`,
+ADD COLUMN `current_value` VARCHAR(45) NULL DEFAULT NULL AFTER `property_category`,
+ADD COLUMN `archive_value` VARCHAR(45) NULL AFTER `current_value`;
+---------------------------------------------------------------------------------------------------
+
+
+
+ALTER TABLE `webinforcement_demo`.`client_master` 
+CHANGE COLUMN `email` `client_email` VARCHAR(150);
+
+-----------------------------------------------------------------------------------------------------
+
+NOV/27/2019::::
+-----------------------------------------------------------------------------------------------------
+
+ALTER TABLE `webinforcement_demo`.`whitelist`
+ADD COLUMN `clientId` INT NOT NULL AFTER `created_by`;
+
+ALTER TABLE `webinforcement_demo`.`whitelist_instagram`
+ADD COLUMN `clientId` INT NOT NULL AFTER `created_by`;
+
+
+ALTER TABLE `webinforcement_demo`.`whitelist_two`
+ADD COLUMN `clientId` INT NOT NULL AFTER `created_by`;
+
+
+ALTER TABLE `webinforcement_demo`.`whitelist_yt`
+ADD COLUMN `clientId` INT NOT NULL AFTER `created_by`;
+
+ALTER TABLE `webinforcement_demo`.`greylist`
+ADD COLUMN `clientId` INT NOT NULL AFTER `created_on`;
+
+------------------------------------------------------------------------------------------------------
+
+Nov/28/2019
+-----------------------------------------------------------------------------------------------------
+
+ALTER TABLE `webinforcement_demo`.`project_info` 
+ADD COLUMN `last_updated_on` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `archive_value`;
+
+
+-----------Dec/11/2019 ----------------------------------------------------------------------------
+
+CREATE TABLE `webinforcement_demo`.`project_content_tdays` (
+ `id` INT NOT NULL AUTO_INCREMENT,
+ `projectId` INT NULL DEFAULT '0',
+ `projectName` VARCHAR(50) NULL DEFAULT '0',
+ `archive_days` VARCHAR(50) NULL DEFAULT '0',
+ `projecttype` INT NULL DEFAULT '0',
+ PRIMARY KEY (`id`));
+ 
+
+CREATE DEFINER=`root`@`%` TRIGGER `project_info_after_insert` AFTER INSERT ON `project_info` FOR EACH ROW BEGIN
+
+if new.project_type=4 then
+update tv_content_tdays set tv_content_tdays.projectId =new.id where
+tv_content_tdays.projectName=new.project_name;
+end if;
+if new.project_type=5 then
+update tv_content_tdays set tv_content_tdays.projectId =new.id where
+tv_content_tdays.projectName=new.project_name;
+end if;
+
+if new.project_type=2 then
+update project_content_tdays set project_content_tdays.projectId =new.id where
+project_content_tdays.projectName=new.project_name;
+end if;
+
+END
+------------------------------------------------------------------------------------------------
+
+---------------------DEC/16/2019---------------------------------------------------------------
+
+ALTER TABLE `webinforcement_demo`.`whitelist_instagram`  DROP INDEX `taken_by_id` ;
+CREATE UNIQUE INDEX unique_index1 ON whitelist_instagram (clientId,taken_by_id);
+ALTER TABLE `webinforcement_demo`.`whitelist_two`  DROP INDEX `link` ;
+CREATE UNIQUE INDEX unique_index2 ON whitelist_two (clientId,link);
+ALTER TABLE `webinforcement_demo`.`whitelist_yt`  DROP INDEX `chid` ;
+CREATE UNIQUE INDEX unique_index3 ON whitelist_yt (clientId,ch_id);
+ALTER TABLE `webinforcement_demo`.`whitelist`  DROP INDEX `domain_name1` ;
+CREATE UNIQUE INDEX unique_index1 ON whitelist (clientId,domain_name);
+
+--------------------------------------------------------------------------------------------------
+
+
+----------------------- 13.01.2020 ---------------------------------------------------------------
+CREATE TABLE `webinforcement_demo`.`imdb_content_detail` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `projectId` INT(11) NULL DEFAULT '0',
+  `projectName` VARCHAR(50) NULL DEFAULT '0',
+  `season_name` VARCHAR(150) NULL DEFAULT '0',
+  `season_number` INT(11) NULL DEFAULT '0',
+  `episodeId` INT(11) NULL DEFAULT '0',
+  `episodeNo` INT(11) NULL DEFAULT '0',
+  `episodeNm` VARCHAR(150) NULL DEFAULT '0',
+  `episode_realease_dt` TIMESTAMP NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `webinforcement_demo`.`master_crawle_url` 
+CHANGE COLUMN `title` `title` VARCHAR(255) NULL DEFAULT NULL ;
+
+---------------------------------------------------------------------------------------------------
