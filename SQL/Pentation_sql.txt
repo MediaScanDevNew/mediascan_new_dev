@@ -112,6 +112,21 @@ CREATE UNIQUE INDEX unique_index1 ON whitelist (clientId,domain_name);
 
 --------------------------------------------------------------------------------------------------
 
+------------------------- 08.01.2020 -------------------------------------------------------------
+ALTER TABLE `webinforcement_demo`.`blacklist_sites`
+CHANGE COLUMN `id` `id` INT NOT NULL AUTO_INCREMENT ,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`id`, `domain`, `created_by`);
+
+ALTER TABLE `webinforcement_demo`.`master_crawle_url`
+ADD COLUMN `status` VARCHAR(45) NULL DEFAULT NULL AFTER `meta_new`;
+
+ALTER TABLE `webinforcement_demo`.`master_crawle_url`
+ADD COLUMN `g_list` INT NULL DEFAULT '0' AFTER `status`;
+
+ALTER TABLE `webinforcement_demo`.`master_crawle_url`
+ADD COLUMN `is_new_grey` INT NULL DEFAULT '0' AFTER `g_list`;
+--------------------------------------------------------------------------------------------------
 
 ----------------------- 13.01.2020 ---------------------------------------------------------------
 CREATE TABLE `webinforcement_demo`.`imdb_content_detail` (
