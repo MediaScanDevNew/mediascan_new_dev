@@ -100,6 +100,7 @@
 				<value>xml/Tv_content_tdays.hbm.xml</value>
 				<value>xml/Domain_mst.hbm.xml</value>
 				<value>xml/Project_content_tdays.hbm.xml</value>
+				<value>xml/Imdb_content_detail.hbm.xml</value>
 			</list>
 		</property>
 
@@ -263,6 +264,10 @@
 	</bean>
 	
 	<bean id="d39" class="com.markscan.project.dao.Project_content_tdaysDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	
+	<bean id="d40" class="com.markscan.project.dao.Imdb_content_detailDao">
 		<property name="template" ref="template"></property>
 	</bean>
 
