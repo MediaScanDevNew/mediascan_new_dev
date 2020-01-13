@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ import com.markscan.project.beans.Client_master;
 import com.markscan.project.beans.CommanReporting;
 import com.markscan.project.beans.Crawle_url2;
 import com.markscan.project.beans.Domain_Mst;
+import com.markscan.project.beans.Imdb_content_detail;
 import com.markscan.project.beans.Markscan_projecttype;
 import com.markscan.project.beans.Markscan_users;
 import com.markscan.project.beans.ProjectDashboardBean;
@@ -54,6 +56,7 @@ import com.markscan.project.classes.session.LoginAndSession;
 import com.markscan.project.dao.Client_masterDao;
 import com.markscan.project.dao.Crawle_url2Dao;
 import com.markscan.project.dao.Domain_masterDao;
+import com.markscan.project.dao.Imdb_content_detailDao;
 import com.markscan.project.dao.Markscan_projecttypeDao;
 import com.markscan.project.dao.Markscan_usersDao;
 import com.markscan.project.dao.Project_content_tdaysDao;
@@ -134,9 +137,7 @@ public class Reporting extends ActionSupport {
 				lst = null;
 				dao = null;
 				
-				TheMovieDb mvDb = new TheMovieDb();
-				mvDb.getEnglishTvShowDtails();
-
+				
 			} catch (Exception e) {
 				logger.error("get user error ", e);
 				return ERROR;
@@ -201,6 +202,9 @@ public class Reporting extends ActionSupport {
 			Project_content_tdaysDao pdao = null;
 			Domain_masterDao dmo= null;
 			ArrayList<Integer> al = new ArrayList<Integer>();
+			Imdb_content_detailDao imdbdao = null;
+			ArrayList<Integer> al1 = new ArrayList<Integer>();
+			
 			System.out.println("**********************Language******************************"+language);
 			try {
 				dao = (Project_infoDao) factory.getBean("d1");
@@ -208,6 +212,8 @@ public class Reporting extends ActionSupport {
 				tdao=(Tv_content_tdaysDao)factory.getBean("d37");
 				dmo = (Domain_masterDao) factory.getBean("d38");
 				pdao = (Project_content_tdaysDao) factory.getBean("d39");
+				
+				imdbdao = (Imdb_content_detailDao) factory.getBean("d40");
 				
 				if (propertyName_name.trim().length() < 1) {
 					msg = "Property Name cannot be blank.";
@@ -373,12 +379,54 @@ public class Reporting extends ActionSupport {
 					
 					}
 					
+					if((projecttype==4 || projecttype==5) && (language.equalsIgnoreCase("English")))
+					{
+						//HashMap<String, HashMap<String, HashMap<String, String>>>
+						TheMovieDb mvDb = new TheMovieDb();
+						HashMap<String, HashMap<String, HashMap<String, String>>> contentList = mvDb.getEnglishTvShowDtails(propertyName_name);
+						if(!contentList.isEmpty()){
+							
+							for (String name : contentList.keySet())  
+					        { 
+					            // search  for value 
+								HashMap<String, HashMap<String, String>> mp = contentList.get(name); 
+								for(String nm : mp.keySet()){
+									HashMap<String, String> mp1= mp.get(nm);
+									Imdb_content_detail imdb = new Imdb_content_detail();
+									imdb.setProjectName(propertyName_name);
+									imdb.setSeason_name(mp1.get("seasonName"));
+									imdb.setSeason_number(Integer.parseInt(mp1.get("SeasonNumber")));
+									imdb.setEpisodeId(Integer.parseInt(mp1.get("episodeId")));
+									imdb.setEpisodeNo(Integer.parseInt(mp1.get("episodeNo")));
+									imdb.setEpisodeNm(mp1.get("episodeName"));
+									imdb.setEpisode_realease_dt(mp1.get("episodeReleaseDate"));
+									imdbdao.saveData(imdb);
+									al1.add(imdb.getId());
+									
+								}
+					            
+					        } 
+							
+						}
+
+						
+					
+					}
+					
+					
 					dao.saveData(pi);
 					int save_id = pi.getId();
 					if(!al.isEmpty()){
 						for(Integer i : al){
 							String query1="Update Project_content_tdays set projectId="+save_id+" where id="+i+"";
 							pdao.customUpdateProject(query1);
+						 }
+					}
+					
+					if(!al1.isEmpty()){
+						for(Integer i : al1){
+							String query1="Update Imdb_content_detail set projectId="+save_id+" where id="+i+"";
+							imdbdao.customUpdateProject(query1);
 						 }
 					}
 					
