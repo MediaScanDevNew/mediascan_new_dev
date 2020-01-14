@@ -31,6 +31,7 @@ public class BotSetupScriptForOthers {
 	String afttime;
 	String keyphrase;
 	String property_category;
+	String language;
 	
 	Date sDate;
 	Date eDate;
@@ -40,12 +41,14 @@ public class BotSetupScriptForOthers {
 	PreparedStatement psmt1=null;
 	ResultSet rs1=null;
 	
+	PreparedStatement psmt2=null;
+	ResultSet rs2=null;
 	
 	
 	
 	
-	String query ="select DISTINCT pif.id, pif.project_name, pif.project_type,pif.property_category from project_info pif "
-			      + "where  pif.project_type=2 and pif.ttime is null ";
+	String query ="select DISTINCT pif.id, pif.project_name, pif.project_type,pif.property_category,pif.language from project_info pif "
+			      + "where  pif.ttime is null "; //pif.project_type=2 and
 	
 	public BotSetupScriptForOthers()
 	{
@@ -100,9 +103,6 @@ public class BotSetupScriptForOthers {
 	{
 		try
 		{
-		  System.out.println("in side get data method .............");
-		  System.out.println(query);
-		  
 		  psmt = con.prepareStatement(query);
 		  rs = psmt.executeQuery();
 		  while(rs.next())
@@ -111,16 +111,36 @@ public class BotSetupScriptForOthers {
 			  project_name =rs.getString(2);
 			  project_type = rs.getInt(3);
 			  property_category = rs.getString(4);
+			  language = rs.getString(5);
 			  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			  SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MMMM-yyyy");
 			  date=new Date();
 			  String curdate =sdf1.format(date);
 			  
-			  //System.out.println("current Date............"+curdate);
-			  System.out.println("Project Id............"+projectId);
-			  System.out.println("Prject name............."+project_name);
+			  /**
+			   *  Add by Pentation team
+			   *  This if condition add for English TV Show 
+			   * */
+			  
+			  if((project_type ==4 || project_type ==5) && language.equalsIgnoreCase("English")){
+				  
+				  psmt2 = con.prepareStatement("select episodeNm,episode_realease_dt from imdb_content_detail where projectId="+projectId);
+				  rs2 = psmt2.executeQuery();
+				  while(rs2.next()){
+					  keyphrase =project_name+" "+rs2.getString("episodeNm")+" "+rs2.getString("episode_realease_dt");
+					  setQueryToProjectSetup(projectId,keyphrase,con);
+					  
+				  }
+			  }
+			  
+			  /**
+			   * Add by Pentation team
+			   *  This if condition add Others Project type except TV Show 
+			   * */
+			  
 			  
 			  if(property_category!=null && property_category.trim().equalsIgnoreCase("Current")){ 
+				  
 				  psmt1 = con.prepareStatement("SELECT keyphrase FROM webinforcement_demo.keyword_filter_extension_master where projectType="+project_type);
 				  rs1 = psmt1.executeQuery();
 				  while(rs1.next()){
@@ -130,7 +150,9 @@ public class BotSetupScriptForOthers {
 				  }
 			  }else{
 				  
-				  
+				  /**  TO DO for Archive logic code base here
+				   * 
+				   * */
 			  }
 			  
 			 

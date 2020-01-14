@@ -42,6 +42,17 @@ public class WhitelistValidation {
 	private Greylist_Repository gRepo;
 	
 	
+	/**
+	 * Author : Pentation 
+	 * This method takes project id as a parameter and validated the related domain from  
+	 * 'master_crawl_url' table with predefined whitelisted URL mapped with client in 'whitelist' table.
+	 * It also marked all the rows from the 'master_crawl_url' which are passed through the whitelist validation.
+	 * @param projectId
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public String whitelistChecking(int projectId) throws JsonParseException, JsonMappingException, IOException{
 		List<Integer> objSet = projInfo.getClientByProjectId(projectId);
 		if(objSet.size()>0){
@@ -72,7 +83,17 @@ public class WhitelistValidation {
 		}
 	}
 	
-	
+	/**
+	 * Author : Pentation 
+	 * This method takes project id as a parameter and validated the related domain from  
+	 * 'master_crawl_url' table with predefined blacklisted URL in 'blacklist' table.
+	 * It also stored a status against a row from the 'master_crawl_url' which are validated against the blacklist table.
+	 * @param projectId
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public String blacklistChecking(int projectId) throws JsonParseException, JsonMappingException, IOException, URISyntaxException{
 		String[] domains=bRepo.findAllActiveBlacklists();
 //		System.out.println("---domains----->"+domains.length);
@@ -106,7 +127,17 @@ public class WhitelistValidation {
 		return "done";
 		
 	}
-	
+	/**
+	 * Author : Pentation 
+	 * This method takes project id as a parameter and validated the related domain from  
+	 * 'master_crawl_url' table with predefined greylisted URL mapped with client in 'greylist' table.
+	 * It also marked all the rows from the 'master_crawl_url' which are passed through the greylist validation.
+	 * @param projectId
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public String greylistChecking(int projectId) throws JsonParseException, JsonMappingException, IOException{
 		List<Integer> objSet = projInfo.getClientByProjectId(projectId);
 		if(objSet.size()>0){

@@ -125,9 +125,10 @@ public class BotSeApplication1 {
 			MediaType.APPLICATION_XML_VALUE })
 	// @RequestMapping("/check")
 	@ResponseBody
-	 public String botStart(@RequestHeader String Authorization) throws Exception {
-	//public String botStart() throws Exception {
+	// public String botStart(@RequestHeader String Authorization) throws Exception {
+	public String botStart() throws Exception {
 
+		 String Authorization="11";
 		 String s=Authorization;
 		
 		 if(!Authorization.equals(null)) {
@@ -283,23 +284,23 @@ public class BotSeApplication1 {
 					afterCrawl(3, keyphrase);
 					links = null;
 
-					// duck duck Go search======
-
-					// ----------------- Pentation -----------------------------
-					// sps.bingComplate(id);
+					/* Add this by pentation team 
+					 * 
+					 * fetch the data from duck duck go search engine and save the data in database */
+					
 					sps.duckduckStartBingComplete(id);
 					duckduckSearch(keyphrase);
-					System.out.println("===== duckduck go === links size......." + links.size());
 					afterCrawl(4, keyphrase);
 					links = null;
 					// ------------------------------------------------------------
 
-					// ----------------- Pentation
-					// ----------------------------------
+					/* Add this by pentation team 
+					 * 
+					 * fetch the data from russia go search engine and save the data in database */
+					
 					System.out.println("id value is --------->" + id);
 					sps.russiaGoStartduckduckGoComplete(id);
 					russiaGoSearch(keyphrase);
-					System.out.println("===== duckduck go === links size......." + links.size());
 					afterCrawl(5, keyphrase);
 					links = null;
 
@@ -334,6 +335,10 @@ public class BotSeApplication1 {
 					// sps.bingComplate(id);
 					// ----------------- Pentation -----------------------------
 				} else if (pipe == 4) {
+					
+					/* Add this by pentation team 
+					 * 
+					 * fetch the data from duck duck go search engine and save the data in database */
 
 					sps.duckduckStartBingComplete(id);
 					duckduckSearch(keyphrase);
@@ -342,7 +347,12 @@ public class BotSeApplication1 {
 					links = null;
 
 				} else if (pipe == 5) {
-
+					
+					/* Add this by pentation team 
+					 * 
+					 * fetch the data from russia go search engine and save the data in database */
+					
+					
 					sps.russiaGoStartduckduckGoComplete(id);
 					russiaGoSearch(keyphrase);
 					System.out.println("===== duckduck go === links size......." + links.size());
@@ -363,11 +373,19 @@ public class BotSeApplication1 {
 				}
 
 				try {
+					
+					
 					sps.allComplate(id);
+					
+					/* Add this by pentation team 
+					 * 
+					 * Add these three function for white list,grey list ,black list validation */
+					
 					WhitelistValidation wv = new WhitelistValidation();
 					wv.whitelistChecking(projectId);
-					wv.blacklistChecking(projectId);
 					wv.greylistChecking(projectId);
+					wv.blacklistChecking(projectId);
+					
 					// mms.machineStatusFree(myIP);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -640,7 +658,15 @@ public class BotSeApplication1 {
 							.println("=1111111   == " + lnk.toLowerCase().contains(property_name.trim().toLowerCase()));
 
 					if (lnk.toLowerCase().contains(property_name.trim().toLowerCase())) {
+						
+						/**
+						 *  Add this feature by Pentation team
+						 *  
+						 *  here we fetch tile from each individual link
+						 * */
+						
 						String title = getTitleFromEachLinks(lnk);
+						
 						mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()), title);
 						System.out.println("=== running.....first. running..............");
 						b2 = true;
@@ -661,7 +687,14 @@ public class BotSeApplication1 {
 						for (String srckey__ : searchkeywordlist) {
 							System.out.println("=== srckey__ .............." + srckey__);
 							if (lnk.toLowerCase().contains(srckey__.trim().toLowerCase())) {
+								/**
+								 *  Add this feature by Pentation team
+								 *  
+								 *  here we fetch tile from each individual link
+								 * */
+								
 								String title = getTitleFromEachLinks(lnk);
+								
 								mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
 										title);
 
@@ -698,8 +731,15 @@ public class BotSeApplication1 {
 					try {
 
 						if (pagesource.toLowerCase().contains(property_name.trim().toLowerCase())) {
-							System.out.println("--- first fail ===Testing4============'");
+							
+							/**
+							 *  Add this feature by Pentation team
+							 *  
+							 *  here we fetch tile from each individual link
+							 * */
+							
 							String title = getTitleFromEachLinks(lnk);
+							
 							mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
 									title);
 							b2 = true;
@@ -715,9 +755,13 @@ public class BotSeApplication1 {
 				if (b2 == false) {
 					for (String pj : keywordfilter) {
 						try {
-							System.out.println("--- pagesource value ----------->" + pagesource);
-							System.out.println("--- pj value----------->" + pj);
 							if (pagesource.toLowerCase().contains(pj.trim().toLowerCase())) {
+								/**
+								 *  Add this feature by Pentation team
+								 *  
+								 *  here we fetch tile from each individual link
+								 * */
+								
 								String title = getTitleFromEachLinks(lnk);
 								mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
 										title);
@@ -1061,8 +1105,9 @@ public class BotSeApplication1 {
 
 	}
 
-	// --------------------------- duck duck Go Search page pentation
-	// -------------------------------------------------------------
+	/* Search DuckDuckGo Search Engine
+	 * 
+	 * */
 
 	public void duckduckSearch(String searchKeyword) {
 		links = new ArrayList<>();
@@ -1131,11 +1176,10 @@ public class BotSeApplication1 {
 		}
 	}
 
-	// --------------------------------------------------------------------------------------------------------------------
-
-	// --------------------------- russiaGo Search page
-	// Pentation-----------------------------------------------------------------
-
+	/* Search Russian Search Engine
+	 * 
+	 * */
+	
 	public void russiaGoSearch(String searchKeyword) {
 
 		String xpthAnchorRussia = "//h3[@class='result__title']//a[1]";
@@ -1203,8 +1247,10 @@ public class BotSeApplication1 {
 		}
 	}
 
-	// ---------------------------------- get Title Pentation
-	// ---------------------------------------------------------
+	/* Use Selenium to crawl and get the Title from the URL Links
+	 * 
+	 * Returns title
+	 * */
 
 	public String getTitleFromEachLinks(String lnk) {
 
@@ -1224,21 +1270,23 @@ public class BotSeApplication1 {
 			// Using Java script
 			JavascriptExecutor jse = (JavascriptExecutor) driver;
 			String titlebyJavascript = (String) jse.executeScript("return document.title");
-			//System.out.println("Title of webpage by Javascript :-" + titlebyJavascript);
+			printTitle = titlebyJavascript;
+			System.out.println("Title of webpage by Javascript :-" + printTitle);
 
 			if (titlebyJavascript == null || titlebyJavascript.isEmpty()) {
 				driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-				//System.out.println("trying Print Title1:- " + driver.getTitle());
+				printTitle = driver.getTitle();
+				System.out.println("trying Print Title1--------------------------->:- " + printTitle);
 			}
 
 		} catch (TimeoutException ex) {
-			//System.out.println("Using Javascript-" + ex.getMessage());
 			try {
 				printTitle = driver.getTitle();
-				//System.out.println("Print Title:- " + printTitle);
+				System.out.println("Print Title: ====================================> " + printTitle);
 
 				if (printTitle == null || printTitle.isEmpty()) {
 					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+					printTitle = driver.getTitle();
 					//System.out.println("trying Print Title1:- " + driver.getTitle());
 				}
 
@@ -1278,10 +1326,11 @@ public class BotSeApplication1 {
 			System.out.println(ex.getMessage());
 		}
 	}
-	// ------------------------------------------------------------------------------------------------------
-
-	// -------------------------------- google search modify
-	// ------------------------------------------------
+	
+	
+	/* Add this by pentation team 
+	 * 
+	 * modify google search engine  */
 
 	public void googleSearch(String searchKeyword) {
 		System.out.println("Search Keyword Google----" + searchKeyword);

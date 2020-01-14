@@ -379,6 +379,15 @@ public class Reporting extends ActionSupport {
 					
 					}
 					
+					
+					/**
+					 *  Add by pentation team
+					 *  
+					 *  this new feature add for English TV show.Fetch the data from IMDB API by using property name 
+					 *  and save the data in one new table.
+					 *  
+					 */
+					
 					if((projecttype==4 || projecttype==5) && (language.equalsIgnoreCase("English")))
 					{
 						//HashMap<String, HashMap<String, HashMap<String, String>>>
@@ -393,15 +402,27 @@ public class Reporting extends ActionSupport {
 								for(String nm : mp.keySet()){
 									HashMap<String, String> mp1= mp.get(nm);
 									Imdb_content_detail imdb = new Imdb_content_detail();
-									imdb.setProjectName(propertyName_name);
-									imdb.setSeason_name(mp1.get("seasonName"));
-									imdb.setSeason_number(Integer.parseInt(mp1.get("SeasonNumber")));
-									imdb.setEpisodeId(Integer.parseInt(mp1.get("episodeId")));
-									imdb.setEpisodeNo(Integer.parseInt(mp1.get("episodeNo")));
-									imdb.setEpisodeNm(mp1.get("episodeName"));
-									imdb.setEpisode_realease_dt(mp1.get("episodeReleaseDate"));
-									imdbdao.saveData(imdb);
-									al1.add(imdb.getId());
+									
+									/**
+									 *  Here we check episode release date after project release date or not
+									 *  if it is true then we save the data in to the table. 
+									 * */
+									
+									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+									String episode_realse_dt = mp1.get("episodeReleaseDate");
+									String realseDate = realeasingDate.replaceAll("-", "/");
+									if(sdf.parse(episode_realse_dt).after(sdf.parse(realseDate))){
+									
+										imdb.setProjectName(propertyName_name);
+										imdb.setSeason_name(mp1.get("seasonName"));
+										imdb.setSeason_number(Integer.parseInt(mp1.get("SeasonNumber")));
+										imdb.setEpisodeId(Integer.parseInt(mp1.get("episodeId")));
+										imdb.setEpisodeNo(Integer.parseInt(mp1.get("episodeNo")));
+										imdb.setEpisodeNm(mp1.get("episodeName"));
+										imdb.setEpisode_realease_dt(mp1.get("episodeReleaseDate"));
+										imdbdao.saveData(imdb);
+										al1.add(imdb.getId());
+									}	
 									
 								}
 					            
