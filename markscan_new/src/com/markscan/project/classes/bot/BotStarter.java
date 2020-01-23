@@ -63,8 +63,8 @@ public class BotStarter {
 		try {
 			
 			Class.forName("com.mysql.jdbc.Driver");  
-			 con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","root","root");
-			 //con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","testuser","M@123rkscan"); 
+			 //con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","root","root");
+			 con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","testuser","M@123rkscan"); 
 			 stmt=con.createStatement();  
 			 rs=stmt.executeQuery("SELECT DISTINCT ip_address from markscan_machine1 where status=0 LIMIT 1");
 			 System.out.println("**********************************************Query Executed*******************");

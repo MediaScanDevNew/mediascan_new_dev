@@ -125,34 +125,21 @@ public class BotSeApplication1 {
 			MediaType.APPLICATION_XML_VALUE })
 	// @RequestMapping("/check")
 	@ResponseBody
-	// public String botStart(@RequestHeader String Authorization) throws Exception {
-	public String botStart() throws Exception {
+	 public String botStart(@RequestHeader String Authorization) throws Exception {
+	//public String botStart() throws Exception {
 
-		 String Authorization="11";
+		 //String Authorization="11";
 		 String s=Authorization;
 		
 		 if(!Authorization.equals(null)) {
 			 System.out.println("Testing-------------------");
 			 myIP = myIPaddress();
-			 System.out.println("========== ip address-------" + myIP);
+			 
 		try {
-			// System.setProperty("webdriver.gecko.driver",
-			// "/home/hduser/Videos/gckodriver/geckodriver");
-
 			System.setProperty("webdriver.chrome.driver", "/home/hduser/Videos/Driver/chromedriver");
-
-			// System.setProperty("webdriver.gecko.driver",
-			// "D:\\geckodriver.exe");
-			// System.setProperty("webdriver.firefox.marionette",
-			// "D:\\geckodriver.exe");
-			// System.setProperty("webdriver.firefox.marionette",
-			// "D://harry/gecko_driver/geckodriver.exe");
-			// driver = new FirefoxDriver();
-
 			driver = new ChromeDriver();
 			serviceDetail();
 			sendMail = false;
-			System.out.println("========== sendMail-------" + sendMail);
 		} catch (Exception e) {
 			System.out.println("================Parent Exception==========" + e);
 			serviceDetail();
@@ -385,7 +372,16 @@ public class BotSeApplication1 {
 					wv.whitelistChecking(projectId);
 					wv.greylistChecking(projectId);
 					wv.blacklistChecking(projectId);
-					
+				//---------------------------------------------------------------------------------------------	
+                   /**
+                    * new code added by Pentation/M (22.01.2020)
+                    * call iwl enginee from BOT SE application.....
+                    * */
+					/*String otpurl = "http://localhost:8083/crawler/?projectId="+projectId;
+					URL url = new URL(otpurl);
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");*/
+				//-----------------------------------------------------------------------------------------------	
 					// mms.machineStatusFree(myIP);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -953,10 +949,10 @@ public class BotSeApplication1 {
 			pName = (String) prj[0];
 			ctype = Integer.parseInt((String) prj[1]);
 
-			System.out.println("**********************Client Type*********" + ctype);
+			System.out.println("**********Client Type*********" + ctype);
 
 		}
-		System.out.println("**********************Client Type1*********" + ctype);
+		System.out.println("*********Client Type1*********" + ctype);
 		cdata = cms.findCustomData(ctype);
 		for (Object[] cmd : cdata) {
 			client_name = (String) cmd[0];
@@ -1280,6 +1276,8 @@ public class BotSeApplication1 {
 			}
 
 		} catch (TimeoutException ex) {
+			//System.out.println("Using Javascript-" + ex.getMessage());
+			//ex.printStackTrace();
 			try {
 				printTitle = driver.getTitle();
 				System.out.println("Print Title: ====================================> " + printTitle);

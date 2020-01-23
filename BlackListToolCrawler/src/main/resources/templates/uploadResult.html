@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Upload Result</title>
+<style>
+table {
+	border-collapse: collapse;
+}
+
+table, td, th {
+	border: 1px solid black;
+}
+</style>
+</head>
+
+<body>
+	<!--    <th:block th:include="/_menu"></th:block> -->
+
+	Description:
+	<span th:utext="${description}"></span>
+	<br />
+	<h3>Uploaded Files:</h3>
+
+	<ul th:each="file : ${uploadedFiles}">
+		<li th:utext="${file}"></li>
+	</ul>
+
+	<h3>Failed:</h3>
+	<ul th:each="file : ${failedFiles}">
+		<li style="color: red;" th:utext="${file}"></li>
+	</ul>
+
+	<h3>Error:</h3>
+	<ul th:each="file : ${Error}">
+		<li style="color: red;" th:utext="${file}"></li>
+	</ul>
+
+<h3>Result:</h3>
+	<table>
+		<tr>
+			<th>DateWise Link</th>
+			<th>Search Keyword</th>
+			<th>Infringing Count</th>
+			<th>Source Count</th>
+		</tr>
+		<tr th:each="prod : ${Result}">
+			<td th:text="${prod.infringing_link}"></td>
+			<td th:text="${prod.search_keyword}"></td>
+			<td th:text="${prod.projectid}"></td>
+			<td th:text="${prod.row_in_use}"></td>
+		</tr>
+	</table>
+
+</body>
+
+</html>

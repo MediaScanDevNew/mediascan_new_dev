@@ -391,6 +391,7 @@ public class Reporting extends ActionSupport {
 					if((projecttype==4 || projecttype==5) && (language.equalsIgnoreCase("English")))
 					{
 						//HashMap<String, HashMap<String, HashMap<String, String>>>
+						
 						TheMovieDb mvDb = new TheMovieDb();
 						HashMap<String, HashMap<String, HashMap<String, String>>> contentList = mvDb.getEnglishTvShowDtails(propertyName_name);
 						if(!contentList.isEmpty()){
@@ -410,8 +411,8 @@ public class Reporting extends ActionSupport {
 									
 									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 									String episode_realse_dt = mp1.get("episodeReleaseDate");
-									String realseDate = realeasingDate.replaceAll("-", "/");
-									if(sdf.parse(episode_realse_dt).after(sdf.parse(realseDate))){
+									String realseDate[] = realeasingDate.split(" ");
+									if(sdf.parse(episode_realse_dt).after(sdf.parse(realseDate[0]))){
 									
 										imdb.setProjectName(propertyName_name);
 										imdb.setSeason_name(mp1.get("seasonName"));
@@ -429,9 +430,6 @@ public class Reporting extends ActionSupport {
 					        } 
 							
 						}
-
-						
-					
 					}
 					
 					

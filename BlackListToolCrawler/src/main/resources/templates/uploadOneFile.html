@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ 
+   <head>
+      <meta charset="UTF-8">
+      <title>Upload One File</title>
+      
+      <style type="text/css">
+      table {
+    border-collapse: collapse;
+}
+
+table, td {
+    border: 1px solid black;
+}
+      </style>
+   </head>
+   
+   <body>
+  <!--     <th:block th:include="/_menu"></th:block> -->
+       
+      <h3>Upload One File:</h3>
+       
+      <!-- MyUploadForm -->
+       
+      <form th:object="${myUploadForm}" method="POST"
+         action="" enctype="multipart/form-data">
+         Description:
+         
+         <input th:field="*{description}" style="width:300px;"/>                
+         <br/>User ID:
+          <input th:field="*{user_id}" style="width:300px;"/>                
+         <br/>Project ID:
+          <input th:field="*{project_id}" style="width:300px;"/>                
+         <br/>
+         <br/>  
+         File to upload: <input th:field="*{fileDatas}" type="file"/>
+         <br />  
+         <input type="submit" value="Upload">
+      </form>
+       <h2>File format is CSV and file type is mentioned below</h2>
+       <table>
+       <tr>
+       <td>Link</td>
+       <td>Search keyword</td>
+       <td>project id</td>
+       </tr>
+       </table>
+       
+   </body>
+</html>
