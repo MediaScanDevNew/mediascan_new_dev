@@ -761,6 +761,7 @@ public class BotSeApplication1 {
 						 * */
 						
 						String title = getTitleFromEachLinks(lnk);
+						System.out.println("The save title is ------------------------------>"+title);
 						
 						mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()), title);
 						System.out.println("=== running.....first. running..............");
@@ -789,7 +790,7 @@ public class BotSeApplication1 {
 								 * */
 								
 								String title = getTitleFromEachLinks(lnk);
-								
+								System.out.println("The save title is ------------------------------>"+title);
 								mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
 										title);
 
@@ -834,7 +835,7 @@ public class BotSeApplication1 {
 							 * */
 							
 							String title = getTitleFromEachLinks(lnk);
-							
+							System.out.println("The save title is ------------------------------>"+title);
 							mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
 									title);
 							b2 = true;
@@ -858,6 +859,7 @@ public class BotSeApplication1 {
 								 * */
 								
 								String title = getTitleFromEachLinks(lnk);
+								System.out.println("The save title is ------------------------------>"+title);
 								mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
 										title);
 								// break;
@@ -1424,6 +1426,7 @@ public class BotSeApplication1 {
 					// Using Java script
 					JavascriptExecutor jse = (JavascriptExecutor)driver;
 					String titlebyJavascript= (String) jse.executeScript("return document.title");
+					printTitle = titlebyJavascript;
 					System.out.println("Title of webpage by Javascript :-"+titlebyJavascript);
 					
 					if(titlebyJavascript == null || titlebyJavascript.isEmpty()) {
@@ -1539,18 +1542,21 @@ public class BotSeApplication1 {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					// driver.get(next.getAttribute("href"));
 					getLink = driver.findElements(By.xpath(xpthAnchorGoogle));
-					/*
-					 * for (WebElement we : getLink) {
-					 * links.add(we.getAttribute("href"));
-					 * 
-					 * //getHref = we.getAttribute("href"); // for confirm
-					 * //System.out.println("printurl - try:- "+getHref);
-					 * 
-					 * //getTitleFromEachLinks(); // later hide }
-					 */
-
-					// Selenium for checking Button is present or not first he
-					// clicked then check
+					
+					  for (WebElement we : getLink) {
+					  links.add(we.getAttribute("href"));
+					  /* 
+							 * //getHref = we.getAttribute("href"); // for confirm
+							 * //System.out.println("printurl - try:- "+getHref);
+							 * 
+							 * //getTitleFromEachLinks(); // later hide }
+							 */
+		
+							// Selenium for checking Button is present or not first he
+							// clicked then check
+					  } // end loop here
+					  
+					  
 					nextGoogle = driver.findElement(By.xpath(xpthNextGoogle));
 					if (nextGoogle.isDisplayed() || nextGoogle.isEnabled()) {
 						System.out.println("----------------" + "\n" + "founded - Next Page");
@@ -1561,6 +1567,7 @@ public class BotSeApplication1 {
 						System.out.println("else break");
 						break;
 					}
+				  
 				} catch (NoSuchElementException e) {
 					// e.printStackTrace();
 					System.out.println("\n" + "==== next button not available ====");
