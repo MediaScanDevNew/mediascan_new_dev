@@ -109,13 +109,15 @@ public class CrawleController {
    * */
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String uploadFileHandler(@RequestParam("projectId") int projectId) {
+	public String uploadFileHandler(@RequestParam("projectId") int projectId, @RequestParam("flag") int flag ) {
 		
 		ArrayList<IWLDataBean> iwl_list = new ArrayList<IWLDataBean>();
 		String msg = "done";
 		System.out.println("project id is ------->"+projectId);
+		System.out.println("flag is ------->"+flag);
 		try {
-			iwl_list = new IWLDataProcess().DataProcess(projectId);
+			iwl_list = new IWLDataProcess().DataProcess(projectId,flag);
+			System.out.println("iwl_list:--->"+iwl_list.size());
 			if(!iwl_list.isEmpty()){
 				for(IWLDataBean bn : iwl_list){
 				   int val = tellynagariLink(bn.getCrawle_url2(), bn.getKeyphase(), bn.getUser_id(), "1", bn.getProject_id());
@@ -333,17 +335,20 @@ public class CrawleController {
 		link_size = 0;
 		source_link_size = 0;
 		try {
+			System.out.println("inside tellynagariLink-----------"+pageSourceCode);
 			doc = Jsoup.parse(pageSourceCode);
 			// get all links and recursively call the processPage method
 			links = doc.select("a[onclick]");
+			System.out.println("Links in telly----->"+links.size());
 			for (Element link : links) {
 				Infringing_source is = new Infringing_source();
 				if (link.text().toLowerCase().contains(keyword.toLowerCase())) {
 					// modifing URL by method urlModifier()
 					modifiedURL = urlModifier(pageSourceCode,
 							link.attr("onclick").replace("itm", "").replace("(", "").replace(")", "").replace("'", ""));
-
+					
 					sourceLink = srcExtractor__c.srcLink_Extractor(modifiedURL.trim());
+					System.out.println("sourceLink----->"+sourceLink);
 					is.setInfringing_link_by_date(URL);
 					is.setInfi_time(nowTime());
 					is.setInfringing_link(modifiedURL);

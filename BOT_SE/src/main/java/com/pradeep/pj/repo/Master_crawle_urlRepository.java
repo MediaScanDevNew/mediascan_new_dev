@@ -32,7 +32,7 @@ public interface Master_crawle_urlRepository extends CrudRepository<Master_crawl
 	List<Object[]> getDomainProjectWise(int projectId);
 	
 	@Modifying
-	@Query(nativeQuery = true ,value="UPDATE master_crawle_url set w_list=1 where id =?1")
+	@Query(nativeQuery = true ,value="UPDATE master_crawle_url set wh_list=1 where id =?1")
 	@Transactional
 	int updateWhitelistedDomain(int id);
 	
@@ -41,7 +41,7 @@ public interface Master_crawle_urlRepository extends CrudRepository<Master_crawl
 	@Transactional
 	int updateOtherStatus(int projectId);
 	
-	@Query(nativeQuery = true ,value="Select id,domain_name,crawle_url2 from master_crawle_url  where project_id=?1 and w_list=0 and is_new=1")
+	@Query(nativeQuery = true ,value="Select id,domain_name,crawle_url2,title from master_crawle_url  where project_id=?1 and wh_list=0 and is_new=1")
 	List<Object[]> getNotWhitelistedDomain(int projectId);
 	
 	@Modifying

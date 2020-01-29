@@ -17,7 +17,7 @@ public class IWLDataProcess {
 	Connection con= null;
 	
 	
-	public ArrayList<IWLDataBean> DataProcess(int projectId,int flag) throws SQLException {
+	public ArrayList<IWLDataBean> DataProcess(int projectId) throws SQLException {
 		
 		ArrayList<IWLDataBean> iwl_list = new ArrayList<IWLDataBean>();
 		try{

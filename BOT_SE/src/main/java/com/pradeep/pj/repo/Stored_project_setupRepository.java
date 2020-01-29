@@ -67,11 +67,17 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 	//------------------------ 20.12.2019 -----------------------------------------
 	
 	@Modifying(clearAutomatically = true)
-	@Query(value = "update stored_project_setup1 set bing=2,duckduckgo=1 where id= (:id)", nativeQuery = true)
+	@Query(value = "update stored_project_setup1 set bing=1,duckduckgo=2 where id= (:id)", nativeQuery = true)
 	int bingcomplate(@Param("id") int id);
 	
 	@Modifying(clearAutomatically = true)
-	@Query(value = "update stored_project_setup1 set duckduckgo=2,russiaGo=1 where id= (:id)", nativeQuery = true)
+	@Query(value = "update stored_project_setup1 set duckduckgo=1,russiaGo=2 where id= (:id)", nativeQuery = true)
 	int duckduckGocomplate(@Param("id") int id);
+	
+	/** Added on Jan/27 to track end of Russian Search engine crawl **/
+	/** End of Russian Search Engine */
+	@Modifying(clearAutomatically = true)
+	@Query(value = "update stored_project_setup1 set russiaGo=1 where id= (:id)", nativeQuery = true)
+	int russiacomplete(@Param("id") int id);
 
 }

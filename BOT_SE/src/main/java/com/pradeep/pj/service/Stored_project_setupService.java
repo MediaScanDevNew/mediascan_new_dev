@@ -77,4 +77,11 @@ public class Stored_project_setupService {
 	public int russiaGoStartduckduckGoComplete(int id) {
 		return ssr.duckduckGocomplate(id);
 	}
+	
+	/** Added on Jan/27 to track end of Russian Search engine crawl **/
+	/** End of Russian Search Engine */ 
+	@Transactional
+	public int russiacomplete(int id) {
+		return ssr.russiacomplete(id);
+	}
 }

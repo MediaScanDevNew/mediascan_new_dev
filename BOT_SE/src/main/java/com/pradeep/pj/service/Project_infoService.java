@@ -20,6 +20,9 @@ public class Project_infoService {
 
 	@Autowired
 	Project_infoRepository pir;
+	
+	@Autowired
+	Project_infoRepository projInfo;
 
 	public String findALLCustom(int pid) {
 //		List<Object[]> allCustomRecords = new ArrayList<>();
@@ -27,6 +30,9 @@ public class Project_infoService {
 		System.out.println("The pid value is ------------------------------------>"+pid);
 		return pir.AllDataCustom(pid);
 	}
+	
+	
+	
 	public List<Object[]> findCustomData(int pid)
 	{
 		List<Object[]> allCustomRecords = new ArrayList<>();
@@ -34,5 +40,8 @@ public class Project_infoService {
     	return allCustomRecords;
 		
 	}
+	
+	
+	
 
 }

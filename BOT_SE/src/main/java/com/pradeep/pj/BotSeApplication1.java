@@ -10,6 +10,7 @@ import java.net.NetworkInterface;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -54,7 +55,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pradeep.pj.model.IWLDataBean;
 import com.pradeep.pj.repo.Master_crawle_urlRepository;
+import com.pradeep.pj.repo.impl.IWLDataProcess;
 import com.pradeep.pj.service.Blacklist_sitesService;
 import com.pradeep.pj.service.BotRunningStatusService;
 import com.pradeep.pj.service.Client_MasterService;
@@ -90,7 +93,7 @@ public class BotSeApplication1 {
 	@Autowired
 	private Master_crawle_urlService mcus;
 	@Autowired
-	private PageSource ps;
+	private PageSourceBot ps;
 	@Autowired
 	private Markscan_usersService mus;
 	@Autowired
@@ -100,6 +103,8 @@ public class BotSeApplication1 {
 	
 	@Autowired
 	private WhitelistValidation wv;
+	@Autowired
+	private IWLEngine iwl ;
 
 	List<Object[]> data;
 	List<String> data1;
@@ -116,7 +121,7 @@ public class BotSeApplication1 {
 	String htmlpage = "";
 	boolean sendMail = false;
 	int count1 = 0;
-
+	public static final int PAGES=2;
 	/*
 	 * public static void main(String[] args) { //
 	 * SpringApplication.run(BotSeApplication.class, args);
@@ -317,7 +322,9 @@ public class BotSeApplication1 {
 					russiaGoSearch(keyphrase);
 					afterCrawl(5, keyphrase);
 					links = null;
-					
+					/** Added on Jan/27 to track end of Russian Search engine crawl **/
+					/** End of Russian Search Engine */
+					sps.russiacomplete(id);
 					
 
 					// ---------------------------------------------------------------
@@ -374,6 +381,10 @@ public class BotSeApplication1 {
 					System.out.println("===== duckduck go === links size......." + links.size());
 					afterCrawl(5, keyphrase);
 					links = null;
+					
+					/** Added on Jan/27 to track end of Russian Search engine crawl **/
+					/** End of Russian Search Engine */
+					sps.russiacomplete(id);
 					// ----------------- Pentation -----------------------------
 				} else if (pipe > 5) {
 
@@ -408,12 +419,23 @@ public class BotSeApplication1 {
                     * */
 					
 					
-					String otpurl = "http://localhost:8088/crawler/?projectId="+projectId;
-					URL url = new URL(otpurl);
-					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					conn.setRequestMethod("GET");
+//					String otpurl = "http://localhost:8088/crawler/?projectId="+projectId;
+//					URL url = new URL(otpurl);
+//					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//					conn.setRequestMethod("GET");
 					
+//					String otpurl = "http://localhost:8088/crawler/?projectId="+projectId+"&flag=1";
+//					System.out.println(otpurl);
+//					URL url = new URL(otpurl);
+//					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//					conn.setRequestMethod("GET");
+//					System.out.println("222222222222222222222222------->"+conn.getResponseCode());
 					
+					/**
+	                    * new code added by Pentation/M (29.01.2020)
+	                    * call iwl enginee from BOT SE application.....
+	                    * */
+					iwl.iwlEngine(projectId);
 				//-----------------------------------------------------------------------------------------------	
 					// mms.machineStatusFree(myIP);
 				} catch (Exception e) {
@@ -579,7 +601,7 @@ public class BotSeApplication1 {
 			
 			WebElement nextYahoo = driver.findElement(By.xpath(xpthNextYahoo));
 			System.out.println("===Yahoo link===" + nextYahoo.getAttribute("href"));
-			for (int i = 1; i <= 30; i++) {
+			for (int i = 1; i <= PAGES; i++) {
 				try {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					// driver.get(next.getAttribute("href"));
@@ -637,7 +659,7 @@ public class BotSeApplication1 {
 			 */
 			WebElement next = driver.findElement(By.xpath("//a[@title='Next page']"));
 			System.out.println("===bing link===" + next.getAttribute("href"));
-			for (int i = 1; i <= 30; i++) {
+			for (int i = 1; i <= PAGES; i++) {
 				try {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					// driver.get(next.getAttribute("href"));
@@ -697,8 +719,7 @@ public class BotSeApplication1 {
 			}
 			WebElement next = driver.findElement(By.xpath("//a[@id='pnnext']"));
 			next.click();
-
-			for (int i = 1; i <= 30; i++) {
+			for (int i = 1; i <= PAGES; i++) {
 
 				try {
 					Thread.sleep(random_number(8000, 2000), random_number(1000, 100));
@@ -781,7 +802,7 @@ public class BotSeApplication1 {
 					}
 					if (b2 == false) {
 						for (String srckey__ : searchkeywordlist) {
-							System.out.println("=== srckey__ .............." + srckey__);
+//							System.out.println("=== srckey__ .............." + srckey__);
 							if (lnk.toLowerCase().contains(srckey__.trim().toLowerCase())) {
 								/**
 								 *  Add this feature by Pentation team
@@ -1231,7 +1252,7 @@ public class BotSeApplication1 {
 			
 			WebElement nextDuck = driver.findElement(By.xpath(xpthNextDuck));
 			System.out.println("===duckduckgo link===" + nextDuck.getAttribute("href"));
-			for (int i = 1; i <= 30; i++) {
+			for (int i = 1; i <= PAGES; i++) {
 				try {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					// driver.get(next.getAttribute("href"));
@@ -1301,8 +1322,8 @@ public class BotSeApplication1 {
 			 * links.add(we.getAttribute("href")); }
 			 */
 			WebElement nextrussia = driver.findElement(By.xpath(xpthNextRussia));
-			System.out.println("===duckduckgo link===" + nextrussia.getAttribute("href"));
-			for (int i = 1; i <= 30; i++) {
+			System.out.println("===russia Go Search  link===" + nextrussia.getAttribute("href"));
+			for (int i = 1; i <= PAGES; i++) {
 				try {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					// driver.get(next.getAttribute("href"));
@@ -1399,10 +1420,123 @@ public class BotSeApplication1 {
 		return printTitle;
 	}*/
 	
-	
+	//*************28-01-2020 by pentation/m************************//
+	public  String getTitleFromEachLinks(String lnk) {
+		
+		getResponsePage(lnk);
+		String printTitle = "";
+		((JavascriptExecutor) driver).executeScript("window.open()"); 
+		
+		ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
+		int getTabsCount = tabs.size();
+		
+		System.out.println("Total Tabs:- "+getTabsCount);
+		// 2nd Tab
+		driver.switchTo().window(tabs.get(1));
+		
+		try {
+//			driver.get(getHref);
+			driver.navigate().to(lnk);
+			
+			long startTime = System.currentTimeMillis();
+			
+			// Using Java script
+			JavascriptExecutor jse = (JavascriptExecutor)driver;
+			String titlebyJavascript= (String) jse.executeScript("return document.title");
+			printTitle = titlebyJavascript;
+			System.out.println("Title of webpage by Javascript :-"+titlebyJavascript);
+			
+			if(titlebyJavascript == null || titlebyJavascript.isEmpty()) {
+				driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+//				printTitle = driver.getTitle();
+				try {
+					useSpecialWaitForTitle("//title");
+					
+				}
+				catch(Exception useSpecialWaitForTitle) {
+					System.out.println("useSpecialWaitForTitle:- "+useSpecialWaitForTitle.getMessage());
+					
+				}
+				String  tryingPrintTitle12 = driver.getTitle();
+				printTitle=tryingPrintTitle12;
+				System.out.println("trying Print Title12:- "+tryingPrintTitle12);
+			}
+			
+			long endTime = System.currentTimeMillis();
+		    long duration = (endTime - startTime);  //Total execution time in milli seconds
+		    System.out.println("Time taking for print the Title:-"+duration+" Milliseconds");
+			
+		}catch(TimeoutException ex) {
+			System.out.println("Using Javascript-"+ex.getMessage());
+			long startTimeCatch = System.currentTimeMillis();
+			try {
+				printTitle = driver.getTitle();
+				System.out.println("Print Title:- "+printTitle);
+				
+				if(printTitle == null || printTitle.isEmpty()) {
+					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+					try {
+						useSpecialWaitForTitle("//title");
+					}
+					catch(Exception useSpecialWaitForTitle) {
+						System.out.println("useSpecialWaitForTitle:- "+useSpecialWaitForTitle.getMessage());
+					}
+					String  tryingPrintTitle1 = driver.getTitle();
+					printTitle=tryingPrintTitle1;
+					System.out.println("trying Print Title1:- "+tryingPrintTitle1);
+				}
+				
+			}catch(TimeoutException TOEX) {
+				System.out.println("TOEX-"+TOEX.getMessage());
+			}
+			
+			long endTimeCatch = System.currentTimeMillis();
+		    long durationCatch = (endTimeCatch - startTimeCatch);  //Total execution time in milli seconds
+		    System.out.println("Time taking for print the Title in Catch:-"+durationCatch+" Milliseconds");
+		}
+			
+				
+		driver.close(); // close the 2nd tab
+		// 1st Tab
+		driver.switchTo().window(tabs.get(0));
+		
+		// ===================== Hndl Multiple Tabs =====================
+
+		System.out.println("--------------------------------------------");
+		return printTitle;
+	}
+	public static WebElement useSpecialWaitForTitle (String xpathExpression) {
+		WebDriverWait wait = new WebDriverWait(driver,40);
+		try {
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathExpression)));
+		}catch(Exception ex) {
+			System.out.println("Wait Exception:- "+ex.getMessage());
+		}
+		
+		WebElement eleRelxpath =  driver.findElement(By.xpath(xpathExpression));
+		String printInnerText = eleRelxpath.getAttribute("innerText");
+		System.out.println("printInnerText:- "+printInnerText);
+
+		if( printInnerText.isEmpty() || printInnerText == null || printInnerText == "" ) {
+			String TryNo4 = driver.getTitle();
+			System.out.println("Try no 4:- "+TryNo4);
+
+			if( TryNo4.isEmpty() || TryNo4 == null || TryNo4 == "" ) {
+				List <WebElement> getAllTitle = driver.findElements(By.xpath(xpathExpression));
+				if ( getAllTitle.size() >1 ) {
+					System.out.println("getTitleCount:-"+getAllTitle.size());
+					for (int TC = 0 ; TC <getAllTitle.size() ; TC++) {
+						String tooManyTitle =  getAllTitle.get(TC).getAttribute("innerText");
+						System.out.println("Title No:- "+TC+" - "+tooManyTitle);
+					}// for loop
+				} // list checking
+			} // TryNo4 checking
+		} // printInnerText checking
+		return eleRelxpath;	
+	}
 	// ------------------ 25-01-2020 ----------------
 	
-		public String getTitleFromEachLinks(String lnk) {
+		public String getTitleFromEachLinks_old(String lnk) {
 			
 				getResponsePage(lnk);
 				String printTitle = "";
@@ -1472,7 +1606,7 @@ public class BotSeApplication1 {
 				
 		}
 		
-		public static WebElement useSpecialWaitForTitle (String xpathExpression) {
+		public static WebElement useSpecialWaitForTitle_old (String xpathExpression) {
 			WebDriverWait wait = new WebDriverWait(driver,40);
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathExpression)));
 			WebElement sd =  driver.findElement(By.xpath(xpathExpression));
@@ -1537,7 +1671,7 @@ public class BotSeApplication1 {
 
 			WebElement nextGoogle = driver.findElement(By.xpath(xpthNextGoogle));
 			System.out.println("===Google link===" + nextGoogle.getAttribute("href"));
-			for (int i = 1; i <= 30; i++) {
+			for (int i = 1; i <= PAGES; i++) {
 				try {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					// driver.get(next.getAttribute("href"));
