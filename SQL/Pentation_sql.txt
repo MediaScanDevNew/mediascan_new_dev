@@ -126,6 +126,10 @@ ADD COLUMN `g_list` INT NULL DEFAULT '0' AFTER `status`;
 
 ALTER TABLE `webinforcement_demo`.`master_crawle_url`
 ADD COLUMN `is_new_grey` INT NULL DEFAULT '0' AFTER `g_list`;
+
+ALTER TABLE `webinforcement_demo`.`master_crawle_url` 
+ADD COLUMN `title` VARCHAR(255) NULL DEFAULT NULL AFTER `is_new_grey`;
+
 --------------------------------------------------------------------------------------------------
 
 ----------------------- 13.01.2020 ---------------------------------------------------------------
@@ -140,8 +144,87 @@ CREATE TABLE `webinforcement_demo`.`imdb_content_detail` (
   `episodeNm` VARCHAR(150) NULL DEFAULT '0',
   `episode_realease_dt` TIMESTAMP NULL,
   PRIMARY KEY (`id`));
-
-ALTER TABLE `webinforcement_demo`.`master_crawle_url` 
-CHANGE COLUMN `title` `title` VARCHAR(255) NULL DEFAULT NULL ;
-
 ---------------------------------------------------------------------------------------------------
+
+------------------------ 05.02.2020 ---------------------------------------------------------------
+
+ALTER TABLE `webinforcement_demo`.`crawle_url4` 
+ADD COLUMN `page_no` VARCHAR(4) NULL DEFAULT NULL AFTER `is_new_grey`,
+ADD COLUMN `page_rank` VARCHAR(5) NULL DEFAULT NULL AFTER `page_no`;
+----------------------------------------------------------------------------------------------------
+
+ALTER TABLE `webinforcement_demo`.`crawle_url4` 
+ADD COLUMN `page_no` VARCHAR(4) NULL DEFAULT NULL AFTER `w_list_perform`,
+ADD COLUMN `page_rank` VARCHAR(5) NULL DEFAULT NULL AFTER `page_no`;
+-----------------------------------------------------------------------------------------------------------
+
+ALTER TABLE `webinforcement_demo`.`stored_project_setup2` 
+ADD COLUMN `priority` INT(1) NULL AFTER `project_id`;
+-----------------------------------------------------------------------------------------------------------
+
+---------------- 07.02.2020-----------------------------------------------------------------------------------
+
+ALTER TABLE `webinforcement_demo`.`markscan_projecttype` 
+ADD COLUMN `db_generated_keyphrase` INT(1) NULL DEFAULT '0' AFTER `name`;
+
+UPDATE `webinforcement_demo`.`markscan_projecttype` SET `db_generated_keyphrase`='1' WHERE `id`='4';
+
+ALTER TABLE `webinforcement_demo`.`project_info` 
+ADD COLUMN `genre` VARCHAR(45) NULL DEFAULT NULL AFTER `last_updated_on`;
+
+
+ALTER TABLE `webinforcement_demo`.`blacklist_sites` 
+ADD COLUMN `project_id` INT(5) NULL AFTER `is_active`;
+--------------------------------------------------------------------------------------------------------------
+
+------------------------ 10.02.2020 ---------------------------------------------------------------------------
+ALTER TABLE `webinforcement_demo`.`bl_infringing_source` 
+ADD COLUMN `page_no` VARCHAR(5) NULL DEFAULT NULL AFTER `data_move_i`,
+ADD COLUMN `page_rank` VARCHAR(5) NULL DEFAULT NULL AFTER `page_no`;
+
+
+ALTER TABLE `webinforcement_demo`.`crawle_url4` 
+ADD COLUMN `delivery format` VARCHAR(45) NULL DEFAULT NULL AFTER `page_rank`;
+
+
+---------------------------------------------------------------------------------------------------------------
+
+---------------------- 11.02.2020 ----------------------------------------------------------------
+NOT REQUIRED AT THIS MOMENT:
+
+CREATE TABLE `markscan_iwl_machine` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `ip_address` varchar(255) DEFAULT NULL,
+  `db_name` varchar(255) DEFAULT NULL,
+  `user_name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `port` varchar(255) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `iwl_version` varchar(255) DEFAULT NULL,
+  `iwl_status` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `webinforcement_demo`.`markscan_iwl_machine` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+
+INSERT INTO `webinforcement_demo`.`markscan_iwl_machine` (`name`, `ip_address`, `db_name`, `port`, `status`, `iwl_version`, `iwl_status`) VALUES ('IWL_Server1', '127.0.0.1', 'webinforcement_demo', '8088', '0', '', '0');
+----------------------------------------------------------------------------------------------------------
+
+
+-------------------- 12.02.2020 ---------------------------------------------------------------------------
+
+CREATE TABLE `webinforcement_demo`.`genre` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `project_type` INT NULL,
+  `language` VARCHAR(45) NULL,
+  `genre` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `webinforcement_demo`.`crawle_url4` 
+ADD COLUMN `iwl_failed` INT(1) NOT NULL DEFAULT 0 AFTER `page_rank`;
+
+---------------------------------------------------------------------------------------------------------------
+
