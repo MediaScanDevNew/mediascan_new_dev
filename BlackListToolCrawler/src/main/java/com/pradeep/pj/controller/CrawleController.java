@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,14 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -41,9 +50,12 @@ import com.pradeep.pj.crawl.source.FindDomainName;
 import com.pradeep.pj.crawl.source.PageSource;
 import com.pradeep.pj.crawl.source.SourceLinkExtracter;
 import com.pradeep.pj.form.MyUploadForm;
+import com.pradeep.pj.model.Crawle_url4;
 import com.pradeep.pj.model.IWLDataBean;
 import com.pradeep.pj.model.Infringing_source;
 import com.pradeep.pj.property.AlbelaLinks;
+import com.pradeep.pj.repo.Crawle_url4Repository;
+import com.pradeep.pj.repo.impl.Crawle_url4RepoIMPL;
 import com.pradeep.pj.repo.impl.IWLDataProcess;
 import com.pradeep.pj.repo.impl.InfringingSourceRepositoryIMPL;
 
@@ -51,18 +63,20 @@ import com.pradeep.pj.repo.impl.InfringingSourceRepositoryIMPL;
  * @author pradeep 18dec2017
  *
  */
-//@Controller
-@RestController
+@Controller
+//@RestController
 public class CrawleController {
 	private static final Logger logger = LoggerFactory.getLogger(CrawleController.class);
-
+	HttpGet httpget = null;
 	/**
 	 * 
 	 */
 	public CrawleController() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	@Autowired
+	private Crawle_url4Repository crawleRepo;
 	@Autowired
 	private InfringingSourceRepositoryIMPL isri;
 
@@ -70,13 +84,13 @@ public class CrawleController {
 	private AlbelaLinks propFile;
 
 	@Autowired
-	private PageSource pageSource__c;
-
-	@Autowired
 	private FindDomainName domain_name__c;
 
 	@Autowired
 	private SourceLinkExtracter srcExtractor__c;
+	
+	@Autowired
+	private Crawle_url4RepoIMPL cui;
 
 	/**
 	 * ==============================
@@ -90,15 +104,15 @@ public class CrawleController {
 		model.addAttribute("myUploadForm", myUploadForm);
 
 		return "uploadOneFile";
-	}*/
+	}
 	
 	
 	// POST: Do Upload
-		/*@RequestMapping(value = "/", method = RequestMethod.POST)
-		public String uploadOneFileHandlerPOST(HttpServletRequest request, //
-				Model model, //
+		@RequestMapping(value = "/", method = RequestMethod.POST)
+		public String uploadOneFileHandlerPOST(HttpServletRequest request, 
+				Model model, 
 				@ModelAttribute("myUploadForm") MyUploadForm myUploadForm) {
-
+			System.out.println		("----------------inside-----------------");
 			return this.doUpload(request, model, myUploadForm);
 
 		}*/
@@ -106,24 +120,30 @@ public class CrawleController {
   /**
    *  New GET method API implementation by Pentation/M for automated IWL Enginee.....
    *  Fetch record from master_crawle_url for every project...
+ * @throws UnknownHostException 
    * */
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String uploadFileHandler(@RequestParam("projectId") int projectId, @RequestParam("flag") int flag ) {
+	@RequestMapping(value = "/startIWL", method = RequestMethod.GET)
+	public String uploadFileHandler(@RequestParam("projectIds") String projectIds, @RequestParam("flag") int flag ) throws UnknownHostException {
 		
 		ArrayList<IWLDataBean> iwl_list = new ArrayList<IWLDataBean>();
 		String msg = "done";
-		System.out.println("project id is ------->"+projectId);
+		System.out.println("project id is ------->"+projectIds);
 		System.out.println("flag is ------->"+flag);
 		try {
-			iwl_list = new IWLDataProcess().DataProcess(projectId,flag);
+			String[] ids=projectIds.split(",");
+			for( int i=0;i<ids.length;i++){
+			iwl_list = new IWLDataProcess().DataProcess(Integer.parseInt(ids[i]));
 			System.out.println("iwl_list:--->"+iwl_list.size());
 			if(!iwl_list.isEmpty()){
 				for(IWLDataBean bn : iwl_list){
-				   int val = tellynagariLink(bn.getCrawle_url2(), bn.getKeyphase(), bn.getUser_id(), "1", bn.getProject_id());
-				   /*if(val > 0){
-				   }*/
+					if (bn.getCrawle_url2().toLowerCase().contains(propFile.getTellyNagariLink().toLowerCase())){
+						tellynagariLink(bn.getCrawle_url2(), bn.getKeyphase(), bn.getUser_id(), InetAddress.getLocalHost().getHostAddress(), bn.getProject_id());
+					}else{
+						linkCrowle(bn.getCrawle_url2(), bn.getKeyphase(), bn.getUser_id(),InetAddress.getLocalHost().getHostAddress(), bn.getProject_id());
+					}
 				}
+			}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -143,7 +163,7 @@ public class CrawleController {
 	MultipartFile fileDatas = null;
 	String name = null;
 
-	private String doUpload(HttpServletRequest request, Model model, //
+	private String doUpload(HttpServletRequest request, Model model, 
 			MyUploadForm myUploadForm) {
 
 		logger.info(propFile.getTellyNagariLink());
@@ -244,7 +264,7 @@ public class CrawleController {
 		model.addAttribute("Result", result);
 		return "uploadResult";
 	}
-
+	
 	String keyword = null;
 	List<Infringing_source> report = null;
 	List<Infringing_source> result = null;
@@ -263,14 +283,15 @@ public class CrawleController {
 		link_size = 0;
 		source_link_size = 0;
 		try {
-
-			doc = Jsoup.parse(pageSource__c.html2Doc(URL));
+			System.out.println("url:--->"+URL);
+			doc = Jsoup.parse(html2Doc(URL));
 
 			// get all links and recursively call the processPage method
 			links = doc.select("a[href]");
 			// domain = findDomain(URL);
 			for (Element link : links) {
 				Infringing_source is = new Infringing_source();
+				Crawle_url4 c4=new Crawle_url4();
 				if (link.text().toLowerCase().contains(keyword.toLowerCase())) {
 					//logger.info(link.text() + "---------------" + link.attr("href"));
 					sourceLink = srcExtractor__c.srcLink_Extractor(link.attr("href"));
@@ -278,12 +299,19 @@ public class CrawleController {
 					is.setInfringing_link_by_date(URL);
 					is.setInfi_time(nowTime());
 					is.setInfringing_link(link.attr("href"));
+					c4.setLink_logger_srclink(link.attr("href"));
 					is.setDomain(domain_name__c.findDomain(URL));
+					c4.setDomain_name(domain_name__c.findDomain(URL));
 					is.setUserid(userid);
+					c4.setUser_id(userid);
 					is.setProjectid(projectid);
+					c4.setProject_id(projectid);
 					is.setSearch_keyword(keyword);
+					c4.setNote2(keyword);
+					c4.setLink_logger(1);
 					if (sourceLink.length() > 7 && !sourceLink.equals(null)) {
 						is.setSource_link(sourceLink);
+						c4.setCrawle_url2(sourceLink);
 						is.setSource_domain(domain_name__c.findDomain(sourceLink));
 						is.setSource_time(nowTime());
 						is.setRow_in_use(2);
@@ -294,10 +322,23 @@ public class CrawleController {
 
 					link_size = link_size + 1;
 					is = null;
+				}else{
+					int url_id=crawleRepo.getIdByURL(URL);
+					if(url_id>0){
+						crawleRepo.updateIWLErrorField(url_id);
+					}else{
+						crawleRepo.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			int url_id=crawleRepo.getIdByURL(URL);
+			if(url_id>0){
+				crawleRepo.updateIWLErrorField(url_id);
+			}else{
+				crawleRepo.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+			}
 		} finally {
 			doc = null;
 			links = null;
@@ -330,7 +371,7 @@ public class CrawleController {
 	private String sourceLink = null;
 
 	public int tellynagariLink(String URL, String keyword, int userid, String ipadd, int projectid) {
-		pageSourceCode = pageSource__c.html2Doc(URL);
+		pageSourceCode = html2Doc(URL);
 		sourceLink = "";
 		link_size = 0;
 		source_link_size = 0;
@@ -342,6 +383,7 @@ public class CrawleController {
 			System.out.println("Links in telly----->"+links.size());
 			for (Element link : links) {
 				Infringing_source is = new Infringing_source();
+				Crawle_url4 c4=new Crawle_url4();
 				if (link.text().toLowerCase().contains(keyword.toLowerCase())) {
 					// modifing URL by method urlModifier()
 					modifiedURL = urlModifier(pageSourceCode,
@@ -349,30 +391,50 @@ public class CrawleController {
 					
 					sourceLink = srcExtractor__c.srcLink_Extractor(modifiedURL.trim());
 					System.out.println("sourceLink----->"+sourceLink);
-					is.setInfringing_link_by_date(URL);
+					
+					is.setInfringing_link_by_date(URL); //crawle_url2
 					is.setInfi_time(nowTime());
 					is.setInfringing_link(modifiedURL);
+					c4.setLink_logger_srclink(modifiedURL);
 					is.setDomain(domain_name__c.findDomain(URL));
+					c4.setDomain_name(domain_name__c.findDomain(URL));
 					is.setUserid(userid);
+					c4.setUser_id(userid);
 					is.setProjectid(projectid);
+					c4.setProject_id(projectid);
 					is.setSearch_keyword(keyword);
-
+					c4.setNote2(keyword);
+					c4.setLink_logger(1);
 					if (sourceLink.length() > 7 && !sourceLink.equals(null)) {
 						is.setSource_link(sourceLink);
-						is.setSource_domain(domain_name__c.findDomain(sourceLink));
+						c4.setCrawle_url2(sourceLink);
+						is.setSource_domain(domain_name__c.findDomain(sourceLink));			
 						is.setSource_time(nowTime());
 						is.setRow_in_use(2);
 						source_link_size = source_link_size + 1;
 					}
 					isri.addData(is);
-
+					cui.addData(c4);
 					link_size = link_size + 1;
 					is = null;
+				}else{
+					int url_id=crawleRepo.getIdByURL(URL);
+					if(url_id>0){
+						crawleRepo.updateIWLErrorField(url_id);
+					}else{
+						crawleRepo.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+					}
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			int url_id=crawleRepo.getIdByURL(URL);
+			if(url_id>0){
+				crawleRepo.updateIWLErrorField(url_id);
+			}else{
+				crawleRepo.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+			}
 		} finally {
 			modifiedURL = null;
 			links = null;
@@ -468,6 +530,46 @@ public class CrawleController {
 		}
 
 		return modifyUrl;
+	}
+	public String html2Doc(String uurl) {
+		logger.info("---- link is ---" + uurl);
+		String pageSource = "";
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		try {
+			httpget = new HttpGet(uurl.trim());
+
+			logger.info("Executing request " + httpget.getRequestLine());
+
+			// Create a custom response handler
+			ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+
+				public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+					int status = response.getStatusLine().getStatusCode();
+					if (status >= 200 && status < 300) {
+						HttpEntity entity = response.getEntity();
+						return entity != null ? EntityUtils.toString(entity) : null;
+					} else {
+						throw new ClientProtocolException("Unexpected response status: " + status);
+					}
+				}
+
+			};
+			pageSource = httpclient.execute(httpget, responseHandler);
+		} catch (ClientProtocolException e) {
+			pageSource = "Unexpected response status: 404";
+		} catch (Exception e) {
+			httpget = null;
+			e.printStackTrace();
+
+		} finally {
+			httpget = null;
+			try {
+				httpclient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}return pageSource;
 	}
 
 }

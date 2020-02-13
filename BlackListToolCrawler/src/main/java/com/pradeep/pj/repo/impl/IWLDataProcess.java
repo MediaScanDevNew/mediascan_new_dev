@@ -17,7 +17,7 @@ public class IWLDataProcess {
 	Connection con= null;
 	
 	
-	public ArrayList<IWLDataBean> DataProcess(int projectId,int flag) throws SQLException {
+	public ArrayList<IWLDataBean> DataProcess(int projectId) throws SQLException {
 		
 		ArrayList<IWLDataBean> iwl_list = new ArrayList<IWLDataBean>();
 		try{
@@ -30,7 +30,7 @@ public class IWLDataProcess {
     		con=DriverManager.getConnection(connection_url,connection_userNm,connection_userPwd);
     		
 			String sql = " SELECT a.id,a.crawle_url2,b.keyphrase,a.user_id,a.project_id FROM master_crawle_url a,stored_project_setup1 b "
-					     + "where a.stored_project_setup_id = b.id and projectId = ?";
+					     + "where a.stored_project_setup_id = b.id and projectId = ? ";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, projectId);
 			rs = ps.executeQuery();
