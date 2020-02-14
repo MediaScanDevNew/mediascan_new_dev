@@ -481,7 +481,7 @@ public class ProjSetup extends ActionSupport {
 	 */
 
 	//public void storeData(int uid, BeanFactory bf, String keyp, int pi, String mach, int preoty, int bls) {
-	public void storeData(int uid, BeanFactory bf, String keyp, int pipe) {
+	public void storeData(int uid, BeanFactory bf, String keyp, int pipe,int priority) {
 		Stored_project_setup1Dao dao = null;
 		Stored_project_setup1 sps = null;
 		try {
@@ -489,6 +489,7 @@ public class ProjSetup extends ActionSupport {
 			// String query = "";
 			sps = new Stored_project_setup1();
 			sps.setKeyphrase(keyp);
+			System.out.println("Property name is ------------------->"+propertyName);
 			sps.setProjectId(propertyName);
 			sps.setUserId(uid);
 			sps.setGoogle(0);
@@ -496,7 +497,8 @@ public class ProjSetup extends ActionSupport {
 			sps.setBing(0);
 			sps.setPipe(pipe);
 			sps.setDuckduckgo(0);
-			sps.setRussiaGo(0);
+			sps.setRussiago(0);
+			sps.setPriority(priority);
 			//sps.setBls(bls);
 			//dao.saveData(sps);
 			dao.saveData(sps);
@@ -525,13 +527,18 @@ public class ProjSetup extends ActionSupport {
 			int count = Integer.parseInt(request.getParameter("count"));
 			int count1 = 0;
 			String keywords = request.getParameter("keyword1").trim();
+			System.out.println("keywords value is ----------------->"+keywords);
+			System.out.println("count value is -------------------->"+count);
+			
+			
 			if (keywords.equals("Static Keyword")) {
+				int priority = 0 ;
 				for (int i = 1; i <= count; i++) {
 					try {
 						keyph1 = request.getParameter(String.valueOf(i));
 						int pipe1 = Integer.parseInt(request.getParameter(keyph1));
 						if (keyph1 != null) {
-							storeData((int) session2.getAttribute("uid"), factory, keyph1, pipe1);
+							storeData((int) session2.getAttribute("uid"), factory, keyph1, pipe1,priority);
 							count1 = 1;
 						}
 
@@ -552,13 +559,15 @@ public class ProjSetup extends ActionSupport {
 
 			// **************************Dynamic Keyword
 			if (keywords.equals("Dynamic Keyword")) {
+				int priority = 1 ;
 				for (int i = 1; i <= count; i++) {
 					try {
 						String pi = "pip" + i;
 						keyph1 = request.getParameter(String.valueOf(i));
+						System.out.println("keyph1 ------------------>"+keyph1);
 						int pipe1 = Integer.parseInt(request.getParameter(pi));
 						if (keyph1.length() != 0) {
-							storeData((int) session2.getAttribute("uid"), factory, keyph1, pipe1);
+							storeData((int) session2.getAttribute("uid"), factory, keyph1, pipe1,priority);
 							count1 = 1;
 						}
 
@@ -575,6 +584,8 @@ public class ProjSetup extends ActionSupport {
 
 				}
 			}
+			
+			System.out.println("count1 value is -------------------->"+count1);
 			if (count1 == 1) {
 				System.out.println("********************count1*********" + count1);
 				bstr = new BotStarter();

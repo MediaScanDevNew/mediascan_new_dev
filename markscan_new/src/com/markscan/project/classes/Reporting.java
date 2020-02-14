@@ -392,14 +392,17 @@ public class Reporting extends ActionSupport {
 					{
 						//HashMap<String, HashMap<String, HashMap<String, String>>>
 						
+						System.out.println("=================== in side imdb details ==============");
+						
 						TheMovieDb mvDb = new TheMovieDb();
 						HashMap<String, HashMap<String, HashMap<String, String>>> contentList = mvDb.getEnglishTvShowDtails(propertyName_name);
 						if(!contentList.isEmpty()){
 							
 							for (String name : contentList.keySet())  
 					        { 
-					            // search  for value 
+					            // search  for value https://www.tutorialspoint.com/how-to-compare-two-dates-in-java 
 								HashMap<String, HashMap<String, String>> mp = contentList.get(name); 
+								System.out.println("IMDB Contents ===========>"+mp);
 								for(String nm : mp.keySet()){
 									HashMap<String, String> mp1= mp.get(nm);
 									Imdb_content_detail imdb = new Imdb_content_detail();
@@ -412,8 +415,17 @@ public class Reporting extends ActionSupport {
 									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 									String episode_realse_dt = mp1.get("episodeReleaseDate");
 									String realseDate[] = realeasingDate.split(" ");
-									if(sdf.parse(episode_realse_dt).after(sdf.parse(realseDate[0]))){
 									
+									System.out.println("=================== episode_realse_dt =============="+episode_realse_dt);
+									System.out.println("=================== realseDate[0]  =============="+realseDate[0]);
+									
+									
+									Date d1 = sdf.parse(episode_realse_dt);
+								    Date d2 = sdf.parse(realseDate[0]);
+								    System.out.println("======= 11111111  ========"+d1.compareTo(d2));
+								    
+									if(d1.compareTo(d2) < 0){
+										System.out.println("======= ha ha ha ha  ========");
 										imdb.setProjectName(propertyName_name);
 										imdb.setSeason_name(mp1.get("seasonName"));
 										imdb.setSeason_number(Integer.parseInt(mp1.get("SeasonNumber")));

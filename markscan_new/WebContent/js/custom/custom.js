@@ -455,7 +455,7 @@ function editWhite(){
 			}
 		}else if(platformId === "in" || platformId === "fb" || platformId === "tw" ||platformId === "insta" || platformId === "yt" ){
 			success=true;
-		}
+			}
 		if(success){
 			$('#editModal').modal('hide');
 			$.getJSON('editInternetWhiteList', {

@@ -64,9 +64,12 @@ public class BotStarter {
 			
 			Class.forName("com.mysql.jdbc.Driver");  
 			 //con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","root","root");
+			 //con=DriverManager.getConnection("jdbc:mysql://182.73.134.27:3306/webinforcement_demo","root","M@1234rkscan"); 
 			 con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","testuser","M@123rkscan"); 
+			
+			 
 			 stmt=con.createStatement();  
-			 rs=stmt.executeQuery("SELECT DISTINCT ip_address from markscan_machine1 where status=0 LIMIT 1");
+			 rs=stmt.executeQuery("SELECT DISTINCT ip_address from markscan_machine1 where status=0 and port='8089' LIMIT 1");
 			 System.out.println("**********************************************Query Executed*******************");
 			while(rs.next())
 			{
@@ -85,7 +88,7 @@ public class BotStarter {
 			logger.info("IP Address........................."+SServer1IP);
 			URL_Server_PREFIX = "http://" + SServer1IP + ":" + prop.getProperty("SmServer1PORT")
 			+ "/check";
-			stmt.executeUpdate("UPDATE markscan_machine1 SET status=1 WHERE ip_address='"+SServer1IP+"'");
+			stmt.executeUpdate("UPDATE markscan_machine1 SET status=1 WHERE ip_address='"+SServer1IP+"' and port='8089'");
 			logger.info("IP Address............22222222222222222............."+URL_Server_PREFIX);
 			
 			}
@@ -123,7 +126,7 @@ public class BotStarter {
 			e.printStackTrace();
 		} finally 
 		{
-			stmt.executeUpdate("UPDATE markscan_machine1 SET status=0 WHERE ip_address='"+SServer1IP+"'");
+			stmt.executeUpdate("UPDATE markscan_machine1 SET status=0 WHERE ip_address='"+SServer1IP+"' and port='8089'");
 			System.out.println("Updating query..............................");
 			SServer1IP=null;
 			stmt.close();

@@ -245,7 +245,9 @@ public class AjaxJsonAction extends ActionSupport {
 				*/
 				
 				//lst = dao.viewRecord("select kfem.id,kfem.keyphrase from Keyword_filter_extension_master as kfem where kfem.projectType= '"+ ptype+"'");
-				lst= dao.viewRecord("select kfem.id,kfem.keyphrase from Keyword_filter_extension_master as kfem where kfem.projectType= '"+ ptype+"'");
+				String sql = "select kfem.id,kfem.keyphrase from Keyword_filter_extension_master as kfem where kfem.projectType= '"+ ptype+"'";
+				System.out.println(sql);
+				lst= dao.viewRecord(sql);
 				logger.info("=============List data======================="+ptype.trim());
 
 				for (int i = 0; i < lst.size(); i++) {

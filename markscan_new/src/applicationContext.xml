@@ -8,36 +8,32 @@
 	<bean id="mydataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
 
-   <!--
-		<property name="url"
-			value="jdbc:mysql://172.168.1.6:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
-
-		<property name="username" value="myuser"></property>
-
-		<property name="password" value="P@$$@123++pj"></property>
- 
-        <property name="url"
+  
+          <!-- <property name="url"
 			value="jdbc:mysql://localhost:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
 
 		<property name="username" value="root"></property>
 
-		<property name="password" value="root"></property>
-     
+		<property name="password" value="root"></property>        -->   
+      
 
- <property name="url"
-			value="jdbc:mysql://172.168.1.25:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
-
-		<property name="username" value="myuser1"></property>
-
-		<property name="password" value="M@123rkscan"></property>
-       -->
-        <property name="url"
+           <property name="url"
 			value="jdbc:mysql://localhost:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
+
+			<property name="username" value="testuser"></property>
+
+			<property name="password" value="M@123rkscan"></property>    
+		
+		
+		 
+      
+       <!--  <property name="url"
+			value="jdbc:mysql://182.73.134.27:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
 
 		<property name="username" value="root"></property>
 
-		<property name="password" value=""></property>
-     
+		<property name="password" value="M@1234rkscan"></property>  -->
+      
 
 		<property name="maxActive" value="35" />
 		<property name="initialSize" value="10" />

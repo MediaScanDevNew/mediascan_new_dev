@@ -304,6 +304,8 @@
 			<result name="success">/jsp/fileUpload.jsp</result>
 			<result name="login">/jsp/sessionOut.jsp</result>
 		</action>
+		
+		
 		<!-- <action name="dataImport_old" class="com.markscan.project.classes.ActionPerform" 
 			method="dataImport"> <result name="success">/jsp/fileUpload2.jsp</result> 
 			<result name="login">/jsp/sessionOut.jsp</result> </action> -->
