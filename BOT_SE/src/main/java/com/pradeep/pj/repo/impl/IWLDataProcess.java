@@ -30,7 +30,7 @@ public class IWLDataProcess {
     		con=DriverManager.getConnection(connection_url,connection_userNm,connection_userPwd);
     		
 			String sql = " SELECT a.id,a.crawle_url2,b.keyphrase,a.user_id,a.project_id FROM master_crawle_url a,stored_project_setup1 b "
-					     + "where a.stored_project_setup_id = b.id and projectId = ?";
+					     + "where a.stored_project_setup_id = b.id and projectId = ? AND a.status='Both Matched'";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, projectId);
 			rs = ps.executeQuery();
@@ -83,5 +83,38 @@ public class IWLDataProcess {
 		}
 		
 	}
+	
+	
+	public int getProjectType(int id) throws SQLException {
+		   int projetId=0;
+			try{
+				
+				Class.forName("com.mysql.jdbc.Driver");  
+	    		ResourceBundle rb = ResourceBundle.getBundle("application");
+	    		String connection_url = rb.getString("spring.datasource.url");
+	    		String connection_userNm = rb.getString("spring.datasource.username");
+	    		String connection_userPwd = rb.getString("spring.datasource.password");
+	    		con=DriverManager.getConnection(connection_url,connection_userNm,connection_userPwd);
+	    		
+				String sql = "select project_type from project_info where id = ?";
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, id);
+				rs = ps.executeQuery();
+				if(rs.next()){
+					projetId = rs.getInt("project_type");
+				}
+				
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}finally{
+				
+				if(ps != null) ps.close();
+				if(con != null) con.close();
+				
+			}
+			
+			return projetId;
+			
+		}
 
 }

@@ -29,7 +29,7 @@ public class Master_crawle_url {
 	int id;
 	int stored_project_setup_id, user_id, project_id, pipe_id, is_new, url_new, run_id, link_logger,
 			metatags_filter_new, meta_tags_new, meta_new;
-	String crawle_url2, created_on, url_query, domain_name, url_status, surl_status, machine,title;
+	String crawle_url2, created_on, url_query, domain_name, url_status, surl_status, machine,title,page_rank,page_no;
 
 	public String getMachine() {
 		return machine;
@@ -189,6 +189,22 @@ public class Master_crawle_url {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getPage_rank() {
+		return page_rank;
+	}
+
+	public void setPage_rank(String page_rank) {
+		this.page_rank = page_rank;
+	}
+
+	public String getPage_no() {
+		return page_no;
+	}
+
+	public void setPage_no(String page_no) {
+		this.page_no = page_no;
 	}
 	
 	

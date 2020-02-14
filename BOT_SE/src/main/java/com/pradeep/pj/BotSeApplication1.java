@@ -1,21 +1,21 @@
 package com.pradeep.pj;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
-
-import java.io.File;
-import java.io.RandomAccessFile;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -26,13 +26,15 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.swing.JOptionPane;
+import javax.servlet.ServletContext;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -43,20 +45,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.ServletContextAware;
 
-import com.pradeep.pj.model.IWLDataBean;
-import com.pradeep.pj.repo.Master_crawle_urlRepository;
 import com.pradeep.pj.repo.impl.IWLDataProcess;
 import com.pradeep.pj.service.Blacklist_sitesService;
 import com.pradeep.pj.service.BotRunningStatusService;
@@ -69,13 +65,12 @@ import com.pradeep.pj.service.Master_crawle_urlService;
 import com.pradeep.pj.service.Project_infoService;
 import com.pradeep.pj.service.Stored_project_setupService;
 
-import org.openqa.selenium.JavascriptExecutor;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 @RestController
-public class BotSeApplication1 {
+public class BotSeApplication1 implements ServletContextAware{
 	BotSeApplication1() {
-		System.out.println("--------------------------Constuctor of BotSeApplication1----------");
+		//System.out.println("--------------------------Constuctor of BotSeApplication1----------");
 	}
 
 	@Autowired
@@ -121,7 +116,9 @@ public class BotSeApplication1 {
 	String htmlpage = "";
 	boolean sendMail = false;
 	int count1 = 0;
-	public static final int PAGES=2;
+	public static final int PAGES=20;
+	
+	private ServletContext servletcontext;
 	/*
 	 * public static void main(String[] args) { //
 	 * SpringApplication.run(BotSeApplication.class, args);
@@ -140,11 +137,11 @@ public class BotSeApplication1 {
 	 public String botStart(@RequestHeader String Authorization) throws Exception {
 	//public String botStart() throws Exception {
 
-		 //String Authorization="11";
+		// String Authorization="11";
 		 String s=Authorization;
 		
 		 if(!Authorization.equals(null)) {
-			 System.out.println("Testing-------------------");
+			 //System.out.println("Testing-------------------");
 			 myIP = myIPaddress();
 			 
 		try {
@@ -173,7 +170,7 @@ public class BotSeApplication1 {
 			serviceDetail();
 			sendMail = false;
 		} catch (Exception e) {
-			System.out.println("================Parent Exception==========" + e);
+			//System.out.println("================Parent Exception==========" + e);
 			serviceDetail();
 
 		}
@@ -182,33 +179,43 @@ public class BotSeApplication1 {
 		return "success";
 
 	}
+	
+	
+	
 
 	public void botStart1() throws Exception {
-		System.out.println("Testing-------------------");
+		//System.out.println("Testing-------------------");
 
 		// TODO Auto-generated method stub
 
 		BotSeApplication1 ba = new BotSeApplication1();
 		myIPaddress();
-		System.out.println("========== ip address-------" + myIP);
+		//System.out.println("========== ip address-------" + myIP);
 		System.setProperty("webdriver.firefox.marionette", "/opt/geckodriver");
 		driver = new FirefoxDriver();
 		serviceDetail();
 		sendMail = false;
-		System.out.println("========== sendMail-------" + sendMail);
+		//System.out.println("========== sendMail-------" + sendMail);
 
 	}
 	// }
 
 	public void serviceDetail() {
 		try {
+			/*String logFileName = "BOTSE_LOG.txt";
+			String uploadLogFile = servletcontext.getRealPath("/home/botserver3/") + logFileName;
+    		FileOutputStream fout=new FileOutputStream(uploadLogFile);    
+		    PrintStream logWriter =new PrintStream(fout);
+		    logWriter.println("");*/
+		    
 			usrList = new ArrayList<Integer>();
 			synchronized (this) {
 				data = sps.findALLCustom(); // get_data_from_stored_project
+				//logWriter.println("data size is -------->"+data.size());
 				if ((data.size() < 1) && (sendMail == false)) {
-					// System.out.println("no any query for u .... '");
+					// //System.out.println("no any query for u .... '");
 					try {
-
+						//logWriter.println("data size is less then 1");
 						// sendMail(machine);
 						mms.machineStatusFree(myIP);
 						driver.quit();
@@ -231,7 +238,7 @@ public class BotSeApplication1 {
 						links.clear();
 						getLink.clear();
 
-						System.out.println("no any query for u .... '");
+						//System.out.println("no any query for u .... '");
 						// System.exit(0);
 
 					} catch (Exception e) {
@@ -239,17 +246,22 @@ public class BotSeApplication1 {
 					}
 
 				} else {
+					//logWriter.println("data size is equal or greater then 1..");
+					List<Integer> projectIdLT = new ArrayList<Integer>();
 					for (Object[] pj : data) {
+						System.out.println("*******************************************************************");
 						id = ((Integer) pj[0]);
 						sps.allComplate(id);
 						keyphrase = ((String) pj[1]);
 						pipe = ((Integer) pj[2]);
 						userId = ((Integer) pj[3]);
 						projectId = ((Integer) pj[4]);
-
-					}
-				}
-
+						System.out.println("project id is ---------------->"+projectId);
+						projectIdLT.add(projectId);
+					//}
+				//}
+				//logWriter.println("Project id is ------>"+projectId);
+				//logWriter.println("Keyphrase  is ------>"+keyphrase);
 				keywordfilter = new HashSet<>();
 				property_name = pis.findALLCustom(projectId);
 				String pj11[] = property_name.trim().split(" ");
@@ -261,8 +273,8 @@ public class BotSeApplication1 {
 				pipe_domain = mps.findALLCustom(pipe);
 				data1 = kfs.findALLCustom(projectId);
 
-				for (Object[] pj : data) {
-					keywordfilter.add(pj[0].toString().trim());
+				for (Object[] pj1 : data) {
+					keywordfilter.add(pj1[0].toString().trim());
 				}
 				if (keyphrase.contains("&")) // http://www.w3schools.com/tags/ref_urlencode.asp
 				{
@@ -278,38 +290,47 @@ public class BotSeApplication1 {
 				if (pipe == 0) {
 
 					sps.googleStart(id);
-
+					//logWriter.println("Google Search Started .....");
 					// google search==
 					googleSearch(keyphrase);
-					System.out.println("=====google=== links size......." + links.size());
+					//logWriter.println("Google Search Completed.links size is  ....."+links.size());
+					//logWriter.println("Google Data Save Start .....");
 					afterCrawl(1, keyphrase);
+					//logWriter.println("Google Data Save Complete .....");
 					links = null;
 
 					sps.yahooStartGoogleComplate(id);
 
 					// yahoo search==
-
+					//logWriter.println("Yahoo Search started  .....");
 					yahooSearch(keyphrase);
-					System.out.println("=====yahoo=== links size......." + links.size());
+					//logWriter.println("Yahoo Search Completed.links size is  ....."+links.size());
+					//logWriter.println("Yahoo Data Save Start .....");
 					afterCrawl(2, keyphrase);
+					//logWriter.println("Yahoo Data Save Complete .....");
 					links = null;
 
 					sps.bingStartYahooComplate(id);
 
 					// Bing search==
-
+					//logWriter.println("Bing Search started  .....");
 					bingSearch(keyphrase);
-					System.out.println("=====bing=== links size......." + links.size());
+					//logWriter.println("Bing Search Completed.links size is  ....."+links.size());
+					//logWriter.println("Bing Data Save Start .....");
 					afterCrawl(3, keyphrase);
+					//logWriter.println("Bing Data Save Complete .....");
 					links = null;
 
 					 /*Add this by pentation team 
 					 * 
 					 * fetch the data from duck duck go search engine and save the data in database */
-					
 					sps.duckduckStartBingComplete(id);
+					//logWriter.println("Duck Duck Go Search started  .....");
 					duckduckSearch(keyphrase);
+					//logWriter.println("Duck Duck Go Search Completed.links size is  ....."+links.size());
+					//logWriter.println("Duck Duck Go Data Save Start .....");
 					afterCrawl(4, keyphrase);
+					//logWriter.println("Duck Duck Go Data Save Complete .....");
 					links = null;
 					// ------------------------------------------------------------
 
@@ -317,24 +338,27 @@ public class BotSeApplication1 {
 					 * 
 					 * fetch the data from russia go search engine and save the data in database */
 					
-					System.out.println("id value is --------->" + id);
+					//System.out.println("id value is --------->" + id);
 					sps.russiaGoStartduckduckGoComplete(id);
+					//logWriter.println("Russia Go Search started  .....");
 					russiaGoSearch(keyphrase);
+					//logWriter.println("Russia Go Search Completed.links size is  ....."+links.size());
+					//logWriter.println("Russia Go Data Save Start .....");
 					afterCrawl(5, keyphrase);
+					//logWriter.println("Russia Go Data Save Complete .....");
 					links = null;
 					/** Added on Jan/27 to track end of Russian Search engine crawl **/
 					/** End of Russian Search Engine */
 					sps.russiacomplete(id);
 					
-
+					//logWriter.println("Search Process Complete .....");
 					// ---------------------------------------------------------------
 				} else if (pipe == 1) {
 					sps.googleStart(id);
-
 					// google search==
 					googleSearch(keyphrase);
-					System.out.println("=====google=== links size......." + links.size());
 					afterCrawl(1, keyphrase);
+					
 					links = null;
 				} else if (pipe == 2) {
 					sps.yahooStartGoogleComplate(id);
@@ -342,7 +366,7 @@ public class BotSeApplication1 {
 					// yahoo search==
 
 					yahooSearch(keyphrase);
-					System.out.println("=====yahoo=== links size......." + links.size());
+					//System.out.println("=====yahoo=== links size......." + links.size());
 					afterCrawl(2, keyphrase);
 					links = null;
 				} else if (pipe == 3) {
@@ -351,7 +375,7 @@ public class BotSeApplication1 {
 					// Bing search==
 
 					bingSearch(keyphrase);
-					System.out.println("=====bing=== links size......." + links.size());
+					//System.out.println("=====bing=== links size......." + links.size());
 					afterCrawl(3, keyphrase);
 					links = null;
 
@@ -365,7 +389,7 @@ public class BotSeApplication1 {
 
 					sps.duckduckStartBingComplete(id);
 					duckduckSearch(keyphrase);
-					System.out.println("===== duckduck go === links size......." + links.size());
+					//System.out.println("===== duckduck go === links size......." + links.size());
 					afterCrawl(4, keyphrase);
 					links = null;
 
@@ -378,7 +402,7 @@ public class BotSeApplication1 {
 					
 					sps.russiaGoStartduckduckGoComplete(id);
 					russiaGoSearch(keyphrase);
-					System.out.println("===== duckduck go === links size......." + links.size());
+					//System.out.println("===== duckduck go === links size......." + links.size());
 					afterCrawl(5, keyphrase);
 					links = null;
 					
@@ -392,7 +416,7 @@ public class BotSeApplication1 {
 					// dao.customUpdateProject("update Stored_project_setup set
 					// google=2 where id=" + id);
 					googleOversies(keyphrase, pipe_domain);
-					System.out.println("=====google geo=== links size......." + links.size());
+					//System.out.println("=====google geo=== links size......." + links.size());
 					afterCrawl(pipe, keyphrase);
 					// afterCrawlOversies(pipe);
 					links = null;
@@ -402,69 +426,100 @@ public class BotSeApplication1 {
 				try {
 					
 					
-					sps.allComplate(id);
+					  sps.allComplate(id);
 					
 					/* Add this by pentation team 
 					 * 
 					 * Add these three function for white list,grey list ,black list validation */
 					
 					//WhitelistValidation wv = new WhitelistValidation();
+					
+				    //logWriter.println("Whitelist Process start .....");  
 					wv.whitelistChecking(projectId);
+					//logWriter.println("Whitelist Process complete,Greylist Process Start .....");  
 					wv.greylistChecking(projectId);
+					//logWriter.println("Greylist Process complete,blacklist Process Start .....");
 					wv.blacklistChecking(projectId);
-				//---------------------------------------------------------------------------------------------	
-                   /**
-                    * new code added by Pentation/M (22.01.2020)
-                    * call iwl enginee from BOT SE application.....
-                    * */
-					
-					
-//					String otpurl = "http://localhost:8088/crawler/?projectId="+projectId;
-//					URL url = new URL(otpurl);
-//					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//					conn.setRequestMethod("GET");
-					
-//					String otpurl = "http://localhost:8088/crawler/?projectId="+projectId+"&flag=1";
-//					System.out.println(otpurl);
-//					URL url = new URL(otpurl);
-//					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//					conn.setRequestMethod("GET");
-//					System.out.println("222222222222222222222222------->"+conn.getResponseCode());
-					
-					/**
-	                    * new code added by Pentation/M (29.01.2020)
-	                    * call iwl enginee from BOT SE application.....
-	                    * */
-					iwl.iwlEngine(projectId);
-				//-----------------------------------------------------------------------------------------------	
+					//logWriter.println("Blacklist Process complete .....");  
 					// mms.machineStatusFree(myIP);
 				} catch (Exception e) {
 					e.printStackTrace();
+					//logWriter.println("Exception ---->"+e.getMessage()); 
+					//logWriter.close();
 				}
-				// System.out.println("crawl is complete");
+				// //System.out.println("crawl is complete");
 
 				// JOptionPane.showMessageDialog(null, "crawl is complete");
 
 				// ****************** send mail to user
-			}
+				
+				} //end for loop part here
+					
+					//---------------------------------------------------------------------------------------------	
+		            /**
+		             * new code added by Pentation/M (22.01.2020)
+		             * call iwl enginee from BOT SE application.....
+		             * */
+						
+						/**
+		                 * new code added by Pentation/M (29.01.2020)
+		                 * call iwl enginee from BOT SE application.....
+		                 * */
+						
+					//-----------------------------------------------------------------------------------------------	
+					//logWriter.println("IWL Enginee Process start .....");  
+					Set<Integer> idWithoutDuplicates = new LinkedHashSet<Integer>(projectIdLT);
+					projectIdLT.clear();
+					projectIdLT.addAll(idWithoutDuplicates);
+					String projectIds = "";
+					for (Integer i : projectIdLT) {
+						try{
+							//logWriter.println("IWL Enginee Project id ....."+i);  
+							int type_val = new IWLDataProcess().getProjectType(i);
+							if(type_val != 2 ||  type_val != 9){
+								//iwl.iwlEngine(i);
+								projectIds = projectIds+i;
+							}	
+						}catch(Exception ex){
+							//logWriter.println("Exception ---->"+ex.getMessage()); 
+							//logWriter.close();
+							
+						}	
+					}
+					
+					ResourceBundle rb = ResourceBundle.getBundle("application");
+					String connection_url = rb.getString("spring.iwl.url");
+					String otpurl = rb.getString("url")+"/startIWL?projectIds="+projectIds;
+					System.out.println(otpurl);
+					URL url = new URL(otpurl);
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");
+					
+					//logWriter.println("IWL Enginee Process end .....");  
+					//logWriter.close();
+			  }	// end else part here
+				
+			}// end sync this end here
+			
+			
+			
 			// }
-			System.out.println("*******************************User Name**********" + userId);
+			//System.out.println("*******************************User Name**********" + userId);
 			sendMailToUser(userId, projectId);
 			if (sendMail == false) {
 				//serviceDetail();
 			}
 
-		}
-
-		catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
+			
 			try {
 				driver.close();
 				driver.quit();
 			} catch (Exception ee) {
 			}
 			// JOptionPane.showMessageDialog(null, "crawl error");
-			System.out.println("**********************crawl error*********");
+			//System.out.println("**********************crawl error*********");
 
 			// factory = null;
 			// HbmTemplateUtils.killMYSQLConnection();
@@ -477,15 +532,15 @@ public class BotSeApplication1 {
 	 * public void googleSearch(String searchKeyword) { links = new
 	 * ArrayList<>(); // searchKeyword = dd; searchEngine =
 	 * "https://www.google.co.in"; try {
-	 * System.out.println("Start Crawle Url...................");
+	 * //System.out.println("Start Crawle Url...................");
 	 * driver.get("https://www.google.co.in/search?q=" + searchKeyword);
 	 * Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 	 * getLink = driver.findElements(By.xpath("//div[@class='r']/a")); for
 	 * (WebElement we : getLink) { links.add(we.getAttribute("href"));
-	 * System.out.println("Crawle Url..................."+we.getAttribute("href"
+	 * //System.out.println("Crawle Url..................."+we.getAttribute("href"
 	 * )); } WebElement next =
 	 * driver.findElement(By.xpath("//a[@id='pnnext']"));
-	 * System.out.println(next.getAttribute("href")); for (int i = 1; i <= 30;
+	 * //System.out.println(next.getAttribute("href")); for (int i = 1; i <= 30;
 	 * i++) { try { Thread.sleep(random_number(8000, 4000), random_number(1000,
 	 * 100)); // driver.get(next.getAttribute("href")); getLink =
 	 * driver.findElements(By.xpath("//div[@class='r']/a")); for (WebElement we
@@ -495,125 +550,76 @@ public class BotSeApplication1 {
 	 * 
 	 * next = driver.findElement(By.xpath("//a[@id='pnnext']")); if
 	 * (next.isDisplayed() || next.isEnabled()) { next.click(); } else {
-	 * System.out.println("else break"); break; }
+	 * //System.out.println("else break"); break; }
 	 * //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS); }
 	 * catch (Exception e) {
-	 * System.out.println("This is the Last Page, Next button not available");
+	 * //System.out.println("This is the Last Page, Next button not available");
 	 * // e.printStackTrace(); break; } }
 	 * 
 	 * } catch (NoSuchElementException e) {
-	 * System.out.println("Element Not Found"+e.getMessage()); }
+	 * //System.out.println("Element Not Found"+e.getMessage()); }
 	 * 
 	 * catch (Exception e) {
-	 * System.out.println("Common Exception"+e.getMessage()); } }
+	 * //System.out.println("Common Exception"+e.getMessage()); } }
 	 */
 
-	/*public void yahooSearch(String searchKeyword) {
-		links = new ArrayList<>();
-		// searchKeyword = dd;
-		try {
-			driver.get("https://in.search.yahoo.com/search?p=" + searchKeyword + "&fr=yfp-t-101");
-			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-			getLink = driver.findElements(By.xpath("//div[@id='web']/ol/li/div/div[1]/h3/a"));
-			for (WebElement we : getLink) {
-				// links.add(we.getAttribute("href"));
-				try {
-					String xx[] = we.getAttribute("href").toString().split("/RU=");
-					xx[1] = xx[1].replaceAll("%3a", ":").replaceAll("%2f", "/");
-					String xx1[] = xx[1].split("/RK=0/");
-					links.add(xx1[0]);
-				} catch (Exception e) {
-					// e.printStackTrace();
-					links.add(we.getAttribute("href").toString());
-				}
-			}
-			WebElement next = driver.findElement(By.xpath("//a[@class='next']"));
-			System.out.println(next.getAttribute("href"));
-			for (int i = 1; i <= 30; i++) {
-				try {
-					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-					// driver.get(next.getAttribute("href"));
-					getLink = driver.findElements(By.xpath("//div[@id='web']/ol/li/div/div[1]/h3/a"));
-					for (WebElement we : getLink) {
-						System.out.println(we.getAttribute("href"));
-						try {
-							String xx[] = we.getAttribute("href").toString().split("/RU=");
-							xx[1] = xx[1].replaceAll("%3a", ":").replaceAll("%2f", "/");
-							String xx1[] = xx[1].split("/RK=0/");
-
-							links.add(xx1[0]);
-						} catch (Exception e) {
-							// e.printStackTrace();
-							links.add(we.getAttribute("href"));
-						}
-						// links.add(we.getAttribute("href"));
-					}
-
-					next = driver.findElement(By.xpath("//a[@class='next']"));
-					if (next.isDisplayed() || next.isEnabled()) {
-						System.out.println("founded");
-						next.click();
-					} else {
-						System.out.println("else break");
-						break;
-					}
-				} catch (Exception e) {
-					System.out.println("error on yahoo search");
-					e.printStackTrace();
-
-					break;
-
-				}
-			}
-
-		} catch (NoSuchElementException e) {
-			// TODO: handle exception
-			System.out.println("==== next button not available====");
-		}
-
-		catch (Exception e) {
-			// browser exception will be caught here
-
-			// e.printStackTrace();
-			System.err.println("=== yahoo search error=====");
-		}
-	}*/
 	
-	
-	public void yahooSearch(String searchKeyword) {
-		System.out.println("Search Keyword Yahoo----"+searchKeyword);
+	public  void yahooSearch(String searchKeyword) {
+		//System.out.println("Search Keyword Yahoo----"+searchKeyword);
 		
 		String xpthAnchorYahoo = "//h3[@class='title']//a[1]";
 		String xpthNextYahoo = "//a[@class='next' and text()='Next']";
 		
 		String hitSearchButton = "//*[@type='submit' and @class='sbb']";
 		String hitSearchButton1 = "//button[@type='submit']";
+		String hitYahooSearch= "//input[@id='uh-search-box' and @name='p']";
+		String getTitleWithOutOpenThePage = "//h3[@class='title']";
+		String getTitleWithOutOpenThePage1 = "//*[@class='title']";
 		
 		links = new ArrayList<>();
 		List<WebElement> getLink = null;
+		List<WebElement> getTitle = null;
 		try {
 			String yahooURL = "https://in.yahoo.com/";
-			System.out.println("-------Yahoo ---------- "+yahooURL);
+			//System.out.println("-------Yahoo ---------- "+yahooURL);
 			driver.get(yahooURL);
-			driver.findElement(By.xpath(hitSearchButton1)).sendKeys(searchKeyword, Keys.RETURN);
-			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-			getLink = driver.findElements(By.xpath(xpthAnchorYahoo));
+//			driver.findElement(By.xpath(hitSearchButton1)).sendKeys(searchKeyword, Keys.RETURN);
+			driver.findElement(By.xpath(hitYahooSearch)).sendKeys(searchKeyword, Keys.RETURN);
 			
+			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 			WebElement nextYahoo = driver.findElement(By.xpath(xpthNextYahoo));
-			System.out.println("===Yahoo link===" + nextYahoo.getAttribute("href"));
+			//System.out.println("===Yahoo link===" + nextYahoo.getAttribute("href"));
 			for (int i = 1; i <= PAGES; i++) {
 				try {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					// driver.get(next.getAttribute("href"));
 					getLink = driver.findElements(By.xpath(xpthAnchorYahoo));
+					getTitle = driver.findElements(By.xpath(getTitleWithOutOpenThePage));
+					int index = 0;
 					for (WebElement we : getLink) {
-						links.add(we.getAttribute("href"));
 						
-						/*getHref = we.getAttribute("href");
-						// for confirm 
-						System.out.println("printurl - try:- "+getHref);*/
-						
-						//getTitleFromEachLinks(); // later hide
+						try {
+//							getTitleFromEachLinks(); // later hide
+							String getTitleWithOutOpenPage = getTitle.get(index++).getText();
+							//System.out.println("getTitleWithOutOpenPage-Yahoo:-"+getTitleWithOutOpenPage);
+							
+							if(getTitleWithOutOpenPage.contains("...") ) {
+								String replacegetTitle = getTitleWithOutOpenPage.replace("...","");
+								//System.out.println("Replace-Yahoo:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+replacegetTitle+"#"+i+"#"+index);
+										
+							}else if (getTitleWithOutOpenPage.contains("…")){
+								String replacegetTitle = getTitleWithOutOpenPage.replace("…","");
+								//System.out.println("Replace-Yahoo:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+replacegetTitle+"#"+i+"#"+index);
+							}else{
+								links.add(we.getAttribute("href")+"#"+getTitleWithOutOpenPage+"#"+i+"#"+index);
+							}
+							
+							//System.out.println("----------------------------------");
+						}catch(StaleElementReferenceException stale) {
+							//System.out.println("StaleElementReferenceException:-"+stale.getMessage());
+						}
 					}	
 
 					//  Selenium for checking Button is present or not first he clicked then check  
@@ -623,88 +629,30 @@ public class BotSeApplication1 {
 						nextYahoo.click();
 						Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					} else {
-						System.out.println("not founded");
-						System.out.println("else break");
+						//System.out.println("not founded");
+						//System.out.println("else break");
 						break;
 					}
 				} catch (NoSuchElementException e) {
 //					e.printStackTrace();
-					System.out.println("\n"+"==== next button not available====");
+					//System.out.println("\n"+"==== next button not available====");
 					break;
 				} catch (Exception e) {
-					System.out.println("error on Yahoo search");
+					//System.out.println("error on Yahoo search");
 					e.printStackTrace();
 					break;
 				}
 			}
-			System.out.println("\n"+" - Yahoo links-  "+links);
+			//System.out.println("\n"+" - Yahoo links-  "+links); // print all the link comma separated
 		} catch (Exception e) {
 			// browser exception will be caught here
 			e.printStackTrace();
 			System.err.println("=== Yahoo  search error=====");
 		}
 	}
-
-	public void bingSearch(String searchKeyword) {
-		links = new ArrayList<>();
-		// searchKeyword = dd;
-		try {
-			driver.get("http://www.bing.com/search?q=" + searchKeyword);
-			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-			getLink = driver.findElements(By.xpath("//li[@class='b_algo']/h2/a"));
-
-			/*
-			 * for (WebElement we : getLink) {
-			 * links.add(we.getAttribute("href")); }
-			 */
-			WebElement next = driver.findElement(By.xpath("//a[@title='Next page']"));
-			System.out.println("===bing link===" + next.getAttribute("href"));
-			for (int i = 1; i <= PAGES; i++) {
-				try {
-					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-					// driver.get(next.getAttribute("href"));
-					getLink = driver.findElements(By.xpath("//li[@class='b_algo']/h2/a"));
-					for (WebElement we : getLink) {
-						links.add(we.getAttribute("href"));
-					}
-
-					next = driver.findElement(By.xpath("//a[@title='Next page']"));
-					if (next.isDisplayed() || next.isEnabled()) {
-						System.out.println("founded");
-						next.click();
-						Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-					} else {
-						System.out.println("not founded");
-						System.out.println("else break");
-						break;
-					}
-				} catch (NoSuchElementException e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					System.out.println("==== next button not available====");
-					break;
-				} catch (Exception e) {
-					System.out.println("error on bing search");
-					e.printStackTrace();
-
-					break;
-
-				}
-
-				// for (String we : links) {
-				// System.out.println(we);
-				// }
-				// driver.quit();
-
-			}
-		} catch (Exception e) {
-			// browser exception will be caught here
-
-			e.printStackTrace();
-			System.err.println("=== bing search error=====");
-		}
-	}
-
+	
+	
+	
 	public void googleOversies(String searchKeyword, String domain) {
 		links = new ArrayList<>();
 
@@ -731,14 +679,14 @@ public class BotSeApplication1 {
 					}
 					next = driver.findElement(By.xpath("//a[@id='pnnext']"));
 					if (next.isDisplayed() || next.isEnabled()) {
-						System.out.println("founded");
+						//System.out.println("founded");
 						next.click();
 					} else {
-						System.out.println("else break");
+						//System.out.println("else break");
 						break;
 					}
 				} catch (Exception e) {
-					System.out.println("error on oversies search");
+					//System.out.println("error on oversies search");
 					e.printStackTrace();
 
 					break;
@@ -748,11 +696,11 @@ public class BotSeApplication1 {
 
 		} catch (NoSuchElementException e) {
 			// TODO: handle exception
-			System.out.println("==== next button not available====");
+			//System.out.println("==== next button not available====");
 		}
 
 		catch (Exception e) {
-			System.out.println("=== google oversies error = = = =");
+			//System.out.println("=== google oversies error = = = =");
 			e.printStackTrace();
 			// driver.quit();
 			// System.exit(0);
@@ -763,91 +711,33 @@ public class BotSeApplication1 {
 		// PageSource ps = new PageSource();
 		String pagesource = null;
 		List<String> searchkeywordlist = new ArrayList<>();
-		System.out.println("=== links size=== " + links.size());
+		//System.out.println("=== links size=== " + links.size());
 		if (links.size() > 0) {
 			int i = 1;
 			for (String lnk : links) {
-				b2 = false;
-				System.out.println("==========lnk===" + lnk);
-				try {
-					System.out
-							.println("=1111111   == " + lnk.toLowerCase().contains(property_name.trim().toLowerCase()));
-
-					if (lnk.toLowerCase().contains(property_name.trim().toLowerCase())) {
-						
-						/**
-						 *  Add this feature by Pentation team
-						 *  
-						 *  here we fetch tile from each individual link
-						 * */
-						
-						String title = getTitleFromEachLinks(lnk);
-						System.out.println("The save title is ------------------------------>"+title);
-						
-						mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()), title);
-						System.out.println("=== running.....first. running..............");
-						b2 = true;
-						// break;
-					}
-					try {
-						String pj[] = searchKeyword.split(" ");
-						for (String s : pj) {
-							if (s != null && s.length() > 0) {
-								searchkeywordlist.add(s);
-							}
-						}
-
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-					if (b2 == false) {
-						for (String srckey__ : searchkeywordlist) {
-//							System.out.println("=== srckey__ .............." + srckey__);
-							if (lnk.toLowerCase().contains(srckey__.trim().toLowerCase())) {
-								/**
-								 *  Add this feature by Pentation team
-								 *  
-								 *  here we fetch tile from each individual link
-								 * */
-								
-								String title = getTitleFromEachLinks(lnk);
-								System.out.println("The save title is ------------------------------>"+title);
-								mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
-										title);
-
-								b2 = true;
-								break;
-							}
-						}
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
-					// e.printStackTrace();
+				String[] arr = lnk.split("#");
+				String lnk1="";
+				String title = "";
+				String page_no="";
+				String page_rank = "";
+				if(arr.length == 1){
+					lnk1 = arr[0];
+					title ="NA";
+					page_no= "NA";
+					page_rank = "NA";
+				}else if(arr.length > 2){
+					lnk1 = arr[0];
+					title = arr[1];
+					page_no = arr[2];
+					page_rank = arr[3];
 				}
-
-				if (b2 == false) {
-
+				
+				if(!lnk1.equals("") && !title.equals("")){
+					b2 = false;
+					//System.out.println("==========lnk===" + lnk1);
 					try {
-
-						doc = Jsoup.connect(lnk.trim()).get();
-						pagesource = doc.body().text();
-
-					} catch (Exception e) {
-						// TODO: handle exception
-						if (lnk.contains("youtube.com") || lnk.contains("facebook.com")) {
-
-						} else
-							try {
-								pagesource = ps.getPageSource(lnk.trim());
-							} catch (Exception e2) {
-
-								// TODO: handle exception
-							}
-					}
-
-					try {
-
-						if (pagesource.toLowerCase().contains(property_name.trim().toLowerCase())) {
+						
+						if (lnk1.toLowerCase().contains(property_name.trim().toLowerCase())) {
 							
 							/**
 							 *  Add this feature by Pentation team
@@ -855,45 +745,120 @@ public class BotSeApplication1 {
 							 *  here we fetch tile from each individual link
 							 * */
 							
-							String title = getTitleFromEachLinks(lnk);
-							System.out.println("The save title is ------------------------------>"+title);
-							mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
-									title);
+							
+							//System.out.println("The save title is ------------------------------>"+title);
+							
+							mcus.storeCrawleData(lnk1, projectId, userId, id, ppipe, machine, findDomain(lnk1.trim()), title,page_no,page_rank);
+							//System.out.println("=== running.....first. running..............");
 							b2 = true;
 							// break;
 						}
-
+						try {
+							String pj[] = searchKeyword.split(" ");
+							for (String s : pj) {
+								if (s != null && s.length() > 0) {
+									searchkeywordlist.add(s);
+								}
+							}
+	
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+						if (b2 == false) {
+							for (String srckey__ : searchkeywordlist) {
+	//							//System.out.println("=== srckey__ .............." + srckey__);
+								if (lnk1.toLowerCase().contains(srckey__.trim().toLowerCase())) {
+									/**
+									 *  Add this feature by Pentation team
+									 *  
+									 *  here we fetch tile from each individual link
+									 * */
+									
+									//String title = getTitleFromEachLinks(lnk1);
+									//System.out.println("The save title is ------------------------------>"+title);
+									mcus.storeCrawleData(lnk1, projectId, userId, id, ppipe, machine, findDomain(lnk1.trim()),
+											title,page_no,page_rank);
+	
+									b2 = true;
+									break;
+								}
+							}
+						}
 					} catch (Exception e) {
 						// TODO: handle exception
 						// e.printStackTrace();
 					}
-				}
-
-				if (b2 == false) {
-					for (String pj : keywordfilter) {
+	
+					if (b2 == false) {
+	
 						try {
-							if (pagesource.toLowerCase().contains(pj.trim().toLowerCase())) {
+	
+							doc = Jsoup.connect(lnk1.trim()).get();
+							pagesource = doc.body().text();
+	
+						} catch (Exception e) {
+							// TODO: handle exception
+							if (lnk1.contains("youtube.com") || lnk1.contains("facebook.com")) {
+	
+							} else
+								try {
+									pagesource = ps.getPageSource(lnk1.trim());
+								} catch (Exception e2) {
+	
+									// TODO: handle exception
+								}
+						}
+	
+						try {
+	
+							if (pagesource.toLowerCase().contains(property_name.trim().toLowerCase())) {
+								
 								/**
 								 *  Add this feature by Pentation team
 								 *  
 								 *  here we fetch tile from each individual link
 								 * */
 								
-								String title = getTitleFromEachLinks(lnk);
-								System.out.println("The save title is ------------------------------>"+title);
-								mcus.storeCrawleData(lnk, projectId, userId, id, ppipe, machine, findDomain(lnk.trim()),
-										title);
+								//String title = getTitleFromEachLinks(lnk1);
+								//System.out.println("The save title is ------------------------------>"+title);
+								mcus.storeCrawleData(lnk1, projectId, userId, id, ppipe, machine, findDomain(lnk1.trim()),
+										title,page_no,page_rank);
+								b2 = true;
 								// break;
 							}
+	
 						} catch (Exception e) {
+							// TODO: handle exception
 							// e.printStackTrace();
 						}
-
 					}
+	
+					if (b2 == false) {
+						for (String pj : keywordfilter) {
+							try {
+								if (pagesource.toLowerCase().contains(pj.trim().toLowerCase())) {
+									/**
+									 *  Add this feature by Pentation team
+									 *  
+									 *  here we fetch tile from each individual link
+									 * */
+									
+									//String title = getTitleFromEachLinks(lnk1);
+									//System.out.println("The save title is ------------------------------>"+title);
+									mcus.storeCrawleData(lnk1, projectId, userId, id, ppipe, machine, findDomain(lnk1.trim()),
+											title,page_no,page_rank);
+									// break;
+								}
+							} catch (Exception e) {
+								// e.printStackTrace();
+							}
+	
+						}
 
 				} // end if condition
+			  }	
 
-			}
+			} //end for loop
 		}
 	}
 
@@ -901,75 +866,75 @@ public class BotSeApplication1 {
 		String domain__c = null;
 		try {
 
-			// System.out.println("=pp=" + ddomain.lastIndexOf("/"));
+			// //System.out.println("=pp=" + ddomain.lastIndexOf("/"));
 
 			if (ddomain.startsWith("https:")) {
 				domain__c = ddomain.replace("https://", "");
 				domain__c = domain__c.replace("www.", "");
-				// System.out.println("domain===1..." + domain__c);
+				// //System.out.println("domain===1..." + domain__c);
 				if (domain__c.contains(":")) {
 					String pj1[] = domain__c.split(":");
 
 					String pj[] = pj1[0].split("/");
 					domain__c = pj[0];
-					// System.out.println("domain===4.1.." + domain__c);
+					// //System.out.println("domain===4.1.." + domain__c);
 				} else {
 					String pj[] = domain__c.split("/");
 					domain__c = pj[0];
-					// System.out.println("domain===4.112.." + domain__c);
+					// //System.out.println("domain===4.112.." + domain__c);
 				}
 
 			} else if (ddomain.startsWith("http:")) {
 				domain__c = ddomain.replace("http://", "");
 				domain__c = domain__c.replace("www.", "");
-				// System.out.println("domain===2..." + domain__c);
+				// //System.out.println("domain===2..." + domain__c);
 				if (domain__c.contains(":")) {
 					String pj1[] = domain__c.split(":");
 
 					String pj[] = pj1[0].split("/");
 					domain__c = pj[0];
-					// System.out.println("domain===4.2.." + domain__c);
+					// //System.out.println("domain===4.2.." + domain__c);
 				} else {
 					String pj[] = domain__c.split("/");
 					domain__c = pj[0];
-					// System.out.println("domain===4.113.." + domain__c);
+					// //System.out.println("domain===4.113.." + domain__c);
 				}
 			} else if (ddomain.startsWith("//www.")) {
 				domain__c = ddomain.replace("//www.", "");
 				domain__c = domain__c.replace("www.", "");
-				// System.out.println("domain===2..." + domain__c);
+				// //System.out.println("domain===2..." + domain__c);
 				if (domain__c.contains(":")) {
 					String pj1[] = domain__c.split(":");
 
 					String pj[] = pj1[0].split("/");
 					domain__c = pj[0];
-					// System.out.println("domain===4.3.." + domain__c);
+					// //System.out.println("domain===4.3.." + domain__c);
 				} else {
 					String pj[] = domain__c.split("/");
 					domain__c = pj[0];
-					// System.out.println("domain===4.113.." + domain__c);
+					// //System.out.println("domain===4.113.." + domain__c);
 				}
 			} else if (ddomain.startsWith("www")) {
 				// domain__c = ddomain.replace("//www.", "");
 				domain__c = ddomain.replace("www.", "");
-				// System.out.println("domain===2..." + domain__c);
+				// //System.out.println("domain===2..." + domain__c);
 				if (domain__c.contains(":")) {
 					String pj1[] = domain__c.split(":");
 
 					String pj[] = pj1[0].split("/");
 					domain__c = pj[0];
-					// System.out.println("domain===4.33.." + domain__c);
+					// //System.out.println("domain===4.33.." + domain__c);
 				} else {
 					String pj[] = domain__c.split("/");
 					domain__c = pj[0];
-					// System.out.println("domain===4.114.." + domain__c);
+					// //System.out.println("domain===4.114.." + domain__c);
 				}
 			}
 
 			else if (!ddomain.startsWith("http:") || !ddomain.startsWith("htts:") || !ddomain.startsWith("www.")) {
 				String pj[] = ddomain.split("/");
 				domain__c = pj[0];
-				// System.out.println("domain===4.114.." + domain__c);
+				// //System.out.println("domain===4.114.." + domain__c);
 			}
 
 		} catch (Exception e) {
@@ -1008,7 +973,7 @@ public class BotSeApplication1 {
 			 * inetAddresses.nextElement(); if (!ia.isLinkLocalAddress()) { myIP
 			 * = ia.getHostAddress(); } } }
 			 */
-			System.out.println("Current IP address : " + myIP);
+			//System.out.println("Current IP address : " + myIP);
 			machine = myIP;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1045,7 +1010,7 @@ public class BotSeApplication1 {
 	// ************************** mail sending code
 	// ************************************
 
-	// @Value("${spring.mail.host}")
+	 @Value("${spring.mail.host}")
 	String mailip;
 
 	public void sendMailToUser(int userId, int projectId) {
@@ -1071,16 +1036,16 @@ public class BotSeApplication1 {
 			pName = (String) prj[0];
 			ctype = Integer.parseInt((String) prj[1]);
 
-			System.out.println("**********Client Type*********" + ctype);
+			//System.out.println("**********Client Type*********" + ctype);
 
 		}
-		System.out.println("*********Client Type1*********" + ctype);
+		//System.out.println("*********Client Type1*********" + ctype);
 		cdata = cms.findCustomData(ctype);
 		for (Object[] cmd : cdata) {
 			client_name = (String) cmd[0];
 			cemail.add((String) cmd[1]);
 			// ctype=(Integer)cmd[1];
-			System.out.println("**********************Client Email*********" + cemail);
+			//System.out.println("**********************Client Email*********" + cemail);
 
 		}
 
@@ -1095,8 +1060,8 @@ public class BotSeApplication1 {
 		 * +"from mediascan application.</p><p> thanks &amp; regards:<br> Harendra Preatap Singh</p>"
 		 * ;
 		 * 
-		 * System.out.println("**********************Email*********"+email);
-		 * System.out.println("**********************UserName******"+uName);
+		 * //System.out.println("**********************Email*********"+email);
+		 * //System.out.println("**********************UserName******"+uName);
 		 * Properties props = new Properties(); props.put("mail.smtp.auth",
 		 * "true"); props.put("mail.smtp.starttls.enable", "true");
 		 * props.put("mail.smtp.host", mailip); props.put("mail.smtp.port",
@@ -1124,7 +1089,7 @@ public class BotSeApplication1 {
 		 * // Send message
 		 * 
 		 * Transport.send(message);
-		 * System.out.println("Sent message successfully...."); } catch
+		 * //System.out.println("Sent message successfully...."); } catch
 		 * (Exception e) { e.printStackTrace(); }
 		 */
 
@@ -1139,28 +1104,28 @@ public class BotSeApplication1 {
 		 * List<Object[]> maildata =brss.findALLCustom(myIp); for(Object[]
 		 * hp:maildata) {
 		 * 
-		 * //System.out.println("*********ID********"+ hp[0]); String userName
-		 * =((String)hp[1]); System.out.println("*********User Name********"+
+		 * ////System.out.println("*********ID********"+ hp[0]); String userName
+		 * =((String)hp[1]); //System.out.println("*********User Name********"+
 		 * userName); String userEmail =((String)hp[2]); email.add(userEmail);
-		 * System.out.println("*********User Email********"+ userEmail); String
+		 * //System.out.println("*********User Email********"+ userEmail); String
 		 * pName =((String)hp[3]);
-		 * System.out.println("*********Project Name********"+ pName); String
+		 * //System.out.println("*********Project Name********"+ pName); String
 		 * keywords =((String)hp[4]);
-		 * System.out.println("*********Keyword********"+ keywords); htmlpage
+		 * //System.out.println("*********Keyword********"+ keywords); htmlpage
 		 * ="<tr><td>"+keywords+"</td><td>"+pName+"</td><td>"+
 		 * userName+" </td></tr>";
 		 * 
 		 * }
 		 */
 		sendMail = true;
-		System.out.println("*****************htmlpage**********" + htmlpage);
+		//System.out.println("*****************htmlpage**********" + htmlpage);
 		htmlpage1 = "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>"
 				+ "<html><head>" + "<style>table {border-collapse: collapse;} table, td, th "
 				+ "{border: 1px solid black;}th{background-color: lightgray;}</style></head><body>"
 				+ "<p>Hi all,</p><p> Bot Search Application has been completed query: <br> <table><tr><th>Keywords</th><th>Project Name</th><th>Client Name</th><th>Created By</th></tr> "
 				+ htmlpage + "</table><br> Now You can extract data"
 				+ "from mediascan application.</p><p> thanks &amp; regards:<br>MediaScan </p></body></html>";
-		System.out.println("********************htmlpage1*********" + htmlpage1);
+		//System.out.println("********************htmlpage1*********" + htmlpage1);
 		String to = "";
 		for (String email1 : uemail) {
 			to = email1 + ",";
@@ -1199,7 +1164,7 @@ public class BotSeApplication1 {
 			htmlpage1 = null;
 			// brss.mailSendUpdate();
 			// message=null;
-			System.out.println("Sent message successfully....");
+			//System.out.println("Sent message successfully....");
 			usrList.clear();
 			usrList.clear();
 			data.clear();
@@ -1227,66 +1192,98 @@ public class BotSeApplication1 {
 	 * 
 	 * */
 
-	public void duckduckSearch(String searchKeyword) {
-		links = new ArrayList<>();
-		// searchKeyword = dd;
+	public  void duckduckSearch(String searchKeyword) {
+		//System.out.println("Search Keyword duckduck go----"+searchKeyword);
+		
 		String xpthAnchorDuck = "//h2[@class='result__title']//a[1]";
 		String xpthNextDuck = "//a[text()='More results' and @class='result--more__btn btn btn--full']";
-
+		String getTitleWithOutOpenThePage = "//h2[@class='result__title']";
+		String getTitleWithOutOpenThePage2 = "//*[@class='result__title']";
+		String getPageNumberDuckDuckGo = "//div[@class='result__pagenum  result__pagenum--side']";
+		
 		links = new ArrayList<>();
 		List<WebElement> getLink = null;
+		List<WebElement> getTitle = null;
 		try {
-			String duckURL = "https://duckduckgo.com/?q=" + searchKeyword;
-			System.out.println("-------duckURL ---------- " + duckURL);
+			String duckURL = "https://duckduckgo.com/?q="+searchKeyword;
+			
 			driver.get(duckURL);
 			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 			getLink = driver.findElements(By.xpath(xpthAnchorDuck));
 			
-			// getLink = driver.findElements(By.xpath("//li[@class]/h2/a"));
-			/*
-			 * for (WebElement we : getLink) { // for confirm
-			 * System.out.println("printurl :- "+we.getAttribute("href"));
-			 * 
-			 * links.add(we.getAttribute("href")); }
-			 */
-			
 			WebElement nextDuck = driver.findElement(By.xpath(xpthNextDuck));
-			System.out.println("===duckduckgo link===" + nextDuck.getAttribute("href"));
+			//System.out.println("===duckduckgo link===" + nextDuck.getAttribute("href"));
 			for (int i = 1; i <= PAGES; i++) {
 				try {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					// driver.get(next.getAttribute("href"));
 					getLink = driver.findElements(By.xpath(xpthAnchorDuck));
+					getTitle = driver.findElements(By.xpath(getTitleWithOutOpenThePage));
+					int index = 0;
 					for (WebElement we : getLink) {
-						links.add(we.getAttribute("href"));
+						
+						try {
+//							getTitleFromEachLinks(); // later hide
+							String getTitleWithOutOpenPage = getTitle.get(index++).getText();
+							//System.out.println("getTitleWithOutOpenPage-DuckDuckGo:-"+getTitleWithOutOpenPage);
+							
+							if(getTitleWithOutOpenPage.contains("...") ) {
+								String replacegetTitle = getTitleWithOutOpenPage.replace("...","");
+								//System.out.println("Replace-DuckDuckGo:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+replacegetTitle+"#"+i+"#"+index);
+										
+							}else if (getTitleWithOutOpenPage.contains("…")){
+								String replacegetTitle = getTitleWithOutOpenPage.replace("…","");
+								//System.out.println("Replace-DuckDuckGo:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+replacegetTitle+"#"+i+"#"+index);
+							}else{
+								links.add(we.getAttribute("href")+"#"+getTitleWithOutOpenPage+"#"+i+"#"+index);
+							}
+							
+							
+							//System.out.println("----------------------------------");
+						}catch(StaleElementReferenceException stale) {
+							//System.out.println("StaleElementReferenceException:-"+stale.getMessage());
+						}
+					}	
 
-						// for confirm
-						System.out.println("printurl - try:- " + we.getAttribute("href"));
-					}
-					links.stream().distinct().collect(Collectors.toList());
-					// TODO Selenium for checking Button is present or not first
-					// he clicked then check
+					//  Selenium for checking Button is present or not first he clicked then check  
 					nextDuck = driver.findElement(By.xpath(xpthNextDuck));
 					if (nextDuck.isDisplayed() || nextDuck.isEnabled()) {
-						System.out.println("----------------" + "\n" + "founded");
+						//System.out.println("----------------"+"\n"+"founded - Next Page");
 						nextDuck.click();
+						 // get page No 
+                        List <WebElement> printPageCount = driver.findElements(By.xpath(getPageNumberDuckDuckGo));
+                        int getPageNoCount = printPageCount.size();
+//                      System.out.println("COUNT:-"+getPageNoCount);
+                        for (int co = 0 ; co < getPageNoCount ; co ++ ) {
+                            if ( printPageCount.size() == 1 ) {
+                                String pageNo = printPageCount.get(co).getText();
+                                //System.out.println("Page No:-"+pageNo);
+                            } else if ( printPageCount.size() == printPageCount.size()) {
+                                String pageNo = printPageCount.get(getPageNoCount-1).getText();
+                                //System.out.println("Page No:-"+pageNo);
+                                break ;
+                            }
+                            
+                        }
 						Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					} else {
-						System.out.println("not founded");
-						System.out.println("else break");
+						//System.out.println("not founded");
+						//System.out.println("else break");
 						break;
 					}
 				} catch (NoSuchElementException e) {
-					// e.printStackTrace();
-					System.out.println("\n" + "==== next button not available====");
+//					e.printStackTrace();
+					//System.out.println("\n"+"==== next button not available====");
 					break;
 				} catch (Exception e) {
-					System.out.println("error on DuckDuck search");
+					//System.out.println("error on DuckDuck search");
 					e.printStackTrace();
 					break;
 				}
 			}
-			System.out.println("\n" + " - Duck links-  " + links);
+			//System.out.println("\n"+" - Duck links-  "+links);
 		} catch (Exception e) {
 			// browser exception will be caught here
 			e.printStackTrace();
@@ -1294,131 +1291,6 @@ public class BotSeApplication1 {
 		}
 	}
 
-	/* Search Russian Search Engine
-	 * 
-	 * */
-	
-	public void russiaGoSearch(String searchKeyword) {
-
-		String xpthAnchorRussia = "//h3[@class='result__title']//a[1]";
-		String xpthNextRussia = "//a[contains(@data-pxt,'r_one')]";
-
-		links = new ArrayList<>();
-		List<WebElement> getLink = null;
-
-		try {
-			String russiaURL = "https://go.mail.ru/";
-			String russiaURLWithKeyword = "https://go.mail.ru/?q=" + searchKeyword;
-			System.out.println("-------russiaGoURL ---------- " + russiaURL);
-			driver.get(russiaURL);
-			driver.findElement(By.xpath("//input[@id='q']")).sendKeys(searchKeyword, Keys.RETURN);
-			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-			getLink = driver.findElements(By.xpath(xpthAnchorRussia));
-			// getLink = driver.findElements(By.xpath("//li[@class]/h2/a"));
-			/*
-			 * for (WebElement we : getLink) { // for confirm
-			 * System.out.println("printurl:- "+we.getAttribute("href"));
-			 * 
-			 * links.add(we.getAttribute("href")); }
-			 */
-			WebElement nextrussia = driver.findElement(By.xpath(xpthNextRussia));
-			System.out.println("===russia Go Search  link===" + nextrussia.getAttribute("href"));
-			for (int i = 1; i <= PAGES; i++) {
-				try {
-					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-					// driver.get(next.getAttribute("href"));
-					getLink = driver.findElements(By.xpath(xpthAnchorRussia));
-					for (WebElement we : getLink) {
-						links.add(we.getAttribute("href"));
-
-						// for confirm
-						System.out.println("printurl - try:- " + we.getAttribute("href"));
-					}
-
-					// TODO Selenium for checking Button is present or not first
-					// he clicked then check
-					nextrussia = driver.findElement(By.xpath(xpthNextRussia));
-					if (nextrussia.isDisplayed() || nextrussia.isEnabled()) {
-						System.out.println("---------------\n" + "founded");
-						nextrussia.click();
-						Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
-					} else {
-						System.out.println("not founded");
-						System.out.println("else break");
-						break;
-					}
-				} catch (NoSuchElementException e) {
-					// e.printStackTrace();
-					System.out.println("\n" + "==== next button not available====");
-					break;
-				} catch (Exception e) {
-					System.out.println("error on russiaGo search");
-					e.printStackTrace();
-					break;
-				}
-			}
-
-			System.out.println(links);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("=== russiaGo  search error=====");
-		}
-	}
-
-	/* Use Selenium to crawl and get the Title from the URL Links
-	 * 
-	 * Returns title
-	 * */
-
-	/*public String getTitleFromEachLinks(String lnk) {
-
-		getResponsePage(lnk);
-		String printTitle = "";
-		// ===================== Hndl Multiple Tabs =====================
-
-		((JavascriptExecutor) driver).executeScript("window.open()");
-
-		ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
-		int getTabsCount = tabs.size();
-		System.out.println("Total Tabs:- " + getTabsCount);
-		driver.switchTo().window(tabs.get(1));
-
-		try {
-			driver.get(lnk);
-			// Using Java script
-			JavascriptExecutor jse = (JavascriptExecutor) driver;
-			String titlebyJavascript = (String) jse.executeScript("return document.title");
-			printTitle = titlebyJavascript;
-			System.out.println("Title of webpage by Javascript :-" + printTitle);
-
-			if (titlebyJavascript == null || titlebyJavascript.isEmpty()) {
-				driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-				printTitle = driver.getTitle();
-				System.out.println("trying Print Title1--------------------------->:- " + printTitle);
-			}
-
-		} catch (TimeoutException ex) {
-			//System.out.println("Using Javascript-" + ex.getMessage());
-			//ex.printStackTrace();
-			try {
-				printTitle = driver.getTitle();
-				System.out.println("Print Title: ====================================> " + printTitle);
-
-				if (printTitle == null || printTitle.isEmpty()) {
-					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-					printTitle = driver.getTitle();
-					//System.out.println("trying Print Title1:- " + driver.getTitle());
-				}
-
-			} catch (TimeoutException TOEX) {
-				//System.out.println("TOEX-" + TOEX.getMessage());
-			}
-		}
-		driver.close(); // close the 2nd tab
-		// 1st Tab
-		driver.switchTo().window(tabs.get(0));
-		return printTitle;
-	}*/
 	
 	//*************28-01-2020 by pentation/m************************//
 	public  String getTitleFromEachLinks(String lnk) {
@@ -1430,7 +1302,7 @@ public class BotSeApplication1 {
 		ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
 		int getTabsCount = tabs.size();
 		
-		System.out.println("Total Tabs:- "+getTabsCount);
+		//System.out.println("Total Tabs:- "+getTabsCount);
 		// 2nd Tab
 		driver.switchTo().window(tabs.get(1));
 		
@@ -1444,7 +1316,7 @@ public class BotSeApplication1 {
 			JavascriptExecutor jse = (JavascriptExecutor)driver;
 			String titlebyJavascript= (String) jse.executeScript("return document.title");
 			printTitle = titlebyJavascript;
-			System.out.println("Title of webpage by Javascript :-"+titlebyJavascript);
+			//System.out.println("Title of webpage by Javascript :-"+titlebyJavascript);
 			
 			if(titlebyJavascript == null || titlebyJavascript.isEmpty()) {
 				driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -1454,24 +1326,24 @@ public class BotSeApplication1 {
 					
 				}
 				catch(Exception useSpecialWaitForTitle) {
-					System.out.println("useSpecialWaitForTitle:- "+useSpecialWaitForTitle.getMessage());
+					//System.out.println("useSpecialWaitForTitle:- "+useSpecialWaitForTitle.getMessage());
 					
 				}
 				String  tryingPrintTitle12 = driver.getTitle();
 				printTitle=tryingPrintTitle12;
-				System.out.println("trying Print Title12:- "+tryingPrintTitle12);
+				//System.out.println("trying Print Title12:- "+tryingPrintTitle12);
 			}
 			
 			long endTime = System.currentTimeMillis();
 		    long duration = (endTime - startTime);  //Total execution time in milli seconds
-		    System.out.println("Time taking for print the Title:-"+duration+" Milliseconds");
+		    //System.out.println("Time taking for print the Title:-"+duration+" Milliseconds");
 			
 		}catch(TimeoutException ex) {
-			System.out.println("Using Javascript-"+ex.getMessage());
+			//System.out.println("Using Javascript-"+ex.getMessage());
 			long startTimeCatch = System.currentTimeMillis();
 			try {
 				printTitle = driver.getTitle();
-				System.out.println("Print Title:- "+printTitle);
+				//System.out.println("Print Title:- "+printTitle);
 				
 				if(printTitle == null || printTitle.isEmpty()) {
 					driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -1479,20 +1351,20 @@ public class BotSeApplication1 {
 						useSpecialWaitForTitle("//title");
 					}
 					catch(Exception useSpecialWaitForTitle) {
-						System.out.println("useSpecialWaitForTitle:- "+useSpecialWaitForTitle.getMessage());
+						//System.out.println("useSpecialWaitForTitle:- "+useSpecialWaitForTitle.getMessage());
 					}
 					String  tryingPrintTitle1 = driver.getTitle();
 					printTitle=tryingPrintTitle1;
-					System.out.println("trying Print Title1:- "+tryingPrintTitle1);
+					//System.out.println("trying Print Title1:- "+tryingPrintTitle1);
 				}
 				
 			}catch(TimeoutException TOEX) {
-				System.out.println("TOEX-"+TOEX.getMessage());
+				//System.out.println("TOEX-"+TOEX.getMessage());
 			}
 			
 			long endTimeCatch = System.currentTimeMillis();
 		    long durationCatch = (endTimeCatch - startTimeCatch);  //Total execution time in milli seconds
-		    System.out.println("Time taking for print the Title in Catch:-"+durationCatch+" Milliseconds");
+		    //System.out.println("Time taking for print the Title in Catch:-"+durationCatch+" Milliseconds");
 		}
 			
 				
@@ -1502,7 +1374,7 @@ public class BotSeApplication1 {
 		
 		// ===================== Hndl Multiple Tabs =====================
 
-		System.out.println("--------------------------------------------");
+		//System.out.println("--------------------------------------------");
 		return printTitle;
 	}
 	public static WebElement useSpecialWaitForTitle (String xpathExpression) {
@@ -1510,24 +1382,24 @@ public class BotSeApplication1 {
 		try {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathExpression)));
 		}catch(Exception ex) {
-			System.out.println("Wait Exception:- "+ex.getMessage());
+			//System.out.println("Wait Exception:- "+ex.getMessage());
 		}
 		
 		WebElement eleRelxpath =  driver.findElement(By.xpath(xpathExpression));
 		String printInnerText = eleRelxpath.getAttribute("innerText");
-		System.out.println("printInnerText:- "+printInnerText);
+		//System.out.println("printInnerText:- "+printInnerText);
 
 		if( printInnerText.isEmpty() || printInnerText == null || printInnerText == "" ) {
 			String TryNo4 = driver.getTitle();
-			System.out.println("Try no 4:- "+TryNo4);
+			//System.out.println("Try no 4:- "+TryNo4);
 
 			if( TryNo4.isEmpty() || TryNo4 == null || TryNo4 == "" ) {
 				List <WebElement> getAllTitle = driver.findElements(By.xpath(xpathExpression));
 				if ( getAllTitle.size() >1 ) {
-					System.out.println("getTitleCount:-"+getAllTitle.size());
+					//System.out.println("getTitleCount:-"+getAllTitle.size());
 					for (int TC = 0 ; TC <getAllTitle.size() ; TC++) {
 						String tooManyTitle =  getAllTitle.get(TC).getAttribute("innerText");
-						System.out.println("Title No:- "+TC+" - "+tooManyTitle);
+						//System.out.println("Title No:- "+TC+" - "+tooManyTitle);
 					}// for loop
 				} // list checking
 			} // TryNo4 checking
@@ -1546,7 +1418,7 @@ public class BotSeApplication1 {
 				ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
 				int getTabsCount = tabs.size();
 				
-				System.out.println("Total Tabs:- "+getTabsCount);
+				//System.out.println("Total Tabs:- "+getTabsCount);
 				
 
 				driver.switchTo().window(tabs.get(1));
@@ -1561,7 +1433,7 @@ public class BotSeApplication1 {
 					JavascriptExecutor jse = (JavascriptExecutor)driver;
 					String titlebyJavascript= (String) jse.executeScript("return document.title");
 					printTitle = titlebyJavascript;
-					System.out.println("Title of webpage by Javascript :-"+titlebyJavascript);
+					//System.out.println("Title of webpage by Javascript :-"+titlebyJavascript);
 					
 					if(titlebyJavascript == null || titlebyJavascript.isEmpty()) {
 						driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -1572,14 +1444,14 @@ public class BotSeApplication1 {
 					
 					long endTime = System.currentTimeMillis();
 				    long duration = (endTime - startTime);  //Total execution time in milli seconds
-				    System.out.println("Time taking for print the Title:-"+duration+" Milliseconds");
+				    //System.out.println("Time taking for print the Title:-"+duration+" Milliseconds");
 					
 				}catch(TimeoutException ex) {
-					System.out.println("Using Javascript-"+ex.getMessage());
+					//System.out.println("Using Javascript-"+ex.getMessage());
 					long startTimeCatch = System.currentTimeMillis();
 					try {
 						printTitle = driver.getTitle();
-						//System.out.println("Print Title:- "+printTitle);
+						////System.out.println("Print Title:- "+printTitle);
 						
 						if(printTitle == null || printTitle.isEmpty()) {
 							driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -1589,12 +1461,12 @@ public class BotSeApplication1 {
 						}
 						
 					}catch(TimeoutException TOEX) {
-						System.out.println("TOEX-"+TOEX.getMessage());
+						//System.out.println("TOEX-"+TOEX.getMessage());
 					}
 					
 					long endTimeCatch = System.currentTimeMillis();
 				    long durationCatch = (endTimeCatch - startTimeCatch);  //Total execution time in milli seconds
-				    System.out.println("Time taking for print the Title in Catch:-"+durationCatch+" Milliseconds");
+				    //System.out.println("Time taking for print the Title in Catch:-"+durationCatch+" Milliseconds");
 				}
 							
 				driver.close(); // close the 2nd tab
@@ -1611,10 +1483,10 @@ public class BotSeApplication1 {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpathExpression)));
 			WebElement sd =  driver.findElement(By.xpath(xpathExpression));
 			String das= sd.getText();
-			System.out.println("das:- "+das);
+			//System.out.println("das:- "+das);
 			if(das.isEmpty() || das == null || das == "") {
 				String TryNo4 = driver.getTitle();
-				System.out.println("Try no 4:- "+TryNo4);
+				//System.out.println("Try no 4:- "+TryNo4);
 			}
 			return sd;	
 		}
@@ -1622,7 +1494,7 @@ public class BotSeApplication1 {
 
 	public static void getResponsePage(String linkUrl) {
 
-		// System.out.println("-------linkUrl-------->"+linkUrl);
+		// //System.out.println("-------linkUrl-------->"+linkUrl);
 		int linkCount = 0;
 		try {
 			URL url = new URL(linkUrl);
@@ -1631,17 +1503,17 @@ public class BotSeApplication1 {
 			httpURLConnection.connect();
 
 			if (httpURLConnection.getResponseCode() == 200) {
-				System.out.println("No: " + linkCount + " - " + linkUrl + " - " + httpURLConnection.getResponseMessage()
-						+ " - " + httpURLConnection.getResponseCode());
+				//System.out.println("No: " + linkCount + " - " + linkUrl + " - " + httpURLConnection.getResponseMessage()
+					//	+ " - " + httpURLConnection.getResponseCode());
 			} else if (httpURLConnection.getResponseCode() != 200
 					|| httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
 				
-				System.out.println("No: " + linkCount + " - " + linkUrl + " - " + httpURLConnection.getResponseCode()
-						+ " - " + httpURLConnection.getResponseMessage() + " - " + HttpURLConnection.HTTP_NOT_FOUND);
+				//System.out.println("No: " + linkCount + " - " + linkUrl + " - " + httpURLConnection.getResponseCode()
+						//+ " - " + httpURLConnection.getResponseMessage() + " - " + HttpURLConnection.HTTP_NOT_FOUND);
 			}
 
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			//System.out.println(ex.getMessage());
 		}
 	}
 	
@@ -1650,10 +1522,91 @@ public class BotSeApplication1 {
 	 * 
 	 * modify google search engine  */
 	
-	
+	public void googleSearch(String searchKeyword ) {
+		//System.out.println("Search Keyword Google----"+searchKeyword);
+		
+		String xpthAnchorGoogle = "//div[@class='r']/a";
+		String xpthNextGoogle = "//a[@id='pnnext']";
+		String hitGoogleSearch = "//input[@name='q']";
+		String getTitleWithOutOpenThePage = "//div[@class='r']/a/h3";
+		
+		links = new ArrayList<>();
+		List<WebElement> getLink = null;
+		List<WebElement> getTitle = null;
+		try {
+			String googleURL = "https://www.google.com/";
+			//System.out.println("-------google ---------- "+googleURL);
+			driver.get(googleURL);
+			driver.findElement(By.xpath(hitGoogleSearch)).sendKeys(searchKeyword, Keys.RETURN);
+			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+			WebElement nextGoogle = driver.findElement(By.xpath(xpthNextGoogle));
+			//System.out.println("===Google link===" + nextGoogle.getAttribute("href"));
+			for (int i = 1; i <= PAGES; i++) {
+				try {
+					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+					// driver.get(next.getAttribute("href"));
+					getLink = driver.findElements(By.xpath(xpthAnchorGoogle));
+					getTitle = driver.findElements(By.xpath(getTitleWithOutOpenThePage));
+					int index = 0;
+					for (WebElement we : getLink) {
+					
+						try {
+//							getTitleFromEachLinks(); // later hide
+							String getTitleWithOutOpenPage = getTitle.get(index++).getText();
+							//System.out.println("getTitleWithOutOpenPage-Google:-"+getTitleWithOutOpenPage);
+							
+							if(getTitleWithOutOpenPage.contains("...") ) {
+								String replacegetTitle = getTitleWithOutOpenPage.replace("...","");
+								//System.out.println("Replace-Google:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+getTitleWithOutOpenPage+"#"+i+"#"+index);
+										
+							}else if (getTitleWithOutOpenPage.contains("…")){
+								String replacegetTitle = getTitleWithOutOpenPage.replace("…","");
+								//System.out.println("Replace-Google:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+getTitleWithOutOpenPage+"#"+i+"#"+index);
+							}else{
+								links.add(we.getAttribute("href")+"#"+getTitleWithOutOpenPage+"#"+i+"#"+index);
+							}
+							
+							//System.out.println("----------------------------------");
+						}catch(StaleElementReferenceException stale) {
+							//System.out.println("StaleElementReferenceException:-"+stale.getMessage());
+						}
+						//}
+//						
+					}	
 
-	public void googleSearch(String searchKeyword) {
-		//System.out.println("Search Keyword Google----" + searchKeyword);
+					//  Selenium for checking Button is present or not first he clicked then check  
+					nextGoogle = driver.findElement(By.xpath(xpthNextGoogle));
+					if (nextGoogle.isDisplayed() || nextGoogle.isEnabled()) {
+						//System.out.println("----------------"+"\n"+"founded - Next Page");
+						nextGoogle.click();
+						Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+					} else {
+						//System.out.println("not founded");
+						//System.out.println("else break");
+						break;
+					}
+				} catch (NoSuchElementException e) {
+//					e.printStackTrace();
+					//System.out.println("\n"+"==== next button not available ====");
+					break;
+				} catch (Exception e) {
+					//System.out.println("error on Google search");
+					e.printStackTrace();
+					break;
+				}
+			}//end for loop
+			//System.out.println("\n"+" - Google links-  "+links);
+		} catch (Exception e) {
+			// browser exception will be caught here
+			e.printStackTrace();
+			System.err.println("=== Google go  search error=====");
+		}
+	}	
+
+	public void googleSearch_old(String searchKeyword) {
+		////System.out.println("Search Keyword Google----" + searchKeyword);
 
 		String xpthAnchorGoogle = "//div[@class='r']/a";
 		String xpthNextGoogle = "//a[@id='pnnext']";
@@ -1663,14 +1616,14 @@ public class BotSeApplication1 {
 		List<WebElement> getLink = null;
 		try {
 			 String googleURL = "https://www.google.com/";
-			//System.out.println("-------google ---------- " + googleURL);
+			////System.out.println("-------google ---------- " + googleURL);
 			driver.get(googleURL);
 			driver.findElement(By.xpath(hitGoogleSearch)).sendKeys(searchKeyword, Keys.RETURN);
 			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 			getLink = driver.findElements(By.xpath(xpthAnchorGoogle));
 
 			WebElement nextGoogle = driver.findElement(By.xpath(xpthNextGoogle));
-			System.out.println("===Google link===" + nextGoogle.getAttribute("href"));
+			//System.out.println("===Google link===" + nextGoogle.getAttribute("href"));
 			for (int i = 1; i <= PAGES; i++) {
 				try {
 					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
@@ -1681,7 +1634,7 @@ public class BotSeApplication1 {
 					  links.add(we.getAttribute("href"));
 					  /* 
 							 * //getHref = we.getAttribute("href"); // for confirm
-							 * //System.out.println("printurl - try:- "+getHref);
+							 * ////System.out.println("printurl - try:- "+getHref);
 							 * 
 							 * //getTitleFromEachLinks(); // later hide }
 							 */
@@ -1693,30 +1646,210 @@ public class BotSeApplication1 {
 					  
 					nextGoogle = driver.findElement(By.xpath(xpthNextGoogle));
 					if (nextGoogle.isDisplayed() || nextGoogle.isEnabled()) {
-						System.out.println("----------------" + "\n" + "founded - Next Page");
+						//System.out.println("----------------" + "\n" + "founded - Next Page");
 						nextGoogle.click();
 						Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
 					} else {
-						System.out.println("not founded");
-						System.out.println("else break");
+						//System.out.println("not founded");
+						//System.out.println("else break");
 						break;
 					}
 				  
 				} catch (NoSuchElementException e) {
 					// e.printStackTrace();
-					System.out.println("\n" + "==== next button not available ====");
+					//System.out.println("\n" + "==== next button not available ====");
 					break;
 				} catch (Exception e) {
-					System.out.println("error on Google search");
+					//System.out.println("error on Google search");
 					e.printStackTrace();
 					break;
 				}
 			} // end for loop
-			System.out.println("\n" + " - Google links-  " + links);
+			//System.out.println("\n" + " - Google links-  " + links);
 		} catch (Exception e) {
 			// browser exception will be caught here
 			e.printStackTrace();
 			System.err.println("=== Google go  search error=====");
+		}
+	}
+	
+	
+	
+	public  void bingSearch(String searchKeyword ) {
+		
+		String xpthAnchorBing = "//li[@class='b_algo']/h2/a";
+		String xpthNextBing = "//a[@title='Next page']";
+		String hitBingSearch = "";
+		String getTitleWithOutOpenThePage = "//li[@class='b_algo']/h2";
+		String getTitleWithOutOpenThePage2 = "//h2";
+		
+		links = new ArrayList<>();
+		List<WebElement> getLink = null;
+		List<WebElement> getTitle = null;
+		// searchKeyword = dd;
+		try {
+			String bingURL = "http://www.bing.com/search?q="+searchKeyword;
+			driver.get(bingURL);
+			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+			getLink = driver.findElements(By.xpath("//li[@class='b_algo']/h2/a"));
+			/*
+			for (WebElement we : getLink) {
+				// for confirm 
+				//System.out.println("printurl :- "+we.getAttribute("href"));
+				
+				links.add(we.getAttribute("href"));
+				
+//				getTitleFromEachLinks(); // later hide
+			}
+			*/
+//			WebElement next = driver.findElement(By.xpath("//a[@title='Next page']"));
+			WebElement next = driver.findElement(By.xpath(xpthNextBing));
+			//System.out.println("===bing link===" + next.getAttribute("href"));
+			for (int i = 1; i <= PAGES; i++) {
+				try {
+					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+					getLink = driver.findElements(By.xpath(xpthAnchorBing));
+					getTitle = driver.findElements(By.xpath(getTitleWithOutOpenThePage));
+					int index = 0;
+					for (WebElement we : getLink) {
+					try {
+
+							String getTitleWithOutOpenPage = getTitle.get(index++).getText();
+							//System.out.println("getTitleWithOutOpenPage-Bing:-" +getTitleWithOutOpenPage );
+							
+							if(getTitleWithOutOpenPage.contains("...") ) {
+								String replacegetTitle = getTitleWithOutOpenPage.replace("...","");
+								//System.out.println("Replace-Bing:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+replacegetTitle+"#"+i+"#"+index);	
+										
+							}else if (getTitleWithOutOpenPage.contains("…")){
+								String replacegetTitle = getTitleWithOutOpenPage.replace("…","");
+								//System.out.println("Replace-Bing:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+replacegetTitle+"#"+i+"#"+index);	
+							}else{
+								links.add(we.getAttribute("href")+"#"+getTitleWithOutOpenPage+"#"+i+"#"+index);	
+							}
+							
+							//System.out.println("----------------------------------");
+						}catch(StaleElementReferenceException stale) {
+							//System.out.println("StaleElementReferenceException:-"+stale.getMessage());
+						}
+					}
+
+//					next = driver.findElement(By.xpath("//a[@title='Next page']"));
+					next = driver.findElement(By.xpath(xpthNextBing));
+					if (next.isDisplayed() || next.isEnabled()) {
+						//System.out.println("---------------"+"\n"+"founded - Next Page");
+						next.click();
+						Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+					} else {
+						//System.out.println("not founded");
+						//System.out.println("else break");
+						break;
+					}
+				} catch (NoSuchElementException e) {
+					// TODO: handle exception
+					e.printStackTrace();
+					//System.out.println("==== next button not available====");
+					break;
+				} catch (Exception e) {
+					//System.out.println("error on bing search");
+					e.printStackTrace();
+					break;
+				}
+			}
+			//System.out.println(links);
+		} catch (Exception e) {
+			// browser exception will be caught here
+
+			e.printStackTrace();
+			System.err.println("=== bing search error=====");
+		}
+	}
+	
+	
+	public  void russiaGoSearch(String searchKeyword) {
+		//System.out.println("Search Keyword russia go----"+searchKeyword);
+		
+		String xpthAnchorRussia = "//h3[@class='result__title']//a[1]";
+		String xpthNextRussia = "//a[contains(@data-pxt,'r_one')]";
+		String getTitleWithOutOpenThePage = "//h3[@class='result__title']";
+		
+		links = new ArrayList<>();
+		List<WebElement> getLink = null;
+		List<WebElement> getTitle = null;
+		
+		try {
+			String russiaURL = "https://go.mail.ru/";
+			String russiaURLWithKeyword = "https://go.mail.ru/?q="+searchKeyword;
+			//System.out.println("-------russiaGoURL ---------- "+russiaURL);
+			driver.get(russiaURL);
+			driver.findElement(By.xpath("//input[@id='q']")).sendKeys(searchKeyword, Keys.RETURN);
+			Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+			getLink = driver.findElements(By.xpath(xpthAnchorRussia));
+
+			WebElement nextrussia = driver.findElement(By.xpath(xpthNextRussia));
+			//System.out.println("===russiaGo link===" + nextrussia.getAttribute("href"));
+			for (int i = 1; i <= PAGES; i++) {
+				try {
+					Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+					// driver.get(next.getAttribute("href"));
+					getLink = driver.findElements(By.xpath(xpthAnchorRussia));
+					getTitle = driver.findElements(By.xpath(getTitleWithOutOpenThePage));
+					int index = 0;
+					for (WebElement we : getLink) {
+						links.add(we.getAttribute("href"));
+						
+						
+						try {
+//							getTitleFromEachLinks(); // later hide
+							String getTitleWithOutOpenPage = getTitle.get(index++).getText();
+							//System.out.println("getTitleWithOutOpenPage-Russia:-" +getTitleWithOutOpenPage );
+							
+							if(getTitleWithOutOpenPage.contains("...") ) {
+								String replacegetTitle = getTitleWithOutOpenPage.replace("...","");
+								//System.out.println("Replace-Russia:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+replacegetTitle+"#"+i+"#"+index);
+										
+							}else if (getTitleWithOutOpenPage.contains("…")){
+								String replacegetTitle = getTitleWithOutOpenPage.replace("…","");
+								//System.out.println("Replace-Russia:-" +replacegetTitle );
+								links.add(we.getAttribute("href")+"#"+replacegetTitle+"#"+i+"#"+index);
+							}else{
+								links.add(we.getAttribute("href")+"#"+getTitleWithOutOpenPage+"#"+i+"#"+index);
+							}
+							
+							//System.out.println("----------------------------------");
+						}catch(StaleElementReferenceException stale) {
+							//System.out.println("StaleElementReferenceException:-"+stale.getMessage());
+						}
+					}	
+					
+					// TODO Selenium for checking Button is present or not first he clicked then check  
+					nextrussia = driver.findElement(By.xpath(xpthNextRussia));
+					if (nextrussia.isDisplayed() || nextrussia.isEnabled()) {
+						//System.out.println("---------------\n"+"founded - Next Page");
+						nextrussia.click();
+						Thread.sleep(random_number(8000, 4000), random_number(1000, 100));
+					} else {
+						//System.out.println("not founded");
+						//System.out.println("else break");
+						break;
+					}
+				} catch (NoSuchElementException e) {
+//					e.printStackTrace();
+					//System.out.println("\n"+"==== next button not available====");
+					break;
+				} catch (Exception e) {
+					//System.out.println("error on russiaGo search");
+					e.printStackTrace();
+					break;
+				}
+			}
+			//System.out.println(links);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("=== russiaGo  search error=====");
 		}
 	}
 	// ------------------------------------------------------------------------------------------------------
@@ -1747,4 +1880,11 @@ public class BotSeApplication1 {
 	boolean b1 = false;
 	boolean b2 = false;
 	Document doc = null;
+	
+	@Override
+	public void setServletContext(ServletContext servletcontext) {
+		// TODO Auto-generated method stub
+		this.servletcontext = servletcontext;
+		
+	}
 }

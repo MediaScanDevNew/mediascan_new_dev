@@ -20,8 +20,8 @@ public class Master_crawle_urlService {
 	Master_crawle_urlRepository mcur;
 
 	@Transactional
-	public Integer storeCrawleData(String lnk, int prid, int uid, int sid, int ppid, String machine, String domain,String title) {
-		return mcur.saveData(lnk, prid, uid, sid, ppid, machine, domain,title);
+	public Integer storeCrawleData(String lnk, int prid, int uid, int sid, int ppid, String machine, String domain,String title,String page_no,String page_rank) {
+		return mcur.saveData(lnk, prid, uid, sid, ppid, machine, domain,title,page_no,page_rank);
 	}
 
 }

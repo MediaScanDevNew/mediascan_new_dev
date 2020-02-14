@@ -14,4 +14,6 @@ public interface Whitelist_Repository extends CrudRepository<Whitelist,Integer>{
 	
 	@Query(nativeQuery = true ,value="Select domain_name from whitelist  where clientId=?1")
 	String[] getClientwiseWhitelist(int clientId);
+	@Query(nativeQuery = true ,value="Select domain_name,clientId from whitelist where clientId > 0")
+	List<Object[]> getAllWhitelist();
 }

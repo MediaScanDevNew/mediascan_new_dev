@@ -26,7 +26,7 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 			*/
 	@Query(value = "select sps.id,sps.keyphrase,sps.pipe, sps.userId,sps.projectId "
 			+ " from stored_project_setup1 as sps  where  sps.completed=0  "
-			+ " order by sps.id asc LIMIT 1 ", nativeQuery = true)
+			+ " order by sps.id asc ", nativeQuery = true)
 			
 	//public List<Object[]> findAllCustomQuery(@Param("ip") String myIP);
 	public List<Object[]> findAllCustomQuery();
@@ -71,13 +71,13 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 	int bingcomplate(@Param("id") int id);
 	
 	@Modifying(clearAutomatically = true)
-	@Query(value = "update stored_project_setup1 set duckduckgo=1,russiaGo=2 where id= (:id)", nativeQuery = true)
+	@Query(value = "update stored_project_setup1 set duckduckgo=1,russiago=2 where id= (:id)", nativeQuery = true)
 	int duckduckGocomplate(@Param("id") int id);
 	
 	/** Added on Jan/27 to track end of Russian Search engine crawl **/
 	/** End of Russian Search Engine */
 	@Modifying(clearAutomatically = true)
-	@Query(value = "update stored_project_setup1 set russiaGo=1 where id= (:id)", nativeQuery = true)
+	@Query(value = "update stored_project_setup1 set russiago=1 where id= (:id)", nativeQuery = true)
 	int russiacomplete(@Param("id") int id);
 
 }

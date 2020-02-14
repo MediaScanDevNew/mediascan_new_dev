@@ -26,7 +26,7 @@ public interface Project_infoRepository extends CrudRepository<Project_info, Str
 	@Query(nativeQuery = true ,value="Select client_type from project_info  where id=(:projectId)")
 	List<Integer> getClientByProjectId(@Param("projectId") int projectId);
 	
-	@Query(nativeQuery = true ,value="Select project_name from project_info  where id=?1")
-	String getNameByProjectId(int projectId);
+	@Query(nativeQuery = true ,value="Select project_name,project_type from project_info  where id=?1")
+	public List<Object[]> getNameByProjectId(int projectId);
 
 }

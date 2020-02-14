@@ -26,7 +26,8 @@ public class Stored_project_setup {
 	int id;
 	//int pipe, preority, userId, projectId, completed, deleted, bing, yahoo, google;
 	//String keyphrase, machine, created_on;
-	int  userId,pipe, projectId, completed, bing, yahoo, google,duckduckgo,russiaGo;
+	
+	int  userId,pipe, projectId, completed, bing, yahoo, google,duckduckgo,russiago;
 	String keyphrase, created_on;
 	
 	public int getId() {
@@ -122,12 +123,14 @@ public class Stored_project_setup {
 	public void setDuckduckgo(int duckduckgo) {
 		this.duckduckgo = duckduckgo;
 	}
-	public int getRussiaGo() {
-		return russiaGo;
+	public int getRussiago() {
+		return russiago;
 	}
-	public void setRussiaGo(int russiaGo) {
-		this.russiaGo = russiaGo;
+	public void setRussiago(int russiago) {
+		this.russiago = russiago;
 	}
+	
+	
 	
 	
 	

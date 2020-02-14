@@ -27,4 +27,6 @@ public interface Blacklist_sitesRepository extends CrudRepository<Blacklist_site
 	public List<Object []> findAllCustomQuery();
 	@Query(value = "select domain from blacklist_sites where is_active=0", nativeQuery = true)
 	public String[] findAllActiveBlacklists();
+	@Query(value = "select distinct domain from blacklist_sites where project_type=?1 and is_active=0", nativeQuery = true)
+	public String[] findAllActiveBlacklistsTypeWise(int project_type);
 }
