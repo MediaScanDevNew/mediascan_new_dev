@@ -62,12 +62,10 @@ public class BotStarter extends Thread {
 		     stmt=con.createStatement(); 
 		     String query1 ="select sps.keyphrase  from stored_project_setup1 sps where completed=0 and (sps.created_on between '"+cdate+" 00:00:00' and '"+cdate+" 23:59:59')";
 		     System.out.println("******************************query:  "+query1);
-			 rs=stmt.executeQuery("select sps.keyphrase "
-			+ " from stored_project_setup1 sps where completed=0 and (sps.created_on between '"+cdate+" 00:00:00' and '"+cdate+" 23:59:59')");
-			 System.out.println("***************************1111111111111*******************Query Executed*******************");
-		     if(rs.next()==false)
+			 rs=stmt.executeQuery(query1);
+			if(rs.next()==false)
 		     {
-		    	 System.out.println("******************************No query Available*************************");
+		    	
 		    	 rs.close();
 		    	 stmt.close();
 		    	 con.close();
