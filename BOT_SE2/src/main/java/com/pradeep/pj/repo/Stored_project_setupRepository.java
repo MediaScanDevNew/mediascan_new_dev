@@ -27,10 +27,9 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 	@Query(value = "select sps.id,sps.keyphrase,sps.pipe, sps.userId,sps.projectId "
 			+ " from stored_project_setup2 as sps  where  sps.completed=0  "
 			+ " order by sps.priority desc ", nativeQuery = true)
-	//id asc
-	
-	//public List<Object[]> findAllCustomQuery(@Param("ip") String myIP);
 	public List<Object[]> findAllCustomQuery();
+	
+	
 	@Query(value="select sps.keyphrase "
 			+ " from stored_project_setup2 sps where completed=0 and sps.id=(:id) ", nativeQuery = true)
 	public String findKeyPhrase(@Param("id") int id);
@@ -80,5 +79,33 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 	@Modifying(clearAutomatically = true)
 	@Query(value = "update stored_project_setup2 set russiago=1 where id= (:id)", nativeQuery = true)
 	int russiacomplete(@Param("id") int id);
+	
+	
+	//------------------------ 15.02.2020 ---------------------------------------------------------------------------
+	
+	@Modifying(clearAutomatically = true)
+	@Query(value = "update stored_project_setup2 set completed=2,yahoo=2 where id= (:id)", nativeQuery = true)
+	int yahooStart(@Param("id") int id);
+	
+	@Modifying(clearAutomatically = true)
+	@Query(value = "update stored_project_setup2 set completed=2,bing=2 where id= (:id)", nativeQuery = true)
+	int bingStart(@Param("id") int id);
+	
+	@Modifying(clearAutomatically = true)
+	@Query(value = "update stored_project_setup2 set completed=2,duckduckgo=2 where id= (:id)", nativeQuery = true)
+	int duckduckStart(@Param("id") int id);
+	
+	
+	@Modifying(clearAutomatically = true)
+	@Query(value = "update stored_project_setup2 set completed=2,russiago=2 where id= (:id)", nativeQuery = true)
+	int russiaGoStart(@Param("id") int id);
+	
+	
+	
+	@Query(value = " SELECT ss.keyphrase,pi.project_name,cm.client_name,mu.name "
+				   + "FROM project_info pi,stored_project_setup2 ss,markscan_users mu,client_master cm "
+				   + "where pi.id = (:projectId) and pi.id = ss.projectId and ss.completed=1 and pi.created_by = mu.id "
+				   + "and pi.client_type = cm.id ", nativeQuery = true)
+	public List<Object[]> findAllMailRecords(@Param("projectId") int projectId);
 
 }

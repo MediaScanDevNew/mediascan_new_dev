@@ -74,7 +74,7 @@ public class WhitelistValidation {
             			if(clientId == Integer.parseInt(wRes[1].toString())){
             				crawlRepo.updateWhitelistedDomain(Integer.parseInt(res[0].toString()));
             			}else{
-            				List<Object[]> clientInfo=clientRepo.AllDataCustom(Integer.parseInt(wRes[0].toString()));
+            				List<Object[]> clientInfo=clientRepo.AllDataCustom(Integer.parseInt(wRes[1].toString()));
             				for (Object[] client : clientInfo) {
             					crawlRepo.updateWhitelistedDomainWithStatus("Whitelist Matched with "+client[0].toString(),Integer.parseInt(res[0].toString()));
             				}
@@ -217,7 +217,7 @@ public class WhitelistValidation {
             Object s = objSet.get(0);
             int clientId = Integer.parseInt((String) s);
             System.out.println("-----------clientId------->" + clientId);
-            String[] domains = gRepo.getClientwiseGreylist(clientId);
+            String[] domains = gRepo.getClientwiseGreylist();
             System.out.println("-----length--->" + domains.length);
             List<Object[]> domainObj = crawlRepo.getNotWhitelistedDomain(projectId);
             for (Object[] res : domainObj) {

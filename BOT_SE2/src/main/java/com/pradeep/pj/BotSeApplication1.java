@@ -107,6 +107,8 @@ public class BotSeApplication1 implements ServletContextAware{
 	List<Object[]> cdata;
 	List<String> udata1;
 	List<String> kquery;
+	List<Object[]> maildata;
+	
 	int count;
 	int property;
 	List<Integer> usrList = null;
@@ -360,21 +362,14 @@ public class BotSeApplication1 implements ServletContextAware{
 					
 					links = null;
 				} else if (pipe == 2) {
-					sps.yahooStartGoogleComplate(id);
-
-					// yahoo search==
-
+					
+					sps.yahooStart(id);
 					yahooSearch(keyphrase);
-					//System.out.println("=====yahoo=== links size......." + links.size());
 					afterCrawl(2, keyphrase);
 					links = null;
 				} else if (pipe == 3) {
-					sps.bingStartYahooComplate(id);
-
-					// Bing search==
-
+					sps.bingStart(id);
 					bingSearch(keyphrase);
-					//System.out.println("=====bing=== links size......." + links.size());
 					afterCrawl(3, keyphrase);
 					links = null;
 
@@ -386,7 +381,7 @@ public class BotSeApplication1 implements ServletContextAware{
 					 * 
 					 * fetch the data from duck duck go search engine and save the data in database */
 
-					sps.duckduckStartBingComplete(id);
+					sps.duckduckStart(id);
 					duckduckSearch(keyphrase);
 					//System.out.println("===== duckduck go === links size......." + links.size());
 					afterCrawl(4, keyphrase);
@@ -399,9 +394,8 @@ public class BotSeApplication1 implements ServletContextAware{
 					 * fetch the data from russia go search engine and save the data in database */
 					
 					
-					sps.russiaGoStartduckduckGoComplete(id);
+					sps.russiaGoStart(id);
 					russiaGoSearch(keyphrase);
-					//System.out.println("===== duckduck go === links size......." + links.size());
 					afterCrawl(5, keyphrase);
 					links = null;
 					
@@ -706,6 +700,14 @@ public class BotSeApplication1 implements ServletContextAware{
 		String pagesource = null;
 		List<String> searchkeywordlist = new ArrayList<>();
 		//System.out.println("=== links size=== " + links.size());
+		
+		Set<String> linkWithDuplicates = new LinkedHashSet<String>(links);
+		links.clear();
+		links.addAll(linkWithDuplicates);
+		
+		System.out.println("Links value --->"+links);
+		
+		
 		if (links.size() > 0) {
 			int i = 1;
 			for (String lnk : links) {
@@ -1006,88 +1008,89 @@ public class BotSeApplication1 implements ServletContextAware{
 	// ************************** mail sending code
 	// ************************************
 
-	 @Value("${spring.mail.host}")
+	@Value("${spring.mail.host}")
 	String mailip;
-
-	public void sendMailToUser(int userId, int projectId) {
+    public void sendMailToUser(int userId, int projectId) {
 
 		uemail = new HashSet<String>();
 		cemail = new HashSet<String>();
-		// Integer id =userId;
-		// String pname =pis.findALLCustom(projectId);
 		udata = mus.findUserDetails(userId);
 		// String email="";
 		String uName = "";
+		String userMail = "";
 		String client_name = "";
 		// String htmlpage="";
 
 		for (Object[] usr : udata) {
 			uemail.add((String) usr[0]);
+			userMail = ((String) usr[0]);
 			uName = ((String) usr[1]);
 		}
-		String pName = "";
-		int ctype = 0;
-		pdata = pis.findCustomData(projectId);
-		for (Object[] prj : pdata) {
-			pName = (String) prj[0];
-			ctype = Integer.parseInt((String) prj[1]);
+		
+		System.out.println("**********User Mail is *********" + userMail);
+		
+		
+//		String pName = "";
+//		int ctype = 0;
+//		pdata = pis.findCustomData(projectId);
+//		for (Object[] prj : pdata) {
+//			pName = (String) prj[0];
+//			ctype = Integer.parseInt((String) prj[1]);
+//
+//		}
+//		
+//		cdata = cms.findCustomData(ctype);
+//		for (Object[] cmd : cdata) {
+//			client_name = (String) cmd[0];
+//			cemail.add((String) cmd[1]);
+//		}
+		
+		maildata = sps.getDataForMails(projectId);
+		htmlpage ="";
+		htmlpage = htmlpage +"Hi All,<br/>";
+		htmlpage = htmlpage +"Bot Search Application has been completed successfully :<br/><br/>";
+		htmlpage = htmlpage +"Query:<br/>";
+		htmlpage = htmlpage + "<table border='1'><tr><td><b>Keywords</b></td><td><b>Project Name</b></td><td><b>Client Name</b></td><td><b>Created By</b></td></tr>";
+		for(Object[] md : maildata){
+			htmlpage = htmlpage + "<tr><td>"+(String)md[0]+"</td><td>"+(String)md[1]+"</td><td>"+(String)md[2]+"</td><td>"+uName+"</td></tr>";
+		}		
+				
+		htmlpage = htmlpage + "</table>";
+		
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "111.118.215.222");
+		props.put("mail.smtp.port", "25");
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication("mediascan@markscan.co.in", "M@123rkscan");
+			}
+		});
+		try {
 
-			//System.out.println("**********Client Type*********" + ctype);
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress("mediascan@markscan.co.in"));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userMail));
 
+			message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(""));
+			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com"));//pradipta.maitra@gmail.com
+			message.setSubject("Bot Application Running Status ");
+
+			message.setContent(htmlpage, "text/html");
+
+			// Send message
+
+			Transport.send(message);
+			htmlpage = null;
+			maildata.clear();
+			System.out.println("Mail Send Successfully -----------------------");
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		//System.out.println("*********Client Type1*********" + ctype);
-		cdata = cms.findCustomData(ctype);
-		for (Object[] cmd : cdata) {
-			client_name = (String) cmd[0];
-			cemail.add((String) cmd[1]);
-			// ctype=(Integer)cmd[1];
-			//System.out.println("**********************Client Email*********" + cemail);
 
-		}
-
-		// brss.botStatusStoredData(uName, email, pname, keyphrase, machine);
-		htmlpage = htmlpage + "<tr><td>" + keyphrase + "</td><td>" + pName + "</td><td>" + client_name + "</td><td>"
-				+ uName + " </td></tr>";
-
-		/*
-		 * htmlpage="<p>Dear "
-		 * +uName+",</p><p> Bot Search Application has been completed query: "
-		 * +keyphrase+" Now You can extract data"
-		 * +"from mediascan application.</p><p> thanks &amp; regards:<br> Harendra Preatap Singh</p>"
-		 * ;
-		 * 
-		 * //System.out.println("**********************Email*********"+email);
-		 * //System.out.println("**********************UserName******"+uName);
-		 * Properties props = new Properties(); props.put("mail.smtp.auth",
-		 * "true"); props.put("mail.smtp.starttls.enable", "true");
-		 * props.put("mail.smtp.host", mailip); props.put("mail.smtp.port",
-		 * "25"); Session session = Session.getInstance(props, new
-		 * javax.mail.Authenticator() { protected PasswordAuthentication
-		 * getPasswordAuthentication() { return new
-		 * PasswordAuthentication("hpsingh@markscan.co.in", "M@123rkscan"); }
-		 * }); try {
-		 * 
-		 * Message message = new MimeMessage(session); message.setFrom(new
-		 * InternetAddress("hpsingh@markscan.co.in")); //
-		 * message.setRecipients(Message.RecipientType.TO,
-		 * InternetAddress.parse("pjoshi@markscan.co.in"));
-		 * message.setRecipients(Message.RecipientType.TO,
-		 * InternetAddress.parse(email));
-		 * 
-		 * message.setRecipients(Message.RecipientType.CC,
-		 * InternetAddress.parse("spandit@markscan.co.in"));
-		 * message.setRecipients(Message.RecipientType.BCC,
-		 * InternetAddress.parse("hpsingh@markscan.co.in"));
-		 * message.setSubject("Bot Application Running Status ");
-		 * 
-		 * message.setContent(htmlpage, "text/html");
-		 * 
-		 * // Send message
-		 * 
-		 * Transport.send(message);
-		 * //System.out.println("Sent message successfully...."); } catch
-		 * (Exception e) { e.printStackTrace(); }
-		 */
+		
 
 	}
 
@@ -1148,7 +1151,7 @@ public class BotSeApplication1 implements ServletContextAware{
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
 
 			message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(""));
-			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("hpsingh@markscan.co.in"));
+			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com"));
 			message.setSubject("Bot Application Running Status ");
 
 			message.setContent(htmlpage1, "text/html");
@@ -1795,9 +1798,6 @@ public class BotSeApplication1 implements ServletContextAware{
 					getTitle = driver.findElements(By.xpath(getTitleWithOutOpenThePage));
 					int index = 0;
 					for (WebElement we : getLink) {
-						links.add(we.getAttribute("href"));
-						
-						
 						try {
 //							getTitleFromEachLinks(); // later hide
 							String getTitleWithOutOpenPage = getTitle.get(index++).getText();

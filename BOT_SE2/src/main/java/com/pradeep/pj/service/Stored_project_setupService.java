@@ -23,11 +23,8 @@ public class Stored_project_setupService {
 	Stored_project_setupRepository ssr;
 
 	public List<Object[]> findALLCustom() {
-		System.out.println("~~~~~~~ipaddress---------");
 		List<Object[]> allCustomRecords = new ArrayList<>();
-		
 		allCustomRecords = ssr.findAllCustomQuery();
-		
 		return allCustomRecords;
 	}
 	
@@ -84,4 +81,36 @@ public class Stored_project_setupService {
 	public int russiacomplete(int id) {
 		return ssr.russiacomplete(id);
 	}
+	
+	
+	//--------------- 15.02.2020 ------------------------------------
+	
+	@Transactional
+	public int yahooStart(int id) {
+		return ssr.yahooStart(id);
+	}
+	
+	@Transactional
+	public int bingStart(int id) {
+		return ssr.bingStart(id);
+	}
+	
+	@Transactional
+	public int duckduckStart(int id) {
+		return ssr.duckduckStart(id);
+	}
+	
+	@Transactional
+	public int russiaGoStart(int id) {
+		return ssr.russiaGoStart(id);
+	}
+	
+	
+	public List<Object[]> getDataForMails(int projectId) {
+		List<Object[]> allMailRecords = new ArrayList<>();
+		allMailRecords = ssr.findAllMailRecords(projectId);
+		return allMailRecords;
+	}
+	
+	//----------------------------------------------------------------
 }
