@@ -2,6 +2,10 @@ package com.pradeep.pj;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+
 
 
 
@@ -55,10 +59,15 @@ import com.pradeep.pj.service.Project_infoService;
 import com.pradeep.pj.service.Stored_project_setupService;
 */
 @SpringBootApplication
-public class BotSeApplication   {
+public class BotSeApplication  extends SpringBootServletInitializer  {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(BotSeApplication.class, args);
+	}
+	
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(BotSeApplication.class);
 	}
 
 	/*

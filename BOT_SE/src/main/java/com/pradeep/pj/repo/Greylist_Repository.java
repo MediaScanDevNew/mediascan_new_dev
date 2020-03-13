@@ -7,6 +7,6 @@ import com.pradeep.pj.model.Greylist;
 
 public interface Greylist_Repository extends CrudRepository<Greylist, Integer>{
 	
-	@Query(nativeQuery = true ,value="Select domain from greylist  where clientId=?1")
-	String[] getClientwiseGreylist(int clientId);
+	@Query(nativeQuery = true ,value="Select domain from greylist ")
+	String[] getClientwiseGreylist();
 }

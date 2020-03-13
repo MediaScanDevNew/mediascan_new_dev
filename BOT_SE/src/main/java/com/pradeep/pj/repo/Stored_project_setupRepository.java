@@ -79,5 +79,32 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 	@Modifying(clearAutomatically = true)
 	@Query(value = "update stored_project_setup1 set russiago=1 where id= (:id)", nativeQuery = true)
 	int russiacomplete(@Param("id") int id);
-
+	
+	
+	//------------------------ 15.02.2020 ---------------------------------------------------------------------------
+	
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup2 set completed=2,yahoo=2 where id= (:id)", nativeQuery = true)
+		int yahooStart(@Param("id") int id);
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup2 set completed=2,bing=2 where id= (:id)", nativeQuery = true)
+		int bingStart(@Param("id") int id);
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup2 set completed=2,duckduckgo=2 where id= (:id)", nativeQuery = true)
+		int duckduckStart(@Param("id") int id);
+		
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup2 set completed=2,russiago=2 where id= (:id)", nativeQuery = true)
+		int russiaGoStart(@Param("id") int id);
+		
+		
+		@Query(value = " SELECT distinct ss.keyphrase,pi.project_name,cm.client_name,mu.name "
+				       + "FROM project_info pi,stored_project_setup1 ss,markscan_users mu,client_master cm "
+				       + "where pi.id = (:projectId) and pi.id = ss.projectId and ss.completed=1 and pi.created_by = mu.id "
+				       + "and pi.client_type = cm.id ", nativeQuery = true)
+		public List<Object[]> findAllMailRecords(@Param("projectId") int projectId);
+	
 }

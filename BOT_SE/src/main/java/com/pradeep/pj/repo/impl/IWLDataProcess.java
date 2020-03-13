@@ -116,5 +116,70 @@ public class IWLDataProcess {
 			return projetId;
 			
 		}
+	
+	
+	public int getCheckCompleted(int id) throws SQLException {
+		   int completeVal=0;
+			try{
+				
+				Class.forName("com.mysql.jdbc.Driver");  
+	    		ResourceBundle rb = ResourceBundle.getBundle("application");
+	    		String connection_url = rb.getString("spring.datasource.url");
+	    		String connection_userNm = rb.getString("spring.datasource.username");
+	    		String connection_userPwd = rb.getString("spring.datasource.password");
+	    		con=DriverManager.getConnection(connection_url,connection_userNm,connection_userPwd);
+	    		
+				String sql = "select completed from stored_project_setup1 where id = ?";
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, id);
+				rs = ps.executeQuery();
+				if(rs.next()){
+					completeVal = rs.getInt("completed");
+				}
+				
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}finally{
+				
+				if(ps != null) ps.close();
+				if(rs != null) rs.close();
+				if(con != null) con.close();
+				
+			}
+			
+			return completeVal;
+			
+		}
+	
+	
+	public void UpdateBOTMachine(String SServer1IP,String port,int status) throws SQLException {
+		   
+			try{
+				
+				Class.forName("com.mysql.jdbc.Driver");  
+	    		ResourceBundle rb = ResourceBundle.getBundle("application");
+	    		String connection_url = rb.getString("spring.datasource.url");
+	    		String connection_userNm = rb.getString("spring.datasource.username");
+	    		String connection_userPwd = rb.getString("spring.datasource.password");
+	    		con=DriverManager.getConnection(connection_url,connection_userNm,connection_userPwd);
+	    		
+	    		String sql2 = "UPDATE markscan_machine1 SET status=? WHERE ip_address=? and port=?";
+				ps = con.prepareStatement(sql2);
+				ps.setInt(1, status);
+				ps.setString(2, SServer1IP);
+				ps.setString(3, port);
+				ps.executeUpdate();
+				
+				
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}finally{
+				
+				if(ps != null) ps.close();
+				if(con != null) con.close();
+				
+			}
+			
+		}
 
 }
