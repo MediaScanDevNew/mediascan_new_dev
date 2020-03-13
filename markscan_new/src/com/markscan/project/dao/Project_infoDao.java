@@ -48,4 +48,26 @@ public class Project_infoDao {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	private int id;
+	private String project_name;
+
+	public int getId() {
+	return this.id;
+	}
+
+	public void setId(int id) {
+	this.id = id;
+	}
+
+	public String getProject_name() {
+	return this.project_name;
+	}
+
+	public void setProject_name(String project_name) {
+	this.project_name = project_name;
+	}
+	
+	
 }

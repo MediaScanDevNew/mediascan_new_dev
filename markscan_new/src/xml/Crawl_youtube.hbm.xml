@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- <!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"> -->
+          <!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.markscan.project.beans.Crawl_youtube" table="crawl_youtube">
+		<id name="id">
+			<generator class="increment"></generator>
+		</id>
+	
+		<property name="thumbnail_url" />
+		<property name="video_name" />
+		<property name="url_link" />
+		<property name="user_id" />
+		<property name="project_type" />
+		<property name="client_id" />
+		<property name="keyword" />
+		
+		<property name="video_duration" />
+		<property name="view_count" />
+		<property name="channel_name" />
+		<property name="subscriber_count" />
+		<property name="like_count" />
+
+		
+		
+	</class>
+
+</hibernate-mapping>

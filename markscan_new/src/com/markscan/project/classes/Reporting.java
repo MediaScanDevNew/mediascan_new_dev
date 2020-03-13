@@ -316,7 +316,7 @@ public class Reporting extends ActionSupport {
 					
 					String days[] =ServletActionContext.getRequest().getParameterValues("days");
 					String archives[] =ServletActionContext.getRequest().getParameterValues("archives");
-					
+					System.out.println("genre id ----->"+genre_id);
 					Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 					
 					pi.setProject_name(propertyName_name_initial);
@@ -337,7 +337,7 @@ public class Reporting extends ActionSupport {
 					pi.setProperty_category(property_category);
 					pi.setCurrent_value(current_value);
 					pi.setLast_updated_on(sdf.format(timestamp));
-					
+					pi.setGenre_id(genre_id);
 					
 					
 					if((projecttype==4 || projecttype==5) && (days!=null))
@@ -972,6 +972,7 @@ public class Reporting extends ActionSupport {
 	private String current_value=null;
 	private String archive_value=null;
 	private String id;
+	private int genre_id;
 	
 	
 
@@ -979,6 +980,15 @@ public class Reporting extends ActionSupport {
 	 * == setter getter method
 	 */
     
+	
+	public int getGenre_id() {
+		return genre_id;
+	}
+
+	public void setGenre_id(int genre_id) {
+		this.genre_id = genre_id;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -1371,7 +1381,7 @@ public class Reporting extends ActionSupport {
 					}
 					
 					String sql ="Update Project_info set project_name='"+propertyName_name_initial+"',channel_name='"+channel_name_initial+"',"
-							+ "project_complete=0,file_attach_link='"+file_attach_link+"',actual_hosted_site='"+actual_hosted_site+"',"
+							+ "project_complete=0, genre_id="+genre_id+", file_attach_link='"+file_attach_link+"',actual_hosted_site='"+actual_hosted_site+"',"
 							+ "project_type="+projecttype+",project_state_machine_wise=0,closed=0,client_type='"+clientname+"',"
 							+ "language='"+language+"',realeasingDate='"+realeasingDate+"',property_category='"+property_category+"',"
 							+ "current_value='"+current_value+"' ";

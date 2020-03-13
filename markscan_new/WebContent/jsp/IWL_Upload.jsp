@@ -11,11 +11,15 @@
 </head>
 <body>
 	<div class="container-fluid">
-	<form action="http://localhost:8088/crawler/uploadCSV" enctype="multipart/form-data" method="post" class="mar-top-15">
+	 <form action="IWLuploadCSV" enctype="multipart/form-data" method="post" class="mar-top-15">  
+	 <!-- <form action="http://172.168.1.13:8088/crawler/uploadCSV" enctype="multipart/form-data" method="post" class="mar-top-15">  -->
 	  <input type="hidden" id="user_id" name="user_id" value="<%=session.getAttribute("uid") %>">
 	  <input type="file" id="myFile" name="file">
 	  <input type="submit" >
+	  <s:property value = "fileFileName"/>
 	</form>
 	</div>
+	
+	
 </body>
 </html>

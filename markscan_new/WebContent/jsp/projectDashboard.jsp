@@ -152,6 +152,7 @@
 											<th>Current Value(weeks)</th>
 											<th>Archive Value(days)</th>
 											<th>Last Updated On</th>
+											<th>Genre</th>
 											<th>Edit</th>
 											<th>Close</th>
 
@@ -183,6 +184,7 @@
 												<td><s:property  value="current_value" /></td>
 												<td><s:property  value="archive_days" /></td>
 												<td><s:property  value="last_updated_on" /></td>
+												<td><s:property  value="genre" /></td>
 												
 												<%-- <td><s:property value="created_on" /></td> --%>
 												<td>

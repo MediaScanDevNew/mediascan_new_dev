@@ -18,7 +18,7 @@ public class Master_crawle_url {
 
 	int id, stored_project_setup_id, df_perform, is_valid, user_id, project_id, pipe_id, is_new, url_new, run_id,
 			link_logger, metatags_filter_new, meta_tags_new, meta_new,w_list;
-	String crawle_url2, machine, created_on, url_query, domain_name, url_status, surl_status,projectName;
+	String crawle_url2, machine, created_on, url_query, domain_name, url_status, surl_status,projectName,page_no,page_rank,keyphrase,status,searchEngine;
 
 	public String getProjectName() {
 		return projectName;
@@ -203,5 +203,48 @@ public class Master_crawle_url {
 	public void setSurl_status(String surl_status) {
 		this.surl_status = surl_status;
 	}
+
+	public String getPage_no() {
+		return page_no;
+	}
+
+	public void setPage_no(String page_no) {
+		this.page_no = page_no;
+	}
+
+	public String getPage_rank() {
+		return page_rank;
+	}
+
+	public void setPage_rank(String page_rank) {
+		this.page_rank = page_rank;
+	}
+
+	public String getKeyphrase() {
+		return keyphrase;
+	}
+
+	public void setKeyphrase(String keyphrase) {
+		this.keyphrase = keyphrase;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getSearchEngine() {
+		return searchEngine;
+	}
+
+	public void setSearchEngine(String searchEngine) {
+		this.searchEngine = searchEngine;
+	}
+	
+	
+	
 
 }

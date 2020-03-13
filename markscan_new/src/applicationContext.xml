@@ -9,30 +9,30 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
 
   
-          <!-- <property name="url"
+        <!--  <property name="url"
 			value="jdbc:mysql://localhost:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
 
 		<property name="username" value="root"></property>
 
-		<property name="password" value="root"></property>        -->   
-      
+		<property name="password" value="password"></property>      
+       -->
 
            <property name="url"
 			value="jdbc:mysql://localhost:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
 
 			<property name="username" value="testuser"></property>
 
-			<property name="password" value="M@123rkscan"></property>    
+			<property name="password" value="M@123rkscan"></property>      
 		
 		
 		 
       
-       <!--  <property name="url"
+     <!-- <property name="url"
 			value="jdbc:mysql://182.73.134.27:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
 
 		<property name="username" value="root"></property>
 
-		<property name="password" value="M@1234rkscan"></property>  -->
+		<property name="password" value="M@1234rkscan"></property>   -->
       
 
 		<property name="maxActive" value="35" />
@@ -97,6 +97,10 @@
 				<value>xml/Domain_mst.hbm.xml</value>
 				<value>xml/Project_content_tdays.hbm.xml</value>
 				<value>xml/Imdb_content_detail.hbm.xml</value>
+				<value>xml/Genre.hbm.xml</value>
+				<value>xml/Crawle_url4.hbm.xml</value>
+				<value>xml/Crawl_youtube.hbm.xml</value>
+				
 			</list>
 		</property>
 
@@ -264,6 +268,17 @@
 	</bean>
 	
 	<bean id="d40" class="com.markscan.project.dao.Imdb_content_detailDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	
+	<bean id="d41" class="com.markscan.project.dao.GenreDao">
+		<property name="template" ref="template"></property>
+	</bean>
+	<bean id="d42" class="com.markscan.project.dao.Crawle_url4Dao">
+		<property name="template" ref="template"></property>
+	</bean>
+	
+	<bean id="d43" class="com.markscan.project.dao.Crawl_youtubeDao">
 		<property name="template" ref="template"></property>
 	</bean>
 

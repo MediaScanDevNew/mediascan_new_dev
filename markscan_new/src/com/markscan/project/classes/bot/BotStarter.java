@@ -64,8 +64,10 @@ public class BotStarter {
 			
 			Class.forName("com.mysql.jdbc.Driver");  
 			 //con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","root","root");
+			 
 			 //con=DriverManager.getConnection("jdbc:mysql://182.73.134.27:3306/webinforcement_demo","root","M@1234rkscan"); 
-			 con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","testuser","M@123rkscan"); 
+			 
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo","testuser","M@123rkscan"); 
 			
 			 
 			 stmt=con.createStatement();  

@@ -298,7 +298,9 @@
         <s:textfield label="Releasing/Telecast Date" name="realeasingDate" id="datepicker"
                      cssStyle="width: 170px;" value="%{realeasingDate}"></s:textfield>
 
-
+		<s:textfield name="genre" id="genre" placeholder="Genre" label="Genre"
+                     value="" cssClass="myclass" readonly = "true"> </s:textfield> &nbsp;
+        <s:hidden name="genre_id" id="genre_id" value="" />
         <table style="height: 57px;display: none;" width="300" id="tv_content_tbl">
             <tbody>
             <tr>
@@ -466,7 +468,7 @@
 <script type="text/javascript">
     $(function () {
         var projecttype = $("select#projecttype").val(); // country = define value of selected option
-		console.log('projecttype: --- > '+projecttype);
+		//console.log('projecttype: --- > '+projecttype);
         if (projecttype != '0') {
             $.getJSON('ajaxAction0', {
                 ptype: projecttype
@@ -508,7 +510,7 @@
     if (request.getAttribute("projecttype") != null) {
 %>
 <script type="text/javascript">
-    let lang,pType;
+    let lang,pType,genreId;
     /**
      * Changed by Pentation on 18/1/20.
      * For English language ,Tv and Sports contents,
@@ -524,6 +526,24 @@
         changeDisplay();
     });
     function changeDisplay() {
+    	//console.log(lang)
+    	genreId=0;
+    	if(lang !== undefined && pType !== undefined && pType!== '0' && lang !== 'Select Language'){
+	    	$.getJSON('getGenre', {
+	            ptype: pType,
+	            language:lang
+	        }, function (jsonResponse) {
+				console.log(jsonResponse)
+				$.each(jsonResponse.stateMap, function (key, value) {
+					//console.log(key,value)
+					//genreId=key;
+					$('#genre_id').val(key)
+					$('#genre').val(value);
+                });
+				console.log(genreId)
+				//$('#genre').val(jsonResponse.genre);
+	        });
+    	}
         if (pType == '4' || pType == '5') {
             if(lang === 'English'){
                 $('#others_content_tbl').show();

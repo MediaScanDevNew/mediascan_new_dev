@@ -33,7 +33,9 @@
 		<property name="url_status" />
 		<property name="surl_status" />
 		<property name="w_list" />
-
+		<property name="page_no" />
+		<property name="page_rank" />
+		<property name="status" />
 	</class>
 
 </hibernate-mapping>

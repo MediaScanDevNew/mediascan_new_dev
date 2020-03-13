@@ -46,4 +46,24 @@ public class Client_masterDao {
 
 	}
 	
+	
+	private int id;
+	private String client_name;
+
+	public int getId() {
+	return this.id;
+	}
+
+	public void setId(int id) {
+	this.id = id;
+	}
+
+	public String getClient_name() {
+	return this.client_name;
+	}
+
+	public void setClient_name(String client_name) {
+	this.client_name = client_name;
+	}
+	
 }

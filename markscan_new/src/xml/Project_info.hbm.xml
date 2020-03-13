@@ -33,6 +33,7 @@
 		<property name="current_value" />
 		<property name="archive_value" />
 		<property name="last_updated_on" />
+		<property name="genre_id" />
 	</class>
 
 </hibernate-mapping>

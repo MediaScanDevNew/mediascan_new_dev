@@ -6,6 +6,8 @@
 
 <struts>
 	<constant name="struts.multipart.maxSize" value="12485760" />
+	<constant name="struts.multipart.saveDir" value="/home/botserver3/IWL1/" />
+	
 	<include file="struts-default.xml" />
 	<package name="default" extends="struts-default, json-default">
 
@@ -1308,6 +1310,89 @@
 			<result name="perror">/jsp/privilegeError.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action> -->
+		
+		<action name="iwl_upload"
+				class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+				method="iwl_upload">
+				<result name="login">/jsp/sessionOut.jsp</result>
+				<result name="error">/jsp/error.jsp</result>
+				<result name="errorMsg">/jsp/errorMessage.jsp</result>
+				<result name="success">/jsp/IWL_Upload.jsp</result>
+			</action>
+			<action name="iwl_error_download"
+				class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+				method="iwl_error_download">
+				<result name="login">/jsp/sessionOut.jsp</result>
+				<result name="error">/jsp/error.jsp</result>
+				<result name="errorMsg">/jsp/errorMessage.jsp</result>
+				<result name="success">/jsp/IWL_Error_Download.jsp</result>
+			</action>
+			<action name="iwl_error_download_file" class="com.markscan.project.classes.ProjSetup"
+				method="downloadIWLFailedFile">
+				<result name="success">/jsp/deleteFilter.jsp</result>
+				<result name="login">/jsp/sessionOut.jsp</result>
+				<result name="error">/jsp/error.jsp</result>
+		   </action>
+		   
+		   <action name="IWLuploadCSV" class="com.markscan.project.classes.ProjSetup"
+				method="IWLUploadCSV">
+				<result name="success">/jsp/IWL_Upload.jsp</result>
+				<result name="login">/jsp/sessionOut.jsp</result>
+				<result name="error">/jsp/error.jsp</result>
+		   </action>
+		   
+		   <action name="getGenre" class="com.markscan.project.classes.Genre">
+				<result type="json">/jsp/addNewProject.jsp</result>
+		   </action>
+		 <action name="reportdownload"
+			class="com.markscan.project.classes.userGenContent.UgcReport" method="reportdownload">
+			<result name="success">/jsp/ugcreport.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+			</action>			   
+		   
+		 <action name="ugcReport"
+			class="com.markscan.project.classes.userGenContent.UgcReport" method="start">
+			<result name="success">/jsp/ugcreport.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+			</action>			   
+		   
+		 <action name="userGenContent"
+			class="com.markscan.project.classes.userGenContent.UserGenContent" method="start">
+			<result name="success">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+			</action>	
+			
+			
+			<action name="youtubehit"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner" method="youtubehit">
+			<result name="success">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+			</action>	
+			
+			  <action name="getproperty"
+			class="com.markscan.project.classes.userGenContent.UserGenContent" method="getproperty">
+			<result name="success" type="json">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+			</action>
+			
+			  <action name="delcrawlrow"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner" method="deleterowdeleterow">
+			<result name="success" type="json">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+			</action>	
+			
+			   <action name="updatecyrow"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner" method="updatecyrow">
+			<result name="success" type="json">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>	
 
 	</package>
 </struts>

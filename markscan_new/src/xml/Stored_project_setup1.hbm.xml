@@ -25,6 +25,7 @@
 		
 		<property name="duckduckgo"></property>
 		<property name="russiago"></property>
+		<property name="priority"></property>
 
 	</class>
 

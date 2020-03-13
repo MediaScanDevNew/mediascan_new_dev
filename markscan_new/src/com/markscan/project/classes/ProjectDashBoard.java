@@ -109,30 +109,31 @@ public class ProjectDashBoard extends ActionSupport {
 					lst = dao.getData("Select pi.id,pi.project_name,pi.created_on ,"
 							// + "pi.start_date,pi.end_date,"
 							+ "cm.client_name, mpt.name, pi.file_attach_link, pi.actual_hosted_site , pi.channel_name, pi.ttime,"
-							+ "pi.language,pi.realeasingDate,pi.property_category,pi.current_value,pi.archive_value,pi.last_updated_on"
-							+ " from Project_info pi, Client_master cm, Markscan_projecttype mpt "
-							+ " where mpt.id="+p_type+" and cm.id = pi.client_type and mpt.id = pi.project_type and  pi.closed = ?", 0);
+							+ "pi.language,pi.realeasingDate,pi.property_category,pi.current_value,pi.archive_value,pi.last_updated_on,gn.genre "
+							+ " from Project_info pi, Client_master cm, Markscan_projecttype mpt,Genre gn "
+							+ " where mpt.id="+p_type+" and cm.id = pi.client_type and mpt.id = pi.project_type and gn.id=pi.genre_id and pi.closed = ?", 0);
 				}else{
 					
 					lst = dao.getData("Select pi.id,pi.project_name,pi.created_on ,"
 							// + "pi.start_date,pi.end_date,"
 							+ "cm.client_name, mpt.name, pi.file_attach_link, pi.actual_hosted_site , pi.channel_name, pi.ttime,"
-							+ "pi.language,pi.realeasingDate,pi.property_category,pi.current_value,pi.archive_value,pi.last_updated_on"
-							+ " from Project_info pi, Client_master cm, Markscan_projecttype mpt "
-							+ " where mpt.id="+p_type+" and cm.id="+client_name+" and cm.id = pi.client_type and mpt.id = "
+							+ "pi.language,pi.realeasingDate,pi.property_category,pi.current_value,pi.archive_value,pi.last_updated_on ,gn.genre "
+							+ " from Project_info pi, Client_master cm, Markscan_projecttype mpt,Genre gn "
+							+ " where mpt.id="+p_type+" and cm.id="+client_name+" and cm.id = pi.client_type and gn.id=pi.genre_id  and mpt.id = "
 							+ "pi.project_type and  pi.closed = ?", 0);
 				
 					
 				}
 				
 				logger.info("................" + lst.size());
+				System.out.println("................" + lst.size());
 				infos = new ArrayList<ProjectDashboardBean>();
 				String d[]=null;
 
 				for (int i = 0; i < lst.size(); i++) {
 					bean = new ProjectDashboardBean();
 					obj = (Object[]) lst.get(i);
-					System.out.println("i value is ---------->"+i);
+					System.out.println("i value is ---------->"+(String) obj[15]);
 					bean.setId((Integer) obj[0]);
 					bean.setProject_name((String) obj[1]);
 					date = (String) obj[2];
@@ -154,10 +155,14 @@ public class ProjectDashBoard extends ActionSupport {
 					bean.setProperty_category((String) obj[11]);
 					bean.setArchive_value((String) obj[13]);
 					bean.setCurrent_value((String) obj[12]);
+					bean.setGenre((String) obj[15]); // added by pentation/m
+					
 					String update_dt = "";
 					update_dt = (String) obj[14];
+					System.out.println("------update_dt------->"+(String) obj[14]);
 					if(update_dt !=null && !update_dt.isEmpty()){
-						bean.setLast_updated_on(update_dt.substring(0,update_dt.indexOf(".")));
+//						bean.setLast_updated_on(update_dt.substring(0,update_dt.indexOf(".")));
+						bean.setLast_updated_on(update_dt);
 						String dateBeforeString = update_dt;
 						Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 						String dateAfterString = myFormat.format(timestamp);
@@ -435,9 +440,9 @@ public class ProjectDashBoard extends ActionSupport {
 							// + "pi.start_date,pi.end_date,"
 							+ "cm.client_name, mpt.name, pi.file_attach_link, pi.actual_hosted_site , pi.channel_name, pi.ttime,"
 							+ "pi.language,pi.realeasingDate,pi.property_category,pi.current_value,pi.archive_value,"
-							+ "pi.project_type,pi.client_type "
-							+ " from Project_info pi, Client_master cm, Markscan_projecttype mpt "
-							+ " where pi.id="+id+" and cm.id = pi.client_type and mpt.id = pi.project_type and  pi.closed = ?", 0);
+							+ "pi.project_type,pi.client_type, gn.genre,gn.id "
+							+ " from Project_info pi, Client_master cm, Markscan_projecttype mpt,Genre gn  "
+							+ " where pi.id="+id+" and cm.id = pi.client_type and mpt.id = pi.project_type and gn.id=pi.genre_id and  pi.closed = ?", 0);
 				
 				logger.info("........2222222222222222222........" + lst.size());
 				
@@ -459,9 +464,10 @@ public class ProjectDashBoard extends ActionSupport {
 					current_value = ((String) obj[12]);
 					archive_value =  ((String) obj[13]);
 					ttime = ((String) obj[8]);
-					
-					System.out.println("realising time ----------1111111-------------->"+((String) obj[8]));
-					
+					genre =((String) obj[16]);
+					genre_id=((int) obj[17]);
+					System.out.println("genre ----------1111111-------------->"+((String) obj[16]));
+					System.out.println("genre ----------1111111-------------->"+((int) obj[17]));
 					
 					
 					daysDao = (Tv_content_tdaysDao) factory.getBean("d37");
@@ -545,30 +551,6 @@ public class ProjectDashBoard extends ActionSupport {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	List<ProjectDashboardBean> infos = null;
 
 	public List<ProjectDashboardBean> getInfos() {
@@ -580,9 +562,49 @@ public class ProjectDashBoard extends ActionSupport {
 	}
 
 	private String id, name, client_name, project_name, start_date, end_date, file_attach_link,ttime,client_type;
-	private String actual_hosted_site, created_on, channel_name,language,realeasingDate,property_category,current_value,archive_value,client_nm;
+	private String actual_hosted_site, created_on, channel_name,language,realeasingDate,property_category,current_value,archive_value,client_nm,genre;
 	
-	private int projecttype;
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
+
+	public int getGenre_id() {
+		return genre_id;
+	}
+
+	public void setGenre_id(int genre_id) {
+		this.genre_id = genre_id;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	private int projecttype,genre_id;
 	
 	
 	

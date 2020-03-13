@@ -14,8 +14,16 @@ public class Project_info {
 	 */
 
 	int id;
-	int project_type, project_complete, project_state_machine_wise, closed, created_by;
+	int project_type, project_complete, project_state_machine_wise, closed, created_by,genre_id;
 	
+
+	public int getGenre_id() {
+		return genre_id;
+	}
+
+	public void setGenre_id(int genre_id) {
+		this.genre_id = genre_id;
+	}
 
 	String project_name, created_on, complete_on, file_attach_link, actual_hosted_site, start_date, end_date,
 			client_type,channel_name, language,realeasingDate,ttime,property_category,current_value,archive_value,last_updated_on;

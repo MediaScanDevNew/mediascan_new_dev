@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.BeanFactory;
 
 import com.markscan.project.beans.Client_master;
+import com.markscan.project.beans.Genre;
 import com.markscan.project.beans.Keyword_filter;
 import com.markscan.project.beans.Keyword_filter_extension_master;
 import com.markscan.project.beans.Markscan_users;
@@ -21,6 +22,7 @@ import com.markscan.project.beans.PreStoredKeyPhrase;
 import com.markscan.project.beans.Project_info;
 import com.markscan.project.dao.Client_masterDao;
 import com.markscan.project.dao.Crawle_url2Dao;
+import com.markscan.project.dao.GenreDao;
 import com.markscan.project.dao.Keyword_filterDao;
 import com.markscan.project.dao.Keyword_filter_extension_masterDao;
 import com.markscan.project.dao.Markscan_usersDao;
@@ -353,38 +355,62 @@ public class AjaxJsonAction extends ActionSupport {
 	}
 	
 	   /**
-		 * get all client from system
+		 * get genre according to project type
 		 * @return client details
 		 */
-//		public String getAllClient() {		
+		public String getGenreProjectWise() {		
 //			stateMap = new LinkedHashMap<Integer, String>();
 //			stateMap.put(0, "Select Client");
-//			Client_masterDao dao = null;
-//			try {
-//				factory = ActionPerform.getFactory();
-//				dao = (Client_masterDao) factory.getBean("d10");
-//				lst = dao.viewRecord("select id, client_name from Client_master");
-//				for (int i = 0; i < lst.size(); i++) {
-//					obj = (Object[]) lst.get(i);
-//					// url2.setId((Integer) obj[0]);
-//					// url2.setClient_name((String) obj[1]);
-//					stateMap.put((Integer) obj[0], (String) obj[1]);
-//					obj = null;
-//				}
-//				logger.info("site map size...Client_master getAllClient...." + stateMap.size());
-//			} catch (Exception e) {
-//				logger.error("get client type.... ", e);
-//			} finally {
-//				factory = null;
-//				dao = null;
-//				obj = null;
-//				lst = null;
-//			}
-//			return SUCCESS;
-//		}
+			genreList=new ArrayList<Genre>();
+			GenreDao dao = null;
+			List list = null;
+			try {
+				factory = ActionPerform.getFactory();
+				dao = (GenreDao) factory.getBean("d41");
+				list = dao.viewRecord("select genre from Genre where project_type ='" + ptype + "' and language='"+language+"'");
+				System.out.println("size:"+list.size());
+				if(list.size()>0){
+					genre = list.get(0).toString();
+				}else{
+					genre ="";
+				}
+				/*for (int i = 0; i < list.size(); i++) {
+					System.out.println("-------->"+list.get(i).getClass().getName());
+					System.out.println("-------->"+list.get(i));
+					genre = list.get(i).toString();
+//					System.out.println(some);
+					
+					
+					
+					
+				  Object[] obj = (Object[])list.get(i);
+				  Genre bn = new Genre();
+				  bn.setGenre(obj[0].toString());
+				  genre = bn.getGenre();
+				  
+				}*/
+				//logger.info("site map size...Genre...." + stateMap.size());
+			} catch (Exception e) {
+				logger.error("get genre type.... ", e);
+			} finally {
+				factory = null;
+				dao = null;
+				obj = null;
+				lst = null;
+			}
+			return SUCCESS;
+		}
 
+	public String getGenre() {
+		return genre;
+	}
 
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
 
+	private List<Genre> genreList=null;
+	private String genre=null;
 	private Map<Integer, String> stateMap = null;
 	private Map<Integer, String> stateMap1 = null;
 	private Map<String, String> stateMape = null;
@@ -396,9 +422,17 @@ public class AjaxJsonAction extends ActionSupport {
 	private String keyword1=null;
 	private String ktype =null;
 	private String pname=null;
+	private String language =null;
 	
 	
-	
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
 	public String getPname() {
 		return pname;
 	}

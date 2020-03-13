@@ -18,6 +18,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 import com.markscan.project.beans.BL_infringing_source;
 import com.markscan.project.beans.Crawle_url2;
+import com.markscan.project.beans.Markscan_projecttype;
 import com.markscan.project.beans.Markscan_users;
 import com.markscan.project.beans.Url_email;
 import com.markscan.project.classes.enforcement.Enforcement;
@@ -26,6 +27,7 @@ import com.markscan.project.classes.session.LoginAndSession;
 import com.markscan.project.dao.BL_infringing_sourceDao;
 import com.markscan.project.dao.Crawle_url2Dao;
 import com.markscan.project.dao.GreylistDao;
+import com.markscan.project.dao.Markscan_projecttypeDao;
 import com.markscan.project.dao.Markscan_usersDao;
 import com.markscan.project.dao.Txn_tblDao;
 import com.markscan.project.dao.Url_emailDao;
@@ -48,6 +50,8 @@ public class BlackList_Tool extends ActionSupport {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
 	private static final Logger logger = Logger.getLogger(BlackList_Tool.class);
 	HttpSession session2 = null;
 	private BeanFactory factory = null;
@@ -55,6 +59,7 @@ public class BlackList_Tool extends ActionSupport {
 	List lst = null;
 	Enforcement e;
 	private List<BL_infringing_source> listData = null;
+	private List<Markscan_projecttype> listDataproj = null;
 	private Set<BL_infringing_source> listDataSet = null;
 	BL_infringing_source bis = null;
 	Object[] obj = null;
@@ -121,6 +126,61 @@ public class BlackList_Tool extends ActionSupport {
 				session2 = null;
 				e = null;
 			}
+			return SUCCESS;
+		}
+	}
+	public String iwl_upload() {
+		session2 = ServletActionContext.getRequest().getSession();
+		if (session2 == null || session2.getAttribute("login") == null) {
+			logger.error("if=====session error reporting===='");
+			return LOGIN;
+		} else {
+			return SUCCESS;
+		}
+	}
+	public String iwl_error_download() {
+		session2 = ServletActionContext.getRequest().getSession();
+		if (session2 == null || session2.getAttribute("login") == null) {
+			logger.error("if=====session error reporting===='");
+			return LOGIN;
+		} else {
+			factory = LoginAndSession.getFactory();
+			
+			Markscan_projecttype url2 = null;
+			Markscan_projecttypeDao dao = null;
+			
+			try {
+
+				dao = (Markscan_projecttypeDao) factory.getBean("d8");
+
+				lst = dao.viewRecord("select id, name from Markscan_projecttype");
+				// System.out.println(".......pradeep........" + lst.size());
+				logger.info(".......pradeep........" + lst.size());
+				listDataproj = new ArrayList<Markscan_projecttype>();
+
+				for (int i = 0; i < lst.size(); i++) {
+					url2 = new Markscan_projecttype();
+					obj = (Object[]) lst.get(i);
+					url2.setId((Integer) obj[0]);
+					url2.setName((String) obj[1]);
+					listDataproj.add(url2);
+					obj = null;
+					url2 = null;
+				}
+				lst = null;
+
+			} catch (Exception e) {
+				logger.error("project type data get ", e);
+				return ERROR;
+			} finally {
+				lst = null;
+				obj = null;
+				url2 = null;
+				dao = null;
+				factory = null;
+				session2 = null;
+			}
+
 			return SUCCESS;
 		}
 	}
@@ -920,6 +980,14 @@ public class BlackList_Tool extends ActionSupport {
 			return 1;
 		} else
 			return 0;
+	}
+	
+	
+	public List<Markscan_projecttype> getListDataproj() {
+		return listDataproj;
+	}
+	public void setListDataproj(List<Markscan_projecttype> listDataproj) {
+		this.listDataproj = listDataproj;
 	}
 
 }

@@ -6,7 +6,15 @@ public class ProjectDashboardBean {
 
 	int id,closeFlag;
 	String project_name, created_on, complete_on, file_attach_link, actual_hosted_site, start_date, end_date,
-			client_name, name, channel_name,ttime,language,realeasingDate,property_category,current_value,archive_value,last_updated_on;
+			client_name, name, channel_name,ttime,language,realeasingDate,property_category,current_value,archive_value,last_updated_on,genre;
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
+
 	String telecast_days[];
 	String archive_days[];
 	

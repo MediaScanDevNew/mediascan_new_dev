@@ -333,5 +333,20 @@ If you are using Google on country wise, and running query on regional language,
 </h3>
 </div>
 <div id ="ajaxResponse"></div>
+
+<!-- <table border="1">
+<tr>
+  <td>Project Name</td>
+  <td>Completed Flag</td>
+  <td>Google</td>
+  <td>Yahoo</td>
+  <td>Bing</td>
+  <td>DuckDuckGo</td>
+  <td>Go.mail.ru</td>
+  <td>BOT Type</td>
+  <td>Machine No</td>
+</tr>
+</table> -->
+
 </body>
 </html>

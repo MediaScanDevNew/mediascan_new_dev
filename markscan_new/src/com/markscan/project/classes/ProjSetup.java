@@ -3,6 +3,10 @@
  */
 package com.markscan.project.classes;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,12 +18,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.BeanFactory;
 
 import com.markscan.project.beans.Blacklist_sites;
 import com.markscan.project.beans.CommanReporting;
+import com.markscan.project.beans.Crawle_url4;
 import com.markscan.project.beans.Keyword_filter;
 import com.markscan.project.beans.Keyword_filter_extension_master;
 import com.markscan.project.beans.Markscan_machine;
@@ -32,6 +38,7 @@ import com.markscan.project.classes.bot.BotStarter;
 import com.markscan.project.classes.session.LoginAndSession;
 import com.markscan.project.dao.Blacklist_sitesDao;
 import com.markscan.project.dao.Client_masterDao;
+import com.markscan.project.dao.Crawle_url4Dao;
 import com.markscan.project.dao.Keyword_filterDao;
 import com.markscan.project.dao.Keyword_filter_extension_masterDao;
 import com.markscan.project.dao.Markscan_machineDao;
@@ -60,7 +67,7 @@ public class ProjSetup extends ActionSupport {
 	HttpSession session2 = null;
 	private BeanFactory factory = null;
 	String oneField = "";
-
+	List<Crawle_url4> crawleUrl4 = null;
 	public String execute() { // templete configuration.....
 
 		session2 = ServletActionContext.getRequest().getSession();
@@ -527,8 +534,9 @@ public class ProjSetup extends ActionSupport {
 			int count = Integer.parseInt(request.getParameter("count"));
 			int count1 = 0;
 			String keywords = request.getParameter("keyword1").trim();
-			System.out.println("keywords value is ----------------->"+keywords);
-			System.out.println("count value is -------------------->"+count);
+			
+			//System.out.println("keywords value is ----------------->"+keywords);
+			//System.out.println("count value is -------------------->"+count);
 			
 			
 			if (keywords.equals("Static Keyword")) {
@@ -1186,7 +1194,97 @@ public class ProjSetup extends ActionSupport {
 		}
 
 	}
+	public String downloadIWLFailedFile() {
+		// System.out.println("property name=== ++ " + propertyName);
+		delFilter = new ArrayList<>();
+		session2 = ServletActionContext.getRequest().getSession();
+		logger.info(session2);
+		if (session2 == null || session2.getAttribute("login") == null) {
+			// System.out.println("if=====session error reporting===='");
+			logger.error("if=====session error reporting===='");
+			return LOGIN;
+		} else {
+			Crawle_url4Dao dao = null;
+			Crawle_url4 url2 = null;
+			try {
+				int pj = 0;
+				crawleUrl4 = new ArrayList<>();
+				factory = ActionPerform.getFactory();
+				dao = (Crawle_url4Dao) factory.getBean("d42");
+				
+				if((propertyName==0)&&(startdate.length()==0)&&(enddate.length()==0))
+				{
+					System.out.println("*******************Condition1*****");
+					lst = dao.viewRecord(
+							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
+									+ " and mcu.project_id = pf.id and mcu.project_id=pf.id and pf.client_type= "+clientname);
+					
+				}
+				else if((propertyName==0) &&(startdate.length()!=0)&&(enddate.length()!=0) )
+				{
+					System.out.println("*******************Condition2*****");
+					lst = dao.viewRecord(
+							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
+									+ " and mcu.project_id = pf.id and mcu.project_id=pf.id and pf.client_type= "+clientname+" and ( mcu.created_on between '"+startdate+"' and '"+enddate+"' )");
+					
+				}
+				
+				else if((propertyName!=0) &&(startdate.length()!=0)&&(enddate.length()!=0) )
+				{
+					System.out.println("*******************Condition3*****");
+					lst = dao.viewRecord(
+							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
+								+ "and  mcu.project_id = pf.id and mcu.project_id =" + propertyName+" and (mcu.created_on between '"+startdate+"' and '"+enddate+"')");
+					
+				}
+				else
+				{
+					System.out.println("*******************Condition4*****");
+				lst = dao.viewRecord(
+						"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
+								+ " and  mcu.project_id = pf.id and mcu.project_id =" + propertyName);
+				}
+				crawleUrl4 = new ArrayList<>();
+				Boolean bb = false;
+				for (int i = 0; i < lst.size(); i++) {
+					    url2 = new Crawle_url4();
+					    obj = (Object[]) lst.get(i);
+						url2.setId(Integer.parseInt(obj[0].toString()));
+						url2.setCrawle_url2(obj[1].toString());
+						url2.setCreated_on(obj[2].toString());
+						url2.setUser_id((Integer) obj[3]);
+						//url2.setProject_id(propertyName);
+						url2.setProjectName(obj[4].toString());
+						crawleUrl4.add(url2);
+						
+//					}
 
+					dao.customUpdateProject("update Crawle_url4 set iwl_downloaded=1, link_logger="
+							+ (int) session2.getAttribute("uid") + "  where id="+ pj);
+
+					obj = null;
+					url2 = null;
+				}
+				System.out.println("----mster size two..." + crawleUrl4.size());
+				downloadIWLCSVFileAction();
+			} catch (Exception e) {
+				// System.err.println("=== error ==occure====");
+				e.printStackTrace();
+				return ERROR;
+			} finally {
+				obj = null;
+				url2 = null;
+				dao = null;
+				factory = null;
+				session2 = null;
+				delFilter = null;
+
+			}
+
+//			deleteFilterPre();
+			return null;
+		}
+	}
 	public String deleteFilter() {
 		// System.out.println("property name=== ++ " + propertyName);
 		delFilter = new ArrayList<>();
@@ -1254,34 +1352,49 @@ public class ProjSetup extends ActionSupport {
 				{
 					System.out.println("*******************Condition1*****");
 					lst = dao.viewRecord(
-							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Master_crawle_url mcu, Project_info pf where mcu.df_perform=0"
-									+ " and mcu.w_list=0 and mcu.project_id=pf.id and pf.client_type= "+clientname);
-					
+							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+							+ "ss.keyphrase,mcu.pipe_id,mcu.status from Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss "
+							+ "where mcu.df_perform=0"
+							+ " and mcu.w_list=0 and  mcu.project_id = pf.id and mcu.project_id=pf.id and ss.id = mcu.stored_project_setup_id "
+							+ " and ss.projectId = pf.id and ss.completed=1 and mcu.status is not null "
+							+ "and pf.client_type= "+clientname);
+					 
 				}
 				else if((propertyName==0) &&(startdate.length()!=0)&&(enddate.length()!=0) )
 				{
 					System.out.println("*******************Condition2*****");
 					lst = dao.viewRecord(
-							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Master_crawle_url mcu, Project_info pf where mcu.df_perform=0"
-									+ " and mcu.w_list=0 and mcu.project_id=pf.id and pf.client_type= "+clientname+" and ( mcu.created_on between '"+startdate+"' and '"+enddate+"' )");
-					
+							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+							+ "ss.keyphrase,mcu.pipe_id,mcu.status "
+							+ "from Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
+							+ " and mcu.w_list=0 and  mcu.project_id = pf.id and mcu.project_id=pf.id and ss.id = mcu.stored_project_setup_id  "
+							+ " and ss.projectId = pf.id  and ss.completed=1 and mcu.status is not null "
+							+ "and pf.client_type= "+clientname+" and ( mcu.created_on between '"+startdate+"' and '"+enddate+"' )");
+				
 				}
 				
 				else if((propertyName!=0) &&(startdate.length()!=0)&&(enddate.length()!=0) )
 				{
 					System.out.println("*******************Condition3*****");
 					lst = dao.viewRecord(
-							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Master_crawle_url mcu, Project_info pf where mcu.df_perform=0"
-								+ " and mcu.w_list=0  and  mcu.project_id =" + propertyName+" and (mcu.created_on between '"+startdate+"' and '"+enddate+"')");
+										"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+										+ "ss.keyphrase,mcu.pipe_id,mcu.status from "
+										+ "Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
+										+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = mcu.stored_project_setup_id and ss.completed=1 "
+										+ "and mcu.status is not null  and  "
+										+ "mcu.project_id =" + propertyName+" and (mcu.created_on between '"+startdate+"' and '"+enddate+"')");
 					
 				}
 				else
 				{
 					System.out.println("*******************Condition4*****");
 				lst = dao.viewRecord(
-						"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Master_crawle_url mcu, Project_info pf where mcu.df_perform=0"
-								+ " and mcu.w_list=0  and  mcu.project_id =" + propertyName);
+							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+							+ "ss.keyphrase,mcu.pipe_id,mcu.status from "
+							+ "Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
+							+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = mcu.stored_project_setup_id and ss.completed=1 and mcu.status is not null and mcu.project_id =" + propertyName);
 				}
+				
 				masterCrawluurl = new ArrayList<>();
 				Boolean bb = false;
 				for (int i = 0; i < lst.size(); i++) {
@@ -1293,9 +1406,6 @@ public class ProjSetup extends ActionSupport {
 						bb = false;
 						pj = (Integer) obj[0];
 						if (obj[1].toString().toLowerCase().trim().contains(ppj.toLowerCase().trim())) {// delete
-																										// operation
-																										// perform.
-
 							bb = true;
 							break;
 						}
@@ -1309,6 +1419,24 @@ public class ProjSetup extends ActionSupport {
 						url2.setUser_id((Integer) obj[3]);
 						//url2.setProject_id(propertyName);
 						url2.setProjectName(obj[4].toString());
+						url2.setPage_no(obj[5].toString());
+						url2.setPage_rank(obj[6].toString());
+						url2.setKeyphrase(obj[7].toString());
+						if(Integer.parseInt(obj[8].toString()) ==1){
+							url2.setSearchEngine("Google");
+						}else if(Integer.parseInt(obj[8].toString()) ==2){
+							url2.setSearchEngine("Yahoo");
+						}else if(Integer.parseInt(obj[8].toString()) ==3){
+							url2.setSearchEngine("Bing");
+						}else if(Integer.parseInt(obj[8].toString()) ==4){
+							url2.setSearchEngine("DuckDuckGo");
+						}else if(Integer.parseInt(obj[8].toString()) ==5){
+							url2.setSearchEngine("Go.mail.ru");
+						}else{
+							url2.setSearchEngine("Google Overseas");
+						}
+						
+						url2.setStatus(obj[9].toString());
 						masterCrawluurl.add(url2);
 						/**
 						 * BOT query will be return duplicate data; we can not
@@ -1382,10 +1510,56 @@ public class ProjSetup extends ActionSupport {
 			response.setHeader("Content-disposition", "attachment;filename=" + reportName);
 
 			rows = new ArrayList<String>();
-			rows.add("ID,Link,Date, User ID, Project Name");
+			rows.add("ID,Link,Date, User ID, Project Name,Project Keyword,Search Engine,Status,Page No,URL Rank");
 			rows.add("\n");
 
 			for (Master_crawle_url mcu : masterCrawluurl) {
+				rows.add("\"" + mcu.getId() + "\",\"" + mcu.getCrawle_url2() + "\",\"" + mcu.getCreated_on() + "\",\""
+						+ mcu.getUser_id() + "\",\"" + mcu.getProjectName() + "\",\"" + mcu.getKeyphrase() + "\",\"" + mcu.getStatus() + "\","
+						+ "\"" + mcu.getSearchEngine() + "\",\"" + mcu.getPage_no() + "\",\"" 
+						+ mcu.getPage_rank() + "\"");
+				rows.add("\n");
+			}
+
+			iter = rows.iterator();
+			while (iter.hasNext()) {
+				outputString = (String) iter.next();
+				// response.getOutputStream().print(outputString);
+				response.getWriter().print(outputString);
+				outputString = null;
+			}
+
+			// response.getOutputStream().flush();
+			response.getWriter().flush();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			response = null;
+			outputString = null;
+			rows = null;
+			reportName = null;
+			iter = null;
+		}
+	}
+	
+	public void downloadIWLCSVFileAction() throws Exception {
+
+		HttpServletResponse response = ServletActionContext.getResponse();
+		String outputString = null;
+		ArrayList<String> rows = null;
+		String reportName = null;
+		Iterator<String> iter = null;
+		try {
+			response.setContentType("text/csv");
+			reportName = "IWL_Fail_data_" + propertyName + ".csv";
+			response.setHeader("Content-disposition", "attachment;filename=" + reportName);
+
+			rows = new ArrayList<String>();
+			rows.add("ID,Link,Date, User ID, Project Name");
+			rows.add("\n");
+
+			for (Crawle_url4 mcu : crawleUrl4) {
 				rows.add("\"" + mcu.getId() + "\",\"" + mcu.getCrawle_url2() + "\",\"" + mcu.getCreated_on() + "\",\""
 						+ mcu.getUser_id() + "\",\"" + mcu.getProjectName() + "\"");
 				rows.add("\n");
@@ -1412,6 +1586,7 @@ public class ProjSetup extends ActionSupport {
 			iter = null;
 		}
 	}
+	
 
 	private List<Markscan_projecttype> listData = null;
 	List lst = null;
@@ -1511,6 +1686,14 @@ public class ProjSetup extends ActionSupport {
 
 	List<String> delFilter = null;
 	List<Master_crawle_url> masterCrawluurl = null;
+
+	public List<Crawle_url4> getCrawleUrl4() {
+		return crawleUrl4;
+	}
+
+	public void setCrawleUrl4(List<Crawle_url4> crawleUrl4) {
+		this.crawleUrl4 = crawleUrl4;
+	}
 
 	public List<Master_crawle_url> getMasterCrawluurl() {
 		return masterCrawluurl;
@@ -1721,7 +1904,6 @@ public class ProjSetup extends ActionSupport {
 	{
 		session2 = ServletActionContext.getRequest().getSession();
 		logger.info(session2);
-		// System.out.println(session2);
 		if (session2 == null || session2.getAttribute("login") == null) {
 			// System.out.println("if=====session error reporting===='");
 			logger.error("if=====session error reporting===='");
@@ -1742,5 +1924,73 @@ public class ProjSetup extends ActionSupport {
 	public void setCrList(List<CommanReporting> crList) {
 		this.crList = crList;
 	}
+	
+	private File file;
+	private String user_id;
+	private String destPath;
+	private String fileFileName;
+	
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+	
+	
+	
+	
+	
+	public String getFileFileName() {
+		return fileFileName;
+	}
+
+	public void setFileFileName(String fileFileName) {
+		this.fileFileName = fileFileName;
+	}
+
+	public String IWLUploadCSV()
+	{
+		session2 = ServletActionContext.getRequest().getSession();
+		logger.info(session2);
+		if (session2 == null || session2.getAttribute("login") == null) {
+			logger.error("if=====session error reporting===='");
+			return LOGIN;
+		} else {
+			//destPath = "/home/hduser/IWL/"+fileFileName;
+			destPath = "/opt/tomcat/apache-tomcat-8.5.47/webapps/examples/"+fileFileName;
+			
+			try {
+		         System.out.println("Src File name: " + file);
+		         File destFile  = new File(destPath);
+		         destFile.deleteOnExit();
+		         System.out.println("My File name is ----------->"+fileFileName);
+		         FileUtils.copyFile(file, destFile);
+		         
+		         String uid = session2.getAttribute("uid").toString();
+		        // String otpurl = "http://172.168.1.13:8088/crawler/uploadCSV1?filename="+fileFileName+"&user_id="+uid;
+		         String otpurl = "http://172.168.1.13:8080/Crawler4SingleSite/uploadCSV1?filename="+fileFileName+"&user_id="+uid;
+		         System.out.println("URL --------->"+otpurl);
+				 URL url = new URL(otpurl);
+				 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				 conn.setRequestMethod("GET");
+				 System.out.println("Server Response is --->"+conn.getResponseCode());
+		      } catch(IOException e) {
+		         e.printStackTrace();
+		         return ERROR;
+		      }
+		}
+		return SUCCESS;
+	}
+	
 
 }
