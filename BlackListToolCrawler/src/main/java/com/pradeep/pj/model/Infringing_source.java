@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.transaction.Transactional;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,6 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "BL_infringing_source")
+@Transactional
 public class Infringing_source {
 
 	/**

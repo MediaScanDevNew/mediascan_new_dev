@@ -2,10 +2,9 @@ package com.example.demo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+
+/*@RunWith(SpringRunner.class)
 @SpringBootTest(classes={BlackListToolCrawlerApplicationTests.class})
 public class BlackListToolCrawlerApplicationTests {
 
@@ -13,4 +12,4 @@ public class BlackListToolCrawlerApplicationTests {
 	public void contextLoads() {
 	}
 
-}
+}*/

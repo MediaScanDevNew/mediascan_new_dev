@@ -6,7 +6,8 @@
 	<groupId>com.pradeep.pj</groupId>
 	<artifactId>Crawler4SingleSite</artifactId>
 	<version>crawle-001</version>
-	<packaging>jar</packaging>
+	<!-- <packaging>jar</packaging> -->
+	<packaging>war</packaging>
 
 	<name>Crawler4SingleSite</name>
 	<description>crawle word press site </description>
@@ -14,7 +15,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.0.M7</version>
+		<version>2.0.1.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -46,11 +47,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 
 		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<dependency>
@@ -83,13 +84,32 @@
 
 	</dependencies>
 
-	<build>
+	<!-- <build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+	</build> -->
+	
+	<build>
+		<finalName>Crawler4SingleSite</finalName>
+		<plugins>
+     <plugin>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-maven-plugin</artifactId>
+     <configuration>
+       <archive>
+         <manifest>
+           <addClasspath>true</addClasspath>
+           <classpathPrefix>lib/</classpathPrefix>
+           <mainClass>com.pradeep.pj.Crawler4SingleSiteApplication</mainClass>
+         </manifest>
+       </archive>
+     </configuration>
+   </plugin>
+ </plugins>   
 	</build>
 
 	<repositories>

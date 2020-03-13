@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-@PropertySource(value = "albelaLinks.properties")
+//@PropertySource(value = "application.properties")
 public class AlbelaLinks {
 
 	/**

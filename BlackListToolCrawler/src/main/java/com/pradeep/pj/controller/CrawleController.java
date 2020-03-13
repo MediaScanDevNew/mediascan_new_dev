@@ -47,6 +47,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.CSVReader;
 import com.pradeep.pj.crawl.source.FindDomainName;
+import com.pradeep.pj.crawl.source.MyClass;
 import com.pradeep.pj.crawl.source.PageSource;
 import com.pradeep.pj.crawl.source.SourceLinkExtracter;
 import com.pradeep.pj.form.MyUploadForm;
@@ -63,8 +64,8 @@ import com.pradeep.pj.repo.impl.InfringingSourceRepositoryIMPL;
  * @author pradeep 18dec2017
  *
  */
-@Controller
-//@RestController
+//@Controller
+@RestController
 public class CrawleController {
 	private static final Logger logger = LoggerFactory.getLogger(CrawleController.class);
 	HttpGet httpget = null;
@@ -75,22 +76,25 @@ public class CrawleController {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@Autowired
-	private Crawle_url4Repository crawleRepo;
-	@Autowired
-	private InfringingSourceRepositoryIMPL isri;
+//	@Autowired
+//	private Crawle_url4Repository crawleRepo;
+	
+	//@Autowired
+	//private InfringingSourceRepositoryIMPL isri;
 
 	@Autowired
 	private AlbelaLinks propFile;
 
-	@Autowired
-	private FindDomainName domain_name__c;
+	/*@Autowired
+	private FindDomainName domain_name__c;*/
 
-	@Autowired
-	private SourceLinkExtracter srcExtractor__c;
+	/*@Autowired
+	private SourceLinkExtracter srcExtractor__c;*/
 	
-	@Autowired
-	private Crawle_url4RepoIMPL cui;
+	/*@Autowired
+	private Crawle_url4RepoIMPL cui;*/
+	
+	
 
 	/**
 	 * ==============================
@@ -278,10 +282,14 @@ public class CrawleController {
 	int source_link_size = 0;
 	// String domain = null;
 
-	public Integer linkCrowle(String URL, String keyword, int userid, String ipadd, int projectid) {
+	public Integer linkCrowle(String URL, String keyword, int userid, String ipadd, int projectid) throws SQLException {
 		sourceLink = "";
 		link_size = 0;
 		source_link_size = 0;
+		Crawle_url4RepoIMPL cui = new Crawle_url4RepoIMPL();
+		FindDomainName domain_name__c = new FindDomainName();
+		SourceLinkExtracter srcExtractor__c = new SourceLinkExtracter();
+		InfringingSourceRepositoryIMPL isri = new InfringingSourceRepositoryIMPL(); 
 		try {
 			System.out.println("url:--->"+URL);
 			doc = Jsoup.parse(html2Doc(URL));
@@ -316,28 +324,38 @@ public class CrawleController {
 						is.setSource_time(nowTime());
 						is.setRow_in_use(2);
 						source_link_size = source_link_size + 1;
+					}else{
+						c4.setCrawle_url2(link.attr("href"));
 					}
-
+					
+					
 					isri.addData(is);
-
+					cui.addData(c4);
+					
+					
 					link_size = link_size + 1;
 					is = null;
+					c4=null;
 				}else{
-					int url_id=crawleRepo.getIdByURL(URL);
+					int url_id=cui.getIdByURL(URL);
+					System.out.println("11==========>"+url_id);
 					if(url_id>0){
-						crawleRepo.updateIWLErrorField(url_id);
+						cui.updateIWLErrorField(url_id);
 					}else{
-						crawleRepo.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+						System.out.println("11==========>"+domain_name__c.findDomain(URL));
+						new IWLDataProcess().saveData(URL, projectid, userid, 0,  domain_name__c.findDomain(URL), 1);
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			int url_id=crawleRepo.getIdByURL(URL);
+			int url_id=cui.getIdByURL(URL);
 			if(url_id>0){
-				crawleRepo.updateIWLErrorField(url_id);
+				cui.updateIWLErrorField(url_id);
 			}else{
-				crawleRepo.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+				//cui.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+				System.out.println("11==========>"+domain_name__c.findDomain(URL));
+				new IWLDataProcess().saveData(URL, projectid, userid, 0,  domain_name__c.findDomain(URL), 1);
 			}
 		} finally {
 			doc = null;
@@ -370,13 +388,17 @@ public class CrawleController {
 	private String pageSourceCode = null;
 	private String sourceLink = null;
 
-	public int tellynagariLink(String URL, String keyword, int userid, String ipadd, int projectid) {
+	public int tellynagariLink(String URL, String keyword, int userid, String ipadd, int projectid) throws SQLException {
 		pageSourceCode = html2Doc(URL);
 		sourceLink = "";
 		link_size = 0;
 		source_link_size = 0;
+		Crawle_url4RepoIMPL cui = new Crawle_url4RepoIMPL();
+		FindDomainName domain_name__c = new FindDomainName();
+		SourceLinkExtracter srcExtractor__c = new SourceLinkExtracter();
+		InfringingSourceRepositoryIMPL isri = new InfringingSourceRepositoryIMPL(); 
 		try {
-			System.out.println("inside tellynagariLink-----------"+pageSourceCode);
+			//System.out.println("inside tellynagariLink-----------"+pageSourceCode);
 			doc = Jsoup.parse(pageSourceCode);
 			// get all links and recursively call the processPage method
 			links = doc.select("a[onclick]");
@@ -412,28 +434,34 @@ public class CrawleController {
 						is.setSource_time(nowTime());
 						is.setRow_in_use(2);
 						source_link_size = source_link_size + 1;
+					}else{
+						c4.setCrawle_url2(link.attr("href"));
 					}
+					
+					
+					
 					isri.addData(is);
 					cui.addData(c4);
 					link_size = link_size + 1;
 					is = null;
+					c4=null;
 				}else{
-					int url_id=crawleRepo.getIdByURL(URL);
+					int url_id=cui.getIdByURL(URL);
 					if(url_id>0){
-						crawleRepo.updateIWLErrorField(url_id);
+						cui.updateIWLErrorField(url_id);
 					}else{
-						crawleRepo.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+						cui.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
 					}
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			int url_id=crawleRepo.getIdByURL(URL);
+			int url_id=cui.getIdByURL(URL);
 			if(url_id>0){
-				crawleRepo.updateIWLErrorField(url_id);
+				cui.updateIWLErrorField(url_id);
 			}else{
-				crawleRepo.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
+				cui.saveData(URL, projectid, userid, 0, domain_name__c.findDomain(URL), 1);
 			}
 		} finally {
 			modifiedURL = null;

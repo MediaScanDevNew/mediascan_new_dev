@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,13 +25,14 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
+@Configurable
 public class SourceLinkExtracter {
 	private static final Logger logger = LoggerFactory.getLogger(SourceLinkExtracter.class);
 	/**
 	 * 
 	 */
 	@Autowired
-	private PageSource pageSource__c;
+	//private PageSource pageSource__c;
 
 	public SourceLinkExtracter() {
 		// TODO Auto-generated constructor stub
@@ -44,6 +46,7 @@ public class SourceLinkExtracter {
 	public String srcLink_Extractor(String uurl) {
 		sourceLink = "";
 		try {
+			PageSource pageSource__c = new PageSource();
 			pSource = pageSource__c.html2Doc(uurl);
 
 			// 1. checking for json data
@@ -219,12 +222,12 @@ public class SourceLinkExtracter {
 		String sourcelinkfromJSON = "", hostingid = "", gjson = "", poster = "", jsonSource = "", publisherid = "",
 				videoid = "";
 		// String contentId="";
-
+		PageSource pageSource__c = new PageSource();
 		try {
 			logger.info("=========+" + jsonURL);
 			if (jsonURL.contains("playwire.com")) {
 				try {
-
+					
 					jsonSource = pageSource__c.html2Doc(jsonURL.trim());
 					parser = new JSONParser();
 					object = (JSONObject) parser.parse(jsonSource.trim());

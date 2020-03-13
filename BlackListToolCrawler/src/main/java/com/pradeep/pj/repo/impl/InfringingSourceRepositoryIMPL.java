@@ -4,6 +4,7 @@
 package com.pradeep.pj.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import com.pradeep.pj.model.Infringing_source;
@@ -14,6 +15,7 @@ import com.pradeep.pj.repo.InfringingSourceRepository;
  *
  */
 @Service
+@Configurable
 public class InfringingSourceRepositoryIMPL {
 
 	/**
@@ -27,7 +29,8 @@ public class InfringingSourceRepositoryIMPL {
 	private InfringingSourceRepository infringingSourceRepository;
 
 	public void addData(Infringing_source infringing_source) {
-		infringingSourceRepository.save(infringing_source);
+		//infringingSourceRepository.save(infringing_source);
+		new IWLDataProcess().addDataInfringing(infringing_source);
 	}
 	
 //	public List<Object[]> findALLCustom(int uid,String date__) {
