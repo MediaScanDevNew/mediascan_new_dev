@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: screenUpload_intigration
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: pradeep
+Implementation-Vendor-Id: com.markscan.screenShot
+Build-Jdk: 1.8.0_91
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/screenUpload_intigration
+Created-By: Maven Integration for Eclipse
+
