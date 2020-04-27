@@ -18,6 +18,7 @@ public class Crawle_url4 {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	int id;
 	int  user_id, project_id, pipe_id, w_list,send_crawl,link_logger,iwl_failed;
+	
 	public int getIwl_failed() {
 		return iwl_failed;
 	}
@@ -66,7 +67,8 @@ public class Crawle_url4 {
 	public void setFilter_new(String filter_new) {
 		this.filter_new = filter_new;
 	}
-	String crawle_url2, created_on,  domain_name, page_rank,page_no,note1,note2,link_logger_srclink,link_type,filter_new;
+	String crawle_url2, created_on,  domain_name, page_rank,page_no,note1,note2,
+	link_logger_srclink,link_type,filter_new,delivery_format;
 	public Crawle_url4() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -131,4 +133,12 @@ public class Crawle_url4 {
 	public void setPage_no(String page_no) {
 		this.page_no = page_no;
 	}
+	public String getDelivery_format() {
+		return delivery_format;
+	}
+	public void setDelivery_format(String delivery_format) {
+		this.delivery_format = delivery_format;
+	}
+	
+	
 }

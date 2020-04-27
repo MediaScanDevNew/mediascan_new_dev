@@ -22,7 +22,7 @@ public class IWLDataProcess {
 	ResultSet rs1= null;
 	
 	
-	public ArrayList<IWLDataBean> DataProcess(int projectId) throws SQLException {
+	public ArrayList<IWLDataBean> DataProcess(int keyphaseId) throws SQLException {
 		
 		ArrayList<IWLDataBean> iwl_list = new ArrayList<IWLDataBean>();
 		try{
@@ -35,9 +35,9 @@ public class IWLDataProcess {
     		con=DriverManager.getConnection(connection_url,connection_userNm,connection_userPwd);
     		
 			String sql = " SELECT a.id,a.crawle_url2,b.keyphrase,a.user_id,a.project_id FROM master_crawle_url a,stored_project_setup1 b "
-					     + "where a.stored_project_setup_id = b.id and projectId = ? ";
+					     + "where a.stored_project_setup_id = b.id and b.id = ? ";
 			ps = con.prepareStatement(sql);
-			ps.setInt(1, projectId);
+			ps.setInt(1, keyphaseId);
 			rs = ps.executeQuery();
 			while(rs.next()){
 				IWLDataBean bn = new IWLDataBean();
@@ -267,8 +267,8 @@ public class IWLDataProcess {
 			
 			if(p == 0){
 			
-				String sql = "insert into crawle_url4 (link_logger_srclink,domain_name,user_id,project_id,note2,link_logger,crawle_url2"
-						 + ") VALUES (?,?,?,?,?,?,?)";
+				String sql = "insert into crawle_url4 (link_logger_srclink,domain_name,user_id,project_id,note2,link_logger,crawle_url2,delivery_format"
+						 + ") VALUES (?,?,?,?,?,?,?,?)";
 				ps = con.prepareStatement(sql);
 				ps.setString(1, cu.getLink_logger_srclink());
 				ps.setString(2, cu.getDomain_name());
@@ -277,6 +277,8 @@ public class IWLDataProcess {
 				ps.setString(5, cu.getNote2());
 				ps.setInt(6, cu.getLink_logger());
 				ps.setString(7, cu.getCrawle_url2());
+				ps.setString(8, cu.getDelivery_format());
+				
 				ps.executeUpdate();
 			}	
 		}catch (Exception e) {
@@ -298,6 +300,67 @@ public class IWLDataProcess {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			
+		}
+	}
+	
+	
+	public String getDeliveryFormat(String source_link) throws SQLException {
+		String format ="";
+		try{
+			
+			Class.forName("com.mysql.jdbc.Driver");  
+    		ResourceBundle rb = ResourceBundle.getBundle("application");
+    		String connection_url = rb.getString("spring.datasource.url");
+    		String connection_userNm = rb.getString("spring.datasource.username");
+    		String connection_userPwd = rb.getString("spring.datasource.password");
+    		con=DriverManager.getConnection(connection_url,connection_userNm,connection_userPwd);
+    		
+			String sql = "Select format from format  where website like '%?%'";
+			ps = con.prepareStatement(sql);
+			ps.setString(1, source_link);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				format = rs.getString("format");
+			}
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}finally{
+			
+			if(ps != null) ps.close();
+			if(con != null) con.close();
+			if(rs != null) rs.close();
+		}
+		
+		return format;
+		
+	}
+	
+	
+	public void RunningIWLFlag(int keyphaseId,int val) throws SQLException {
+		
+		try{
+			
+			Class.forName("com.mysql.jdbc.Driver");  
+    		ResourceBundle rb = ResourceBundle.getBundle("application");
+    		String connection_url = rb.getString("spring.datasource.url");
+    		String connection_userNm = rb.getString("spring.datasource.username");
+    		String connection_userPwd = rb.getString("spring.datasource.password");
+    		con=DriverManager.getConnection(connection_url,connection_userNm,connection_userPwd);
+    		
+			String sql = "UPDATE stored_project_setup1 set iwl_process=? where id =?";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, val);
+			ps.setInt(2, keyphaseId);
+			ps.executeUpdate();
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}finally{
+			
+			if(ps != null) ps.close();
+			if(con != null) con.close();
 			
 		}
 	}

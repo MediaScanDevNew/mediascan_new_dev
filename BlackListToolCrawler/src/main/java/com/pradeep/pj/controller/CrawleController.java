@@ -156,6 +156,39 @@ public class CrawleController {
 
 		return msg;
 	}
+	
+	
+	@RequestMapping(value = "/startIWLNew", method = RequestMethod.GET)
+	public String uploadFileHandlerNew(@RequestParam("keyphaseId") int keyphaseId) throws UnknownHostException, SQLException {
+		
+		ArrayList<IWLDataBean> iwl_list = new ArrayList<IWLDataBean>();
+		String msg = "done";
+		System.out.println("project id is ------->"+keyphaseId);
+		try {
+			iwl_list = new IWLDataProcess().DataProcess(keyphaseId);
+			System.out.println("iwl_list:--->"+iwl_list.size());
+			if(!iwl_list.isEmpty()){
+				new IWLDataProcess().RunningIWLFlag(keyphaseId,2);
+				for(IWLDataBean bn : iwl_list){
+					if (bn.getCrawle_url2().toLowerCase().contains(propFile.getTellyNagariLink().toLowerCase())){
+						tellynagariLink(bn.getCrawle_url2(), bn.getKeyphase(), bn.getUser_id(), InetAddress.getLocalHost().getHostAddress(), bn.getProject_id());
+					}else{
+						linkCrowle(bn.getCrawle_url2(), bn.getKeyphase(), bn.getUser_id(),InetAddress.getLocalHost().getHostAddress(), bn.getProject_id());
+					}
+				}
+				new IWLDataProcess().RunningIWLFlag(keyphaseId,1);
+			}else{
+				
+			}
+			
+		} catch (SQLException e) {
+			new IWLDataProcess().RunningIWLFlag(keyphaseId,3);
+			e.printStackTrace();
+			return msg;
+		}
+
+		return msg;
+	}
 
 	
 
@@ -320,6 +353,9 @@ public class CrawleController {
 					if (sourceLink.length() > 7 && !sourceLink.equals(null)) {
 						is.setSource_link(sourceLink);
 						c4.setCrawle_url2(sourceLink);
+						String domain_nm = domain_name__c.findDomain(sourceLink);
+						String delivery_format = new IWLDataProcess().getDeliveryFormat(domain_nm);
+						c4.setDelivery_format(delivery_format);
 						is.setSource_domain(domain_name__c.findDomain(sourceLink));
 						is.setSource_time(nowTime());
 						is.setRow_in_use(2);
@@ -430,6 +466,9 @@ public class CrawleController {
 					if (sourceLink.length() > 7 && !sourceLink.equals(null)) {
 						is.setSource_link(sourceLink);
 						c4.setCrawle_url2(sourceLink);
+						String domain_nm = domain_name__c.findDomain(sourceLink);
+						String delivery_format = new IWLDataProcess().getDeliveryFormat(domain_nm);
+						c4.setDelivery_format(delivery_format);
 						is.setSource_domain(domain_name__c.findDomain(sourceLink));			
 						is.setSource_time(nowTime());
 						is.setRow_in_use(2);
