@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import com.pradeep.pj.repo.Greylist_Repository;
 import com.pradeep.pj.repo.Master_crawle_urlRepository;
 import com.pradeep.pj.repo.Project_infoRepository;
 import com.pradeep.pj.repo.Whitelist_Repository;
+import com.pradeep.pj.repo.impl.IWLDataProcess;
 
 @Service
 public class WhitelistValidation {
@@ -53,7 +55,7 @@ public class WhitelistValidation {
      * @throws IOException
      */
     public String whitelistChecking(int projectId) throws JsonParseException, JsonMappingException, IOException {
-        System.out.println("Project id is whitelist --------------->" + projectId);
+        //System.out.println("Project id is whitelist --------------->" + projectId);
         List<Integer> objSet = projInfo.getClientByProjectId(projectId);
         if (objSet.size() > 0) {
             Object s = objSet.get(0);
@@ -179,10 +181,10 @@ public class WhitelistValidation {
 	            if (title.toLowerCase().contains(pro_name.toLowerCase())) {
 	                propertyMatch = true;
 	                msg = Property_MATCHED;
-	                System.out.println("-------->" + res[2].toString());
+	                //System.out.println("-------->" + res[2].toString());
 	            }
             }else{
-            	System.out.println("---no title----->" + res[2].toString());
+            	//System.out.println("---no title----->" + res[2].toString());
             }
             if (blackListMatch && propertyMatch) {
                 msg = BOTH_MATCHED;
@@ -207,7 +209,7 @@ public class WhitelistValidation {
      * @throws IOException
      */
     public String greylistChecking(int projectId) throws JsonParseException, JsonMappingException, IOException {
-    	System.out.println("Project id is greylist --------------->" + projectId);
+    	//System.out.println("Project id is greylist --------------->" + projectId);
     	List<Integer> objSet = projInfo.getClientByProjectId(projectId);
         if (objSet.size() > 0) {
             Object s = objSet.get(0);
@@ -222,8 +224,8 @@ public class WhitelistValidation {
                     // in 'master_crawle_url' table.But if any one of them is in 'whitelist' table then both are
                     // selected if we use 'contains' method.
                     if (domains[i].contains(res[1].toString())) {
-                    	System.out.println("domain : "+domains[i]);
-                    	System.out.println("url : "+res[1].toString());
+//                    	System.out.println("domain : "+domains[i]);
+//                    	System.out.println("url : "+res[1].toString());
                     	/*
                     	 * pentation/m on 05/02/20
                     	 */
@@ -250,9 +252,10 @@ public class WhitelistValidation {
      * @throws JsonParseException
      * @throws JsonMappingException
      * @throws IOException
+     * @throws SQLException 
      */
-    public String insertIntoCrawl(int projectId) throws JsonParseException, JsonMappingException, IOException {
-    	System.out.println("Insert into crawle table --------------->" + projectId);
+    public String insertIntoCrawl(int projectId) throws JsonParseException, JsonMappingException, IOException, SQLException {
+    	//System.out.println("Insert into crawle table --------------->" + projectId);
     	List<Object[]> objSet = crawlRepo.getStatusWiseDomain(projectId,BOTH_MATCHED);
         if (objSet.size() > 0) {
         	for (Object[] res : objSet) {
@@ -264,7 +267,10 @@ public class WhitelistValidation {
         		int wlist =Integer.parseInt(res[5].toString());
         		String page_no=res[6].toString();
         		String page_rank=res[7].toString();
-        		url4Repo.saveData(lnk, prid, uid, wlist, ppid, domain, page_no, page_rank);
+        		int k = new IWLDataProcess().checkingDataExistOrNot(lnk,prid,domain);
+        		if(k == 0){
+        			url4Repo.saveData(lnk, prid, uid, wlist, ppid, domain, page_no, page_rank);
+        		}
         	}
             return "done";
         } else {

@@ -67,7 +67,7 @@ public class PageSourceBot {
 	public static String getPageSource(String url) throws IOException {
 		URL urlObject = new URL(url);
 		URLConnection urlConnection = urlObject.openConnection();
-		System.out.println("page source test 1");
+		//System.out.println("page source test 1");
 		//Mozilla/5.0 (X11; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0
 		/*
 		urlConnection.setRequestProperty("User-Agent",
@@ -76,7 +76,7 @@ public class PageSourceBot {
 				*/
 		urlConnection.setRequestProperty("User-Agent",
 				"Mozilla/5.0 (X11; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/68.0.1");
-		System.out.println("page source test 2");
+		//System.out.println("page source test 2");
 		urlConnection.setConnectTimeout(-1);
 		return toString(urlConnection.getInputStream());
 	}
@@ -84,11 +84,11 @@ public class PageSourceBot {
 	private static String toString(InputStream inputStream) throws IOException {
 		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))) {
 			String inputLine;
-			System.out.println("page source test 3");
+			//System.out.println("page source test 3");
 			StringBuilder stringBuilder = new StringBuilder();
 			int count =0;
 			while ((inputLine = bufferedReader.readLine()) != null) {
-				System.out.println("page source test 4"+count);
+				//System.out.println("page source test 4"+count);
 				if(count==10)
 					break;
 				stringBuilder.append(inputLine);

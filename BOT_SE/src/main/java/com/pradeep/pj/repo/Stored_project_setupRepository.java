@@ -25,8 +25,8 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 			+ " order by sps.preority asc ", nativeQuery = true)
 			*/
 	@Query(value = "select sps.id,sps.keyphrase,sps.pipe, sps.userId,sps.projectId "
-			+ " from stored_project_setup1 as sps  where  sps.completed=0  "
-			+ " order by sps.id asc ", nativeQuery = true)
+			+ " from stored_project_setup1 as sps  where  sps.completed in (0,2)  "
+			+ " order by sps.projectId ", nativeQuery = true)
 			
 	//public List<Object[]> findAllCustomQuery(@Param("ip") String myIP);
 	public List<Object[]> findAllCustomQuery();
@@ -84,20 +84,20 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 	//------------------------ 15.02.2020 ---------------------------------------------------------------------------
 	
 		@Modifying(clearAutomatically = true)
-		@Query(value = "update stored_project_setup2 set completed=2,yahoo=2 where id= (:id)", nativeQuery = true)
+		@Query(value = "update stored_project_setup1 set completed=2,yahoo=2 where id= (:id)", nativeQuery = true)
 		int yahooStart(@Param("id") int id);
 		
 		@Modifying(clearAutomatically = true)
-		@Query(value = "update stored_project_setup2 set completed=2,bing=2 where id= (:id)", nativeQuery = true)
+		@Query(value = "update stored_project_setup1 set completed=2,bing=2 where id= (:id)", nativeQuery = true)
 		int bingStart(@Param("id") int id);
 		
 		@Modifying(clearAutomatically = true)
-		@Query(value = "update stored_project_setup2 set completed=2,duckduckgo=2 where id= (:id)", nativeQuery = true)
+		@Query(value = "update stored_project_setup1 set completed=2,duckduckgo=2 where id= (:id)", nativeQuery = true)
 		int duckduckStart(@Param("id") int id);
 		
 		
 		@Modifying(clearAutomatically = true)
-		@Query(value = "update stored_project_setup2 set completed=2,russiago=2 where id= (:id)", nativeQuery = true)
+		@Query(value = "update stored_project_setup1 set completed=2,russiago=2 where id= (:id)", nativeQuery = true)
 		int russiaGoStart(@Param("id") int id);
 		
 		
@@ -106,5 +106,49 @@ public interface Stored_project_setupRepository extends CrudRepository<Stored_pr
 				       + "where pi.id = (:projectId) and pi.id = ss.projectId and ss.completed=1 and pi.created_by = mu.id "
 				       + "and pi.client_type = cm.id ", nativeQuery = true)
 		public List<Object[]> findAllMailRecords(@Param("projectId") int projectId);
+		
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set google=1 where id= (:id)", nativeQuery = true)
+		int googleCompleted(@Param("id") int id);
+		
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set yahoo=1 where id= (:id)", nativeQuery = true)
+		int yahooCompleted(@Param("id") int id);
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set bing=1 where id= (:id)", nativeQuery = true)
+		int bingCompleted(@Param("id") int id);
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set duckduckgo=1 where id= (:id)", nativeQuery = true)
+		int duckduckCompleted(@Param("id") int id);
+		
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set russiago=1 where id= (:id)", nativeQuery = true)
+		int russiaCompleted(@Param("id") int id);
+		
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set whitelist=2 where id= (:id)", nativeQuery = true)
+		int whitelistStart(@Param("id") int id);
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set whitelist=1,greylist=2 where id= (:id)", nativeQuery = true)
+		int greylistStart(@Param("id") int id);
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set greylist=1,blacklist=2 where id= (:id)", nativeQuery = true)
+		int blacklistStart(@Param("id") int id);
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set failedflag=1 where id= (:id)", nativeQuery = true)
+		int failedFlag(@Param("id") int id);
+		
+		@Modifying(clearAutomatically = true)
+		@Query(value = "update stored_project_setup1 set blacklist=1 where id= (:id)", nativeQuery = true)
+		int blacklistComplate(@Param("id") int id);
 	
 }

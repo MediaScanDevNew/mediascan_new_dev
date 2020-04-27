@@ -114,4 +114,51 @@ public class Stored_project_setupService {
 		}
 		
 		//----------------------------------------------------------------
+		
+		
+		@Transactional
+		public int googleCompleted(int id) {
+			return ssr.googleCompleted(id);
+		}
+		
+		@Transactional
+		public int yahooCompleted(int id) {
+			return ssr.yahooCompleted(id);
+		}
+		
+		@Transactional
+		public int bingCompleted(int id) {
+			return ssr.bingCompleted(id);
+		}
+		
+		@Transactional
+		public int duckduckCompleted(int id) {
+			return ssr.duckduckCompleted(id);
+		}
+		
+		@Transactional
+		public int russiaCompleted(int id) {
+			return ssr.russiaCompleted(id);
+		}
+		
+		
+		@Transactional
+		public int whitelistStart(int id) {
+			return ssr.whitelistStart(id);
+		}
+		
+		@Transactional
+		public int greylistStart(int id) {
+			return ssr.greylistStart(id);
+		}
+		
+		@Transactional
+		public int blacklistStart(int id) {
+			return ssr.blacklistStart(id);
+		}
+		
+		@Transactional
+		public int blacklistComplate(int id) {
+			return ssr.blacklistComplate(id);
+		}
 }

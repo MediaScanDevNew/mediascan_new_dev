@@ -10,7 +10,10 @@ import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -54,6 +57,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.ServletContextAware;
 
+import com.pradeep.pj.model.MailProceesBean;
 import com.pradeep.pj.repo.impl.IWLDataProcess;
 import com.pradeep.pj.service.Blacklist_sitesService;
 import com.pradeep.pj.service.BotRunningStatusService;
@@ -119,13 +123,15 @@ public class BotSeApplication1 implements ServletContextAware {
 	Set<String> cemail;
 	String htmlpage = "";
 	boolean sendMail = false;
+	List<Integer> projectIdLT = new ArrayList<Integer>();
+	
 	int count1 = 0;
 	public static final int PAGES = 20;
 	
 	/**
 	 * new code added by Pentation/M (22.01.2020) Update Machine 1 table after Bot Job finished.....
 	 */
-		private String ip = "172.168.1.15";
+		private String ip = "172.168.1.14";
 		private String port = "8083";
 		
 	    
@@ -159,7 +165,7 @@ public class BotSeApplication1 implements ServletContextAware {
 			 * New Added By Pentation/M
 			 * 
 			 */
-
+			new IWLDataProcess().UpdateBOTMachine(ip,port,1);
 			ChromeOptions options = new ChromeOptions();
 			options.addArguments("start-maximized");
 			options.addArguments("enable-automation");
@@ -178,7 +184,8 @@ public class BotSeApplication1 implements ServletContextAware {
 		} catch (Exception e) {
 			// System.out.println("================Parent Exception==========" +
 			// e);
-			serviceDetail();
+			//serviceDetail();
+			new IWLDataProcess().UpdateBOTMachine(ip,port,0);
 
 		}
 
@@ -198,8 +205,9 @@ public class BotSeApplication1 implements ServletContextAware {
 			/**
 			 * new code added by Pentation/M (22.01.2020) Update Machine 1 table after Bot Job finished.....
 			 */
+			    
 				new IWLDataProcess().UpdateBOTMachine(ip,port,1);
-			
+			    
 			
 			usrList = new ArrayList<Integer>();
 			synchronized (this) {
@@ -230,7 +238,7 @@ public class BotSeApplication1 implements ServletContextAware {
 						blkListSites.clear();
 						links.clear();
 						getLink.clear();
-
+						new IWLDataProcess().UpdateBOTMachine(ip,port,0);
 						// System.out.println("no any query for u .... '");
 						// System.exit(0);
 
@@ -241,9 +249,8 @@ public class BotSeApplication1 implements ServletContextAware {
 				} else {
 					// logWriter.println("data size is equal or greater then
 					// 1..");
-					List<Integer> projectIdLT = new ArrayList<Integer>();
+					
 					for (Object[] pj : data) {
-
 						id = ((Integer) pj[0]);
 						int check_start = new IWLDataProcess().getCheckCompleted(id);
 						if (check_start == 0) {
@@ -256,6 +263,15 @@ public class BotSeApplication1 implements ServletContextAware {
 							projectIdLT.add(projectId);
 							// }
 							// }
+							
+							int statusFlag = new IWLDataProcess().getMailNotificationValue(projectId);
+							if(statusFlag == 0){
+								String project_nm = new IWLDataProcess().getProjectName(projectId);
+								botInitialMailToUser(userId,project_nm,projectId);
+								new IWLDataProcess().updateMailNotificationValue(projectId,1);
+							}
+							
+							
 							keywordfilter = new HashSet<>();
 							property_name = pis.findALLCustom(projectId);
 							String pj11[] = property_name.trim().split(" ");
@@ -282,7 +298,7 @@ public class BotSeApplication1 implements ServletContextAware {
 							}
 
 							if (pipe == 0) {
-
+								Date g = new Date();
 								sps.googleStart(id);
 								// logWriter.println("Google Search Started
 								// .....");
@@ -296,7 +312,10 @@ public class BotSeApplication1 implements ServletContextAware {
 								// logWriter.println("Google Data Save Complete
 								// .....");
 								links = null;
-
+								Date g1 = new Date();
+								new IWLDataProcess().insertCrawllog(id, g, g1);	
+								
+								Date y = new Date();
 								sps.yahooStartGoogleComplate(id);
 
 								// yahoo search==
@@ -311,7 +330,10 @@ public class BotSeApplication1 implements ServletContextAware {
 								// logWriter.println("Yahoo Data Save Complete
 								// .....");
 								links = null;
-
+								Date y1 = new Date();
+								new IWLDataProcess().updateCrawllog(id, y, y1, 1);
+								
+								Date b = new Date();
 								sps.bingStartYahooComplate(id);
 
 								// Bing search==
@@ -326,13 +348,15 @@ public class BotSeApplication1 implements ServletContextAware {
 								// logWriter.println("Bing Data Save Complete
 								// .....");
 								links = null;
-
+								Date b1 = new Date();
+								new IWLDataProcess().updateCrawllog(id, b, b1, 2);
 								/*
 								 * Add this by pentation team
 								 * 
 								 * fetch the data from duck duck go search
 								 * engine and save the data in database
 								 */
+								Date d = new Date();
 								sps.duckduckStartBingComplete(id);
 								// logWriter.println("Duck Duck Go Search
 								// started .....");
@@ -345,6 +369,8 @@ public class BotSeApplication1 implements ServletContextAware {
 								// logWriter.println("Duck Duck Go Data Save
 								// Complete .....");
 								links = null;
+								Date d1 = new Date();
+								new IWLDataProcess().updateCrawllog(id, d, d1, 3);
 								// ------------------------------------------------------------
 
 								/*
@@ -356,6 +382,7 @@ public class BotSeApplication1 implements ServletContextAware {
 
 								// System.out.println("id value is --------->" +
 								// id);
+								Date r = new Date();
 								sps.russiaGoStartduckduckGoComplete(id);
 								// logWriter.println("Russia Go Search started
 								// .....");
@@ -368,6 +395,8 @@ public class BotSeApplication1 implements ServletContextAware {
 								// logWriter.println("Russia Go Data Save
 								// Complete .....");
 								links = null;
+								Date r1 = new Date();
+								new IWLDataProcess().updateCrawllog(id, r, r1, 4);
 								/**
 								 * Added on Jan/27 to track end of Russian
 								 * Search engine crawl
@@ -383,18 +412,20 @@ public class BotSeApplication1 implements ServletContextAware {
 								// google search==
 								googleSearch(keyphrase);
 								afterCrawl(1, keyphrase);
-
+								sps.googleCompleted(id);
 								links = null;
 							} else if (pipe == 2) {
 
 								sps.yahooStart(id);
 								yahooSearch(keyphrase);
 								afterCrawl(2, keyphrase);
+								sps.yahooCompleted(id);
 								links = null;
 							} else if (pipe == 3) {
 								sps.bingStart(id);
 								bingSearch(keyphrase);
 								afterCrawl(3, keyphrase);
+								sps.bingCompleted(id);
 								links = null;
 
 								// sps.bingComplate(id);
@@ -414,6 +445,7 @@ public class BotSeApplication1 implements ServletContextAware {
 								// System.out.println("===== duckduck go ===
 								// links size......." + links.size());
 								afterCrawl(4, keyphrase);
+								sps.duckduckCompleted(id);
 								links = null;
 
 							} else if (pipe == 5) {
@@ -428,6 +460,7 @@ public class BotSeApplication1 implements ServletContextAware {
 								sps.russiaGoStart(id);
 								russiaGoSearch(keyphrase);
 								afterCrawl(5, keyphrase);
+								sps.russiaCompleted(id);
 								links = null;
 
 								/**
@@ -455,7 +488,7 @@ public class BotSeApplication1 implements ServletContextAware {
 
 							try {
 
-								sps.allComplate(id);
+								
 
 								/*
 								 * Add this by pentation team
@@ -469,23 +502,30 @@ public class BotSeApplication1 implements ServletContextAware {
 
 								// logWriter.println("Whitelist Process start
 								// .....");
+								Date w = new Date();
+								sps.whitelistStart(id);	
 								wv.whitelistChecking(projectId);
-								// logWriter.println("Whitelist Process
-								// complete,Greylist Process Start .....");
+								Date w1 = new Date();
+								new IWLDataProcess().updateCrawllog(id, w, w1, 5);
+								
+								Date g = new Date();
+								sps.greylistStart(id);
 								wv.greylistChecking(projectId);
-								// logWriter.println("Greylist Process
-								// complete,blacklist Process Start .....");
+								Date g1 = new Date();
+								new IWLDataProcess().updateCrawllog(id, g, g1, 6);
+								
+								Date b = new Date();
+								sps.blacklistStart(id);
 								wv.blacklistChecking(projectId);
-								// logWriter.println("Blacklist Process complete
-								// .....");
-								// mms.machineStatusFree(myIP);
-
+								sps.blacklistComplate(id);
+								Date b1 = new Date();
+								new IWLDataProcess().updateCrawllog(id, b, b1, 7);
+								
 								wv.insertIntoCrawl(projectId);
+								System.out.println("Whitelist/Greylist/blacklist Process completed successfully................................");
+								sps.allComplate(id);
 							} catch (Exception e) {
-								e.printStackTrace();
-								// logWriter.println("Exception
-								// ---->"+e.getMessage());
-								// logWriter.close();
+								
 							}
 							// //System.out.println("crawl is complete");
 
@@ -494,19 +534,17 @@ public class BotSeApplication1 implements ServletContextAware {
 
 							// ****************** send mail to user
 
-							sendMailToUser(userId, projectId, id);
+							  int k = new IWLDataProcess().chekedCompletedFlag(projectId);
+							  if(k == 0){
+								  sendMailToUser(userId, projectId, id);
+							  }
+							
 						} // end if condition
 
 					} // end for loop part here
 					
 					
-					//----------------------------------------------------------------------------------------------
-					/**
-					 * new code added by Pentation/M (22.01.2020) Update Machine 1 table after Bot Job finished.....
-					 */
-					new IWLDataProcess().UpdateBOTMachine(ip,port,0);
 					
-					//-----------------------------------------------------------------------------------------------
 					// ---------------------------------------------------------------------------------------------
 					/**
 					 * new code added by Pentation/M (22.01.2020) call iwl
@@ -524,10 +562,10 @@ public class BotSeApplication1 implements ServletContextAware {
 					projectIdLT.clear();
 					projectIdLT.addAll(idWithoutDuplicates);
 					String projectIds = "";
+					String mailprojectsId = "";
 					for (Integer i : projectIdLT) {
 						try {
-							// logWriter.println("IWL Enginee Project id
-							// ....."+i);
+							mailprojectsId =mailprojectsId+","+i;
 							int type_val = new IWLDataProcess().getProjectType(i);
 							if (type_val != 2 || type_val != 9) {
 								// iwl.iwlEngine(i);
@@ -540,14 +578,25 @@ public class BotSeApplication1 implements ServletContextAware {
 
 						}
 					}
+					
+					//----------------------------------------------------------------------------------------------
+					/**
+					 * new code added by Pentation/M (22.01.2020) Update Machine 1 table after Bot Job finished.....
+					 */
+					System.out.println("Mail Project Id value is ----22222222222222222222222----->"+mailprojectsId.substring(1));
+					new IWLDataProcess().UpdateBOTMachine(ip,port,0);
+					new IWLDataProcess().UpdateMailFlag(mailprojectsId.substring(1));
+					//sendMailToUser(userId, mailprojectsId.substring(1), id);
+					
+					//-----------------------------------------------------------------------------------------------
 
-					ResourceBundle rb = ResourceBundle.getBundle("application");
+					/*ResourceBundle rb = ResourceBundle.getBundle("application");
 					String connection_url = rb.getString("spring.iwl.url");
 					String otpurl = rb.getString("url") + "/startIWL?projectIds=" + projectIds;
 					System.out.println(otpurl);
 					URL url = new URL(otpurl);
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					conn.setRequestMethod("GET");
+					conn.setRequestMethod("GET");*/
 					
 					
 
@@ -571,6 +620,7 @@ public class BotSeApplication1 implements ServletContextAware {
 			 */
 			try {
 				new IWLDataProcess().UpdateBOTMachine(ip,port,0);
+				new IWLDataProcess().updateMailNotificationValue(projectId,0);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -635,7 +685,7 @@ public class BotSeApplication1 implements ServletContextAware {
 
 		String hitSearchButton = "//*[@type='submit' and @class='sbb']";
 		String hitSearchButton1 = "//button[@type='submit']";
-		String hitYahooSearch = "//input[@id='uh-search-box' and @name='p']";
+		String hitYahooSearch = "//input[@id='uh-search-box' or @name='p']";
 		String getTitleWithOutOpenThePage = "//h3[@class='title']";
 		String getTitleWithOutOpenThePage1 = "//*[@class='title']";
 
@@ -1169,7 +1219,7 @@ public class BotSeApplication1 implements ServletContextAware {
 	
 	String mailip;
 
-	public void sendMailToUser(int userId, int projectId, int id) {
+	public void sendMailToUser(int userId, int projectId, int id) throws SQLException {
 
 		uemail = new HashSet<String>();
 		cemail = new HashSet<String>();
@@ -1207,8 +1257,15 @@ public class BotSeApplication1 implements ServletContextAware {
 		 */
 
 		userMail = "smohindru@markscan.co.in";
+		String client_mail = "";
+		client_mail = new IWLDataProcess().getClientEmail(projectId); //
+		
+		if(client_mail == null || client_mail.equals("")){
+			client_mail = "mediascan@markscan.co.in";
+		}
+		
 
-		maildata = sps.getDataForMails(projectId);
+		ArrayList<MailProceesBean> list = new IWLDataProcess().getDataForMails(projectId);
 
 		htmlpage = "";
 		htmlpage = htmlpage + "Hi All,<br/>";
@@ -1216,9 +1273,10 @@ public class BotSeApplication1 implements ServletContextAware {
 		htmlpage = htmlpage + "Query:<br/>";
 		htmlpage = htmlpage
 				+ "<table border='1'><tr><td><b>Keywords</b></td><td><b>Project Name</b></td><td><b>Client Name</b></td><td><b>Created By</b></td></tr>";
-		for (Object[] md : maildata) {
-			htmlpage = htmlpage + "<tr><td>" + (String) md[0] + "</td><td>" + (String) md[1] + "</td><td>"
-					+ (String) md[2] + "</td><td>" + uName + "</td></tr>";
+		
+		for (MailProceesBean bn : list) {
+			htmlpage = htmlpage + "<tr><td>" + bn.getKeyphrase() + "</td><td>" + bn.getProject_nm() + "</td><td>"
+					+ bn.getClient_nm() + "</td><td>" + bn.getUser_nm() + "</td></tr>";
 		}
 
 		htmlpage = htmlpage + "</table>";
@@ -1237,10 +1295,10 @@ public class BotSeApplication1 implements ServletContextAware {
 
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("mediascan@markscan.co.in"));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userMail));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(client_mail)); //userMail ,gray1@markscan.co.in
 
 			message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(""));
-			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com"));// pradipta.maitra@gmail.com
+			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com,dutta.simanta83@gmail.com"));// pradipta.maitra@gmail.com
 			message.setSubject("Bot Application Running Status ");
 
 			message.setContent(htmlpage, "text/html");
@@ -1248,8 +1306,11 @@ public class BotSeApplication1 implements ServletContextAware {
 			// Send message
 
 			Transport.send(message);
-			htmlpage = null;
-			maildata.clear();
+			//htmlpage = null;
+			//maildata.clear();
+			for (MailProceesBean bn : list) {
+				new IWLDataProcess().UpdateMailFlag(bn.getId());
+			}
 			System.out.println("Mail Send Successfully -----------------------");
 
 		} catch (Exception e) {
@@ -2066,6 +2127,76 @@ public class BotSeApplication1 implements ServletContextAware {
 			System.err.println("=== russiaGo  search error=====");
 		}
 	}
+	
+	
+	public void botInitialMailToUser(int userId,String keyphrase,int projectId) throws SQLException {
+
+		uemail = new HashSet<String>();
+		cemail = new HashSet<String>();
+		udata = mus.findUserDetails(userId);
+		
+		String uName = "";
+		String userMail = "";
+		String client_name = "";
+		
+		for (Object[] usr : udata) {
+			uemail.add((String) usr[0]);
+			userMail = ((String) usr[0]);
+			uName = ((String) usr[1]);
+		}
+		
+		String client_mail = "";
+		client_mail = new IWLDataProcess().getClientEmail(projectId); //
+		
+		if(client_mail == null || client_mail.equals("")){
+			client_mail = "mediascan@markscan.co.in";
+		}
+		
+		htmlpage ="";
+		htmlpage = htmlpage +"Hi,<br/>";
+		htmlpage = htmlpage +"Your requested automation bot application successfully started for "+keyphrase+".<br/><br/>";
+		
+		
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "111.118.215.222");
+		props.put("mail.smtp.port", "25");
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication("mediascan@markscan.co.in", "M@123rkscan");
+			}
+		});
+		try {
+
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress("mediascan@markscan.co.in"));//
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(client_mail));//userMail gray1@markscan.co.in,
+
+			message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(""));
+			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com,dutta.simanta83@gmail.com"));//pradipta.maitra@gmail.com
+			message.setSubject("Automation Bot Application Running Status ");
+
+			message.setContent(htmlpage, "text/html");
+
+			// Send message
+
+			Transport.send(message);
+			htmlpage = "";
+			
+			
+			System.out.println("Mail Send Successfully -----------------------");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+
+	}
+
+	
+	
 	// ------------------------------------------------------------------------------------------------------
 	/*
 	 * public boolean isAppActive() throws Exception { File file = new
