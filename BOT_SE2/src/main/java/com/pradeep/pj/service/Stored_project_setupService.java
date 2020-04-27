@@ -22,9 +22,9 @@ public class Stored_project_setupService {
 	@Autowired
 	Stored_project_setupRepository ssr;
 
-	public List<Object[]> findALLCustom() {
+	public List<Object[]> findALLCustom(int pId) {
 		List<Object[]> allCustomRecords = new ArrayList<>();
-		allCustomRecords = ssr.findAllCustomQuery();
+		allCustomRecords = ssr.findAllCustomQuery(pId);
 		return allCustomRecords;
 	}
 	
@@ -106,11 +106,66 @@ public class Stored_project_setupService {
 	}
 	
 	
+	
+	
 	public List<Object[]> getDataForMails(int projectId) {
 		List<Object[]> allMailRecords = new ArrayList<>();
 		allMailRecords = ssr.findAllMailRecords(projectId);
 		return allMailRecords;
 	}
 	
-	//----------------------------------------------------------------
+	@Transactional
+	public int whitelistStart(int id) {
+		return ssr.whitelistStart(id);
+	}
+	
+	@Transactional
+	public int greylistStart(int id) {
+		return ssr.greylistStart(id);
+	}
+	
+	@Transactional
+	public int blacklistStart(int id) {
+		return ssr.blacklistStart(id);
+	}
+	
+	@Transactional
+	public int blacklistComplate(int id) {
+		return ssr.blacklistComplate(id);
+	}
+	
+	@Transactional
+	public int failedFlag(int id) {
+		return ssr.failedFlag(id);
+	}
+	
+	
+	//--------------- 07.04.2020 ------------------------------------
+	
+	@Transactional
+	public int googleCompleted(int id) {
+		return ssr.googleCompleted(id);
+	}
+	
+	@Transactional
+	public int yahooCompleted(int id) {
+		return ssr.yahooCompleted(id);
+	}
+	
+	@Transactional
+	public int bingCompleted(int id) {
+		return ssr.bingCompleted(id);
+	}
+	
+	@Transactional
+	public int duckduckCompleted(int id) {
+		return ssr.duckduckCompleted(id);
+	}
+	
+	@Transactional
+	public int russiaCompleted(int id) {
+		return ssr.russiaCompleted(id);
+	}
+	
+	//------------------- 07.04.2020 --------------------------------------
 }

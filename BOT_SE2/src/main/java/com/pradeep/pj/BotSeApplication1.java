@@ -9,6 +9,7 @@ import java.net.NetworkInterface;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -48,6 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.ServletContextAware;
@@ -116,8 +118,12 @@ public class BotSeApplication1 implements ServletContextAware{
 	Set<String> cemail;
 	String htmlpage = "";
 	boolean sendMail = false;
+	boolean mailFlag = true;
 	int count1 = 0;
 	public static final int PAGES=20;
+	
+	private String ip = "";
+	private String port = "8089";
 	
 	private ServletContext servletcontext;
 	/*
@@ -133,27 +139,19 @@ public class BotSeApplication1 implements ServletContextAware{
 	 */
 	@RequestMapping(value = "/check", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE, //
 			MediaType.APPLICATION_XML_VALUE })
-	// @RequestMapping("/check")
 	@ResponseBody
-	 public String botStart(@RequestHeader String Authorization) throws Exception {
-	//public String botStart() throws Exception {
-
-		// String Authorization="11";
-		 String s=Authorization;
-		
-		 if(!Authorization.equals(null)) {
-			 //System.out.println("Testing-------------------");
-			 myIP = myIPaddress();
-			 
-		try {
-			//System.setProperty("webdriver.chrome.driver", "/home/hduser/Videos/Driver/chromedriver");
-		    //System.setProperty("webdriver.chrome.driver", "/home/botserver3/chromedriver");
+	 //public String botStart(@RequestHeader String Authorization,@RequestHeader String SServer1IP) throws Exception {
+     public String botStart(@RequestParam("pId") int pId, @RequestParam("SServer1IP") String SServer1IP) throws Exception {	 
+	//	 String s=Authorization;
+		 try {
 			
 			/***
 			 * New Added By Pentation/M
 			 * 
 			 * */
-			
+			System.out.println("SServer1IP SServer1IP -------------------"+SServer1IP);
+			ip = SServer1IP;
+			new IWLDataProcess().UpdateBOTMachine(ip,port,1);
 			ChromeOptions options = new ChromeOptions();
 			options.addArguments("start-maximized"); 
 			options.addArguments("enable-automation"); 
@@ -166,16 +164,15 @@ public class BotSeApplication1 implements ServletContextAware{
 			
 			
 			WebDriverManager.chromedriver().setup();
-			
 			driver = new ChromeDriver(options);
-			serviceDetail();
+			serviceDetail(pId);
 			sendMail = false;
 		} catch (Exception e) {
 			//System.out.println("================Parent Exception==========" + e);
-			serviceDetail();
+			new IWLDataProcess().UpdateBOTMachine(ip,port,0);
 
 		}
-	 }
+	
 
 		return "success";
 
@@ -184,7 +181,7 @@ public class BotSeApplication1 implements ServletContextAware{
 	
 	
 
-	public void botStart1() throws Exception {
+	/*public void botStart1() throws Exception {
 		//System.out.println("Testing-------------------");
 
 		// TODO Auto-generated method stub
@@ -198,10 +195,10 @@ public class BotSeApplication1 implements ServletContextAware{
 		sendMail = false;
 		//System.out.println("========== sendMail-------" + sendMail);
 
-	}
+	}*/
 	// }
 
-	public void serviceDetail() {
+	public void serviceDetail(int pId) {
 		try {
 			/*String logFileName = "BOTSE_LOG.txt";
 			String uploadLogFile = servletcontext.getRealPath("/home/botserver3/") + logFileName;
@@ -211,7 +208,7 @@ public class BotSeApplication1 implements ServletContextAware{
 		    
 			usrList = new ArrayList<Integer>();
 			synchronized (this) {
-				data = sps.findALLCustom(); // get_data_from_stored_project
+				data = sps.findALLCustom(pId); // get_data_from_stored_project
 				//logWriter.println("data size is -------->"+data.size());
 				if ((data.size() < 1) && (sendMail == false)) {
 					// //System.out.println("no any query for u .... '");
@@ -241,13 +238,16 @@ public class BotSeApplication1 implements ServletContextAware{
 
 						//System.out.println("no any query for u .... '");
 						// System.exit(0);
-
+						new IWLDataProcess().UpdateBOTMachine(ip,port,0);
+						new IWLDataProcess().UpdateProjectCompleteFlag(projectId);
 					} catch (Exception e) {
 						// System.exit(0);
+						new IWLDataProcess().UpdateBOTMachine(ip,port,0);
+						new IWLDataProcess().UpdateProjectCompleteFlag(projectId);
 					}
 
 				} else {
-					//logWriter.println("data size is equal or greater then 1..");
+					
 					List<Integer> projectIdLT = new ArrayList<Integer>();
 					for (Object[] pj : data) {
 						System.out.println("*******************************************************************");
@@ -257,9 +257,15 @@ public class BotSeApplication1 implements ServletContextAware{
 						pipe = ((Integer) pj[2]);
 						userId = ((Integer) pj[3]);
 						projectId = ((Integer) pj[4]);
-						System.out.println("project id is ---------------->"+projectId);
+						//System.out.println("project id is ---------------->"+projectId);
 						projectIdLT.add(projectId);
 					//}
+						int statusFlag = new IWLDataProcess().getMailNotificationValue(projectId);
+						if(statusFlag == 0){
+							String project_nm = new IWLDataProcess().getProjectName(projectId);
+							botInitialMailToUser(userId,project_nm);
+							new IWLDataProcess().updateMailNotificationValue(projectId,1);
+						}
 				//}
 				//logWriter.println("Project id is ------>"+projectId);
 				//logWriter.println("Keyphrase  is ------>"+keyphrase);
@@ -359,18 +365,20 @@ public class BotSeApplication1 implements ServletContextAware{
 					// google search==
 					googleSearch(keyphrase);
 					afterCrawl(1, keyphrase);
-					
+					sps.googleCompleted(id);
 					links = null;
 				} else if (pipe == 2) {
 					
 					sps.yahooStart(id);
 					yahooSearch(keyphrase);
 					afterCrawl(2, keyphrase);
+					sps.yahooCompleted(id);
 					links = null;
 				} else if (pipe == 3) {
 					sps.bingStart(id);
 					bingSearch(keyphrase);
 					afterCrawl(3, keyphrase);
+					sps.bingCompleted(id);
 					links = null;
 
 					// sps.bingComplate(id);
@@ -383,8 +391,8 @@ public class BotSeApplication1 implements ServletContextAware{
 
 					sps.duckduckStart(id);
 					duckduckSearch(keyphrase);
-					//System.out.println("===== duckduck go === links size......." + links.size());
 					afterCrawl(4, keyphrase);
+					sps.duckduckCompleted(id);
 					links = null;
 
 				} else if (pipe == 5) {
@@ -397,6 +405,7 @@ public class BotSeApplication1 implements ServletContextAware{
 					sps.russiaGoStart(id);
 					russiaGoSearch(keyphrase);
 					afterCrawl(5, keyphrase);
+					sps.russiaCompleted(id);
 					links = null;
 					
 					/** Added on Jan/27 to track end of Russian Search engine crawl **/
@@ -418,93 +427,59 @@ public class BotSeApplication1 implements ServletContextAware{
 
 				try {
 					
-					
-					  sps.allComplate(id);
-					
-					/* Add this by pentation team 
-					 * 
-					 * Add these three function for white list,grey list ,black list validation */
-					
-					//WhitelistValidation wv = new WhitelistValidation();
-					
-				    //logWriter.println("Whitelist Process start .....");  
+					sps.whitelistStart(id);					
 					wv.whitelistChecking(projectId);
-					//logWriter.println("Whitelist Process complete,Greylist Process Start .....");  
+					sps.greylistStart(id);
 					wv.greylistChecking(projectId);
-					//logWriter.println("Greylist Process complete,blacklist Process Start .....");
+					sps.blacklistStart(id);
 					wv.blacklistChecking(projectId);
-					//logWriter.println("Blacklist Process complete .....");  
-					// mms.machineStatusFree(myIP);
-					
+					sps.blacklistComplate(id);
+					sps.allComplate(id);
 					wv.insertIntoCrawl(projectId);
+					
+					System.out.println("Whitelist/Greylist/blacklist Process completed successfully................................");
+					
 				} catch (Exception e) {
 					e.printStackTrace();
-					//logWriter.println("Exception ---->"+e.getMessage()); 
-					//logWriter.close();
+					sps.failedFlag(id);	
+					
 				}
-				// //System.out.println("crawl is complete");
-
-				// JOptionPane.showMessageDialog(null, "crawl is complete");
-
+				
 				// ****************** send mail to user
 				
 				} //end for loop part here
 					
-					//---------------------------------------------------------------------------------------------	
-		            /**
-		             * new code added by Pentation/M (22.01.2020)
-		             * call iwl enginee from BOT SE application.....
-		             * */
-						
-						/**
-		                 * new code added by Pentation/M (29.01.2020)
-		                 * call iwl enginee from BOT SE application.....
-		                 * */
-						
-					//-----------------------------------------------------------------------------------------------	
-					//logWriter.println("IWL Enginee Process start .....");  
 					
-					/*Set<Integer> idWithoutDuplicates = new LinkedHashSet<Integer>(projectIdLT);
-					projectIdLT.clear();
-					projectIdLT.addAll(idWithoutDuplicates);
-					for (Integer i : projectIdLT) {
-						try{
-							//logWriter.println("IWL Enginee Project id ....."+i); 
-							int type_val = new IWLDataProcess().getProjectType(i);
-							if(type_val != 2 ||  type_val != 9){
-								iwl.iwlEngine(i);
-							}	
-						}catch(Exception ex){
-							//logWriter.println("Exception ---->"+ex.getMessage()); 
-							//logWriter.close();
-							
-						}	
-					}*/
-					
-					
-					
-					//logWriter.println("IWL Enginee Process end .....");  
-					//logWriter.close();
 			  }	// end else part here
 				
 			}// end sync this end here
 			
-			
-			
-			// }
-			//System.out.println("*******************************User Name**********" + userId);
 			sendMailToUser(userId, projectId);
-			if (sendMail == false) {
-				//serviceDetail();
-			}
-
+			new IWLDataProcess().updateMailNotificationValue(projectId,0);
+			new IWLDataProcess().UpdateBOTMachine(ip,port,0);
+			new IWLDataProcess().UpdateProjectCompleteFlag(projectId);
+			System.out.println("All Process completed successfully................................");
+			
 		}catch (Exception e) {
+			/**
+			 * new code added by Pentation/M (22.01.2020) Update Machine 1 table after Bot Job finished.....
+			 */
+			sps.failedFlag(id);
 			e.printStackTrace();
+			try {
+				new IWLDataProcess().UpdateBOTMachine(ip,port,0);
+				new IWLDataProcess().updateMailNotificationValue(projectId,0);
+				new IWLDataProcess().UpdateProjectCompleteFlag(projectId);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
 			try {
 				driver.close();
 				driver.quit();
 			} catch (Exception ee) {
+				
 			}
 			// JOptionPane.showMessageDialog(null, "crawl error");
 			//System.out.println("**********************crawl error*********");
@@ -560,7 +535,7 @@ public class BotSeApplication1 implements ServletContextAware{
 		
 		String hitSearchButton = "//*[@type='submit' and @class='sbb']";
 		String hitSearchButton1 = "//button[@type='submit']";
-		String hitYahooSearch= "//input[@id='uh-search-box' and @name='p']";
+		String hitYahooSearch= "//input[@id='uh-search-box' or @name='p']";
 		String getTitleWithOutOpenThePage = "//h3[@class='title']";
 		String getTitleWithOutOpenThePage1 = "//*[@class='title']";
 		
@@ -1008,7 +983,7 @@ public class BotSeApplication1 implements ServletContextAware{
 	// ************************** mail sending code
 	// ************************************
 
-	@Value("${spring.mail.host}")
+	
 	String mailip;
     public void sendMailToUser(int userId, int projectId) {
 
@@ -1030,23 +1005,11 @@ public class BotSeApplication1 implements ServletContextAware{
 		System.out.println("**********User Mail is *********" + userMail);
 		
 		
-//		String pName = "";
-//		int ctype = 0;
-//		pdata = pis.findCustomData(projectId);
-//		for (Object[] prj : pdata) {
-//			pName = (String) prj[0];
-//			ctype = Integer.parseInt((String) prj[1]);
-//
-//		}
-//		
-//		cdata = cms.findCustomData(ctype);
-//		for (Object[] cmd : cdata) {
-//			client_name = (String) cmd[0];
-//			cemail.add((String) cmd[1]);
-//		}
-		
+
 		maildata = sps.getDataForMails(projectId);
+		
 		htmlpage ="";
+		
 		htmlpage = htmlpage +"Hi All,<br/>";
 		htmlpage = htmlpage +"Bot Search Application has been completed successfully :<br/><br/>";
 		htmlpage = htmlpage +"Query:<br/>";
@@ -1074,7 +1037,7 @@ public class BotSeApplication1 implements ServletContextAware{
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userMail));
 
 			message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(""));
-			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com"));//pradipta.maitra@gmail.com
+			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com,dutta.simanta83@gmail.com"));//pradipta.maitra@gmail.com
 			message.setSubject("Bot Application Running Status ");
 
 			message.setContent(htmlpage, "text/html");
@@ -1083,6 +1046,9 @@ public class BotSeApplication1 implements ServletContextAware{
 
 			Transport.send(message);
 			htmlpage = null;
+			for(Object[] md : maildata){
+				new IWLDataProcess().UpdateMailFlag(Integer.parseInt(md[4].toString()));
+			}
 			maildata.clear();
 			System.out.println("Mail Send Successfully -----------------------");
 
@@ -1093,6 +1059,68 @@ public class BotSeApplication1 implements ServletContextAware{
 		
 
 	}
+    
+    
+    
+    public void botInitialMailToUser(int userId,String project_nm) {
+
+		uemail = new HashSet<String>();
+		cemail = new HashSet<String>();
+		udata = mus.findUserDetails(userId);
+		
+		String uName = "";
+		String userMail = "";
+		String client_name = "";
+		
+		for (Object[] usr : udata) {
+			uemail.add((String) usr[0]);
+			userMail = ((String) usr[0]);
+			uName = ((String) usr[1]);
+		}
+		
+		htmlpage ="";
+		htmlpage = htmlpage +"Hi,<br/>";
+		htmlpage = htmlpage +"Your requested manual bot application started successfully for "+project_nm+".<br/><br/>";
+		
+		
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "111.118.215.222");
+		props.put("mail.smtp.port", "25");
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication("mediascan@markscan.co.in", "M@123rkscan");
+			}
+		});
+		try {
+
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress("mediascan@markscan.co.in"));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userMail));
+
+			message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(""));
+			message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com,dutta.simanta83@gmail.com"));//pradipta.maitra@gmail.com
+			message.setSubject("Bot Application Running Status ");
+
+			message.setContent(htmlpage, "text/html");
+
+			// Send message
+
+			Transport.send(message);
+			htmlpage = null;
+			//maildata.clear();
+			mailFlag = false;
+			System.out.println("Mail Send Successfully -----------------------");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+
+	}
+
 
 	// } mms.machineStatusFree(myIP);
 	public void sendMail(String myIp) {
@@ -1865,7 +1893,7 @@ public class BotSeApplication1 implements ServletContextAware{
 	FileChannel channel;
 	String myIP = null;
 	static WebDriver driver = null;
-	int id, userId, projectId, bls, pipe;
+	int id, userId=0, projectId, bls, pipe;
 	String keyphrase, machine, property_name, pipe_domain;
 	String skeyword = null;
 	Set<String> keywordfilter = null;
