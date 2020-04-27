@@ -19,11 +19,20 @@ public class Keyword_filter_extension_master {
 
 
 	int id;
+	int isactive;
 	int projectType;
 	String keyphrase, created_on;
 
 	public int getId() {
 		return id;
+	}
+
+	public int getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(int isactive) {
+		this.isactive = isactive;
 	}
 
 	public String getCreated_on() {

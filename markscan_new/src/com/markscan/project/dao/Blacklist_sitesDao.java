@@ -37,7 +37,9 @@ public class Blacklist_sitesDao {
 		// System.out.println("oooo size Client_masterDao " + dd.size());
 		return dd;
 	}
-
+	
+	
+	
 	public List<Blacklist_sites> viewRecord01(String query, int x) {
 		template.setMaxResults(x);
 		List<Blacklist_sites> dd = new ArrayList<>();
@@ -61,12 +63,56 @@ public class Blacklist_sitesDao {
 		}
 	}
 
-	public void customUpdateProject(String query) { // for qc
+/*	public void customUpdateProject(String query) { // for qc
 		template.bulkUpdate(query);
 
-	}
+	}*/
+	
+	public int customUpdateProject(String query) { // for qc
+		return template.bulkUpdate(query);
+
+	}	
 
 	public void CustomDelete(String entityName, String entity) {
 		template.delete(entityName, entity);
+	}	
+	
+	int id;
+	public int getId() {
+		return id;
 	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public int getIs_active() {
+		return is_active;
+	}
+
+	public void setIs_active(int is_active) {
+		this.is_active = is_active;
+	}
+
+	public int getProject_type() {
+		return project_type;
+	}
+
+	public void setProject_type(int project_type) {
+		this.project_type = project_type;
+	}
+
+	String domain;
+	int is_active;
+	int project_type;
+
+
 }

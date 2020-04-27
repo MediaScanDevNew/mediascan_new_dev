@@ -26,6 +26,10 @@
 		<property name="duckduckgo"></property>
 		<property name="russiago"></property>
 		<property name="priority"></property>
+		
+		<property name="whitelist"></property>
+		<property name="greylist"></property>
+		<property name="blacklist"></property>
 
 	</class>
 

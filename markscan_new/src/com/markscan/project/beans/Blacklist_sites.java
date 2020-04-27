@@ -16,12 +16,19 @@ public class Blacklist_sites {
 		// TODO Auto-generated constructor stub
 	}
 
-	String id, domain, created_on;
-	int created_by, is_active;
-	public String getId() {
+	String  domain, created_on;
+	int created_by, is_active,id,project_type ;
+	
+	public int getProject_type() {
+		return project_type;
+	}
+	public void setProject_type(int project_type) {
+		this.project_type = project_type;
+	}
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getDomain() {

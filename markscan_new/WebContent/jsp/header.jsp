@@ -214,6 +214,7 @@
 							<li><a href="bl_dataEXPORTpre">IWL Engine Data Export</a></li> -->
 							<li><a href="iwl_upload">File Upload</a></li>
 							<li><a href="iwl_error_download">Error File Download</a></li>
+							<li><a href="createkp">Create Keyphrase</a></li>
 						</ul>
 						</li>
 
@@ -243,6 +244,7 @@
 				 -->
 					<li class='has-sub' id="17"><a href='client_pre'><span>Client
 								Create/ Update</span></a></li>
+	<li class='has-sub' id="18"><a href='createkp'><span>Create Keyphrase</span></a></li>								
 					<!-- 	<li class='has-sub' id="18"><a href='source_Status_pre'><span>Source
 								Link status</span></a></li>
 					<li class='has-sub' id="19"><a href='playwireUploadPre'><span>PlayWire
@@ -255,8 +257,8 @@
 				<ul>
 					<li class='has-sub' id="5"><a href='psetup'><span>BOT
 								Setup</span></a></li>
-					<li class='has-sub' id="6"><a href='addKeyphrase'><span>Add
-								KeyPhrase </span></a></li>
+					<!-- <li class='has-sub' id="6"><a href='addKeyphrase'><span>Add
+								KeyPhrase </span></a></li> -->
 					<!-- <li class='has-sub'><a href='#'><span>Key Phrase</span></a>
 						<ul>
 							<li><a href="#">Add Key Phrase</a></li>
@@ -276,15 +278,7 @@
 						</ul>
 					</li>				
 								
-					<li class='has-sub' id="8"><a href='#'><span>
-					<!--  BOT Running Status-->
-					</span></a></li>
-					<li class='has-sub' id="9"><a href='#'><span>
-					<!--  Empty BOT Queue-->
-					</span></a></li>
-					<li class='has-sub'><a href='#'><span>
-					<!--  BlackList Sites add/delete -->
-					</span></a></li>
+
 								 
 				</ul></li>
 			<li class='active has-sub'><a href='#'><span>Data
@@ -301,7 +295,8 @@
 								Replacement</span></a></li>
 					<li class='has-sub' id="20"><a
 						href='EnforcementContentReplacement'><span>Content
-								Replacement (Enforcement)</span></a></li>
+								Replacement (Enforcement)</span></a></li> 
+					<li class='has-sub' id="21"><a href='createblacklist'><span>Blacklist</span></a></li>								
 
 
 

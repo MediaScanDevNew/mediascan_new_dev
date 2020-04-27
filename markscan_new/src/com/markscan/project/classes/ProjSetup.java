@@ -6,12 +6,16 @@ package com.markscan.project.classes;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+
 import org.springframework.beans.factory.BeanFactory;
 
 import com.markscan.project.beans.Blacklist_sites;
@@ -32,6 +37,7 @@ import com.markscan.project.beans.Markscan_machine;
 import com.markscan.project.beans.Markscan_pipe;
 import com.markscan.project.beans.Markscan_projecttype;
 import com.markscan.project.beans.Master_crawle_url;
+import com.markscan.project.beans.Stored_project_setup;
 //import com.markscan.project.beans.Stored_project_setup;
 import com.markscan.project.beans.Stored_project_setup1;
 import com.markscan.project.classes.bot.BotStarter;
@@ -46,6 +52,7 @@ import com.markscan.project.dao.Markscan_pipeDao;
 import com.markscan.project.dao.Markscan_projecttypeDao;
 import com.markscan.project.dao.Master_crawle_urlDao;
 import com.markscan.project.dao.Stored_project_setup1Dao;
+import com.markscan.project.dao.Stored_project_setupDao;
 //import com.markscan.project.dao.Stored_project_setupDao;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -68,6 +75,15 @@ public class ProjSetup extends ActionSupport {
 	private BeanFactory factory = null;
 	String oneField = "";
 	List<Crawle_url4> crawleUrl4 = null;
+	List<Stored_project_setup1> manual_bot = null;
+	List<Stored_project_setup> automate_bot = null;
+	List<Stored_project_setup> iwl_process = null;
+	List<Markscan_machine> machine_list = null;
+	
+	
+	
+	
+	
 	public String execute() { // templete configuration.....
 
 		session2 = ServletActionContext.getRequest().getSession();
@@ -82,9 +98,14 @@ public class ProjSetup extends ActionSupport {
 			factory = LoginAndSession.getFactory();
 			Markscan_projecttypeDao dao = null;
 			Markscan_projecttype url2 = null;
+			Stored_project_setup1Dao sdao = null;
+			Stored_project_setupDao adao = null;
+			Markscan_machineDao mchinedao = null;
 			try {
 
 				dao = (Markscan_projecttypeDao) factory.getBean("d8");
+				
+				
 
 				lst = dao.viewRecord("select id, name from Markscan_projecttype");
 				// System.out.println(".......pradeep........" + lst.size());
@@ -101,6 +122,291 @@ public class ProjSetup extends ActionSupport {
 					url2 = null;
 				}
 				lst = null;
+				
+				//----------- new code added for display running current manual bot 07.03.2020
+				
+				sdao = (Stored_project_setup1Dao) factory.getBean("d7");
+							
+				lst = sdao.viewRecord("SELECT keyphrase,completed,google,yahoo,bing,duckduckgo,russiago,whitelist,greylist,blacklist"
+			              			+ " FROM Stored_project_setup1 "
+			                        + " where completed=2 order by keyphrase");
+				
+				   manual_bot	=new ArrayList<Stored_project_setup1>();
+				   for(int i = 0; i < lst.size(); i++){
+					   Stored_project_setup1 bn = new Stored_project_setup1();
+					   obj = (Object[]) lst.get(i);
+					   bn.setKeyphrase(obj[0].toString());
+					   if(obj[1] != null){
+						   if(Integer.parseInt(obj[1].toString()) == 2){bn.setCompletedVal("Running");}
+					   }
+					   
+					   if(obj[2] != null){
+						   if(Integer.parseInt(obj[2].toString()) == 0)
+						    {
+							  bn.setGoogleVal("--");
+							}else if(Integer.parseInt(obj[2].toString()) == 2){
+								bn.setGoogleVal("Started");
+							}else if(Integer.parseInt(obj[2].toString()) == 1){
+								bn.setGoogleVal("Completed");
+							}
+					   }
+					   
+					   if(obj[3] != null){
+						   if(Integer.parseInt(obj[3].toString()) == 0)
+						    {
+							  bn.setYahooVal("--");
+							}else if(Integer.parseInt(obj[3].toString()) == 2){
+								bn.setYahooVal("Started");
+							}else if(Integer.parseInt(obj[3].toString()) == 1){
+								bn.setYahooVal("Completed");
+							}
+					   }
+					   
+					   if(obj[4] != null){
+						   if(Integer.parseInt(obj[4].toString()) == 0)
+						    {
+							  bn.setBingVal("--");
+							}else if(Integer.parseInt(obj[4].toString()) == 2){
+								bn.setBingVal("Started");
+							}else if(Integer.parseInt(obj[4].toString()) == 1){
+								bn.setBingVal("Completed");
+							}
+					   }
+					   
+					   if(obj[5] != null){
+						   if(Integer.parseInt(obj[5].toString()) == 0)
+						    {
+							  bn.setDuckduckgoVal("--");
+							}else if(Integer.parseInt(obj[5].toString()) == 2){
+								bn.setDuckduckgoVal("Started");
+							}else if(Integer.parseInt(obj[5].toString()) == 1){
+								bn.setDuckduckgoVal("Completed");
+							}
+					   }
+					   
+					   if(obj[6] != null){
+						   if(Integer.parseInt(obj[6].toString()) == 0)
+						    {
+							  bn.setRussiagoVal("--");
+							}else if(Integer.parseInt(obj[6].toString()) == 2){
+								bn.setRussiagoVal("Started");
+							}else if(Integer.parseInt(obj[6].toString()) == 1){
+								bn.setRussiagoVal("Completed");
+							}
+					   }
+					   
+					   if(obj[7] != null){
+						   if(Integer.parseInt(obj[7].toString()) == 0)
+						    {
+							  bn.setWhitelistVal("--");
+							}else if(Integer.parseInt(obj[7].toString()) == 2){
+								bn.setWhitelistVal("Started");
+							}else if(Integer.parseInt(obj[7].toString()) == 1){
+								bn.setWhitelistVal("Completed");
+							}
+					   }
+					   if(obj[8] != null){
+						   if(Integer.parseInt(obj[8].toString()) == 0)
+						    {
+							  bn.setGreylistVal("--");
+							}else if(Integer.parseInt(obj[8].toString()) == 2){
+								bn.setGreylistVal("Started");
+							}else if(Integer.parseInt(obj[8].toString()) == 1){
+								bn.setGreylistVal("Completed");
+							}
+					   }
+					   
+					   if(obj[9] != null){
+						   if(Integer.parseInt(obj[9].toString()) == 0)
+						    {
+							  bn.setBlacklistVal("--");
+							}else if(Integer.parseInt(obj[9].toString()) == 2){
+								bn.setBlacklistVal("Started");
+							}else if(Integer.parseInt(obj[9].toString()) == 1){
+								bn.setBlacklistVal("Completed");
+							}
+					   }
+					   
+					   manual_bot.add(bn);
+				   }
+				   
+				   lst = null;
+				   
+				   
+				//----------- new code added for display running current manual bot 07.03.2020
+				
+				   
+				 //----------- new code added for display running current manual bot 07.03.2020
+					
+					adao = (Stored_project_setupDao) factory.getBean("d99");
+					
+					
+					lst = sdao.viewRecord("SELECT keyphrase,completed,google,yahoo,bing,duckduckgo,russiago,whitelist,greylist,blacklist"
+				              			+ " FROM Stored_project_setup "
+				                        + " where completed=2 order by keyphrase");
+					
+						automate_bot	=new ArrayList<Stored_project_setup>();
+					   for(int i = 0; i < lst.size(); i++){
+						   Stored_project_setup bn = new Stored_project_setup();
+						   obj = (Object[]) lst.get(i);
+						   bn.setKeyphrase(obj[0].toString());
+						   if(obj[1] != null){
+							   if(Integer.parseInt(obj[1].toString()) == 2){bn.setCompletedVal("Running");}
+						   }
+						   
+						   if(obj[2] != null){
+							   if(Integer.parseInt(obj[2].toString()) == 0)
+							    {
+								  bn.setGoogleVal("Not Started");
+								}else if(Integer.parseInt(obj[2].toString()) == 2){
+									bn.setGoogleVal("Started");
+								}else if(Integer.parseInt(obj[2].toString()) == 1){
+									bn.setGoogleVal("Completed");
+								}
+						   }
+						   
+						   if(obj[3] != null){
+							   if(Integer.parseInt(obj[3].toString()) == 0)
+							    {
+								  bn.setYahooVal("Not Started");
+								}else if(Integer.parseInt(obj[3].toString()) == 2){
+									bn.setYahooVal("Started");
+								}else if(Integer.parseInt(obj[3].toString()) == 1){
+									bn.setYahooVal("Completed");
+								}
+						   }
+						   
+						   if(obj[4] != null){
+							   if(Integer.parseInt(obj[4].toString()) == 0)
+							    {
+								  bn.setBingVal("Not Started");
+								}else if(Integer.parseInt(obj[4].toString()) == 2){
+									bn.setBingVal("Started");
+								}else if(Integer.parseInt(obj[4].toString()) == 1){
+									bn.setBingVal("Completed");
+								}
+						   }
+						   
+						   if(obj[5] != null){
+							   if(Integer.parseInt(obj[5].toString()) == 0)
+							    {
+								  bn.setDuckduckgoVal("Not Started");
+								}else if(Integer.parseInt(obj[5].toString()) == 2){
+									bn.setDuckduckgoVal("Started");
+								}else if(Integer.parseInt(obj[5].toString()) == 1){
+									bn.setDuckduckgoVal("Completed");
+								}
+						   }
+						   
+						   if(obj[6] != null){
+							   if(Integer.parseInt(obj[6].toString()) == 0)
+							    {
+								  bn.setRussiagoVal("Not Started");
+								}else if(Integer.parseInt(obj[6].toString()) == 2){
+									bn.setRussiagoVal("Started");
+								}else if(Integer.parseInt(obj[6].toString()) == 1){
+									bn.setRussiagoVal("Completed");
+								}
+						   }
+						   
+						   
+						   if(obj[7] != null){
+							   if(Integer.parseInt(obj[7].toString()) == 0)
+							    {
+								  bn.setWhitelistVal("--");
+								}else if(Integer.parseInt(obj[7].toString()) == 2){
+									bn.setWhitelistVal("Started");
+								}else if(Integer.parseInt(obj[7].toString()) == 1){
+									bn.setWhitelistVal("Completed");
+								}
+						   }
+						   if(obj[8] != null){
+							   if(Integer.parseInt(obj[8].toString()) == 0)
+							    {
+								  bn.setGreylistVal("--");
+								}else if(Integer.parseInt(obj[8].toString()) == 2){
+									bn.setGreylistVal("Started");
+								}else if(Integer.parseInt(obj[8].toString()) == 1){
+									bn.setGreylistVal("Completed");
+								}
+						   }
+						   
+						   if(obj[9] != null){
+							   if(Integer.parseInt(obj[9].toString()) == 0)
+							    {
+								  bn.setBlacklistVal("--");
+								}else if(Integer.parseInt(obj[9].toString()) == 2){
+									bn.setBlacklistVal("Started");
+								}else if(Integer.parseInt(obj[9].toString()) == 1){
+									bn.setBlacklistVal("Completed");
+								}
+						   }
+						   
+						   automate_bot.add(bn);
+					   }
+					  
+					   lst = null;
+					   
+					   
+					   
+					   
+					   
+					   
+					   
+					   mchinedao = (Markscan_machineDao) factory.getBean("d6");
+					   lst = sdao.viewRecord("SELECT ip_address,bot_version,status from Markscan_machine where port in ('8089','8083')");
+					   machine_list	=new ArrayList<Markscan_machine>();
+					   for(int i = 0; i < lst.size(); i++){
+						   Markscan_machine bn = new Markscan_machine();
+						   obj = (Object[]) lst.get(i);
+						   bn.setIp_address(obj[0].toString());
+						   bn.setBot_version(obj[1].toString());
+						   String project_nm = new BotStarter().getProjectNm(bn.getIp_address());
+						   if(Integer.parseInt(obj[2].toString()) ==0 && obj[2] != null){
+							  	   bn.setStatus_display("Free");
+								   bn.setProject_nm("--");
+						   }else if(Integer.parseInt(obj[2].toString()) ==2 && obj[2] != null){
+							   		bn.setStatus_display("Initialized");  
+							   		bn.setProject_nm(project_nm);
+						   }else{
+							   bn.setStatus_display("Running"); 
+							   bn.setProject_nm(project_nm);
+						   }
+						   machine_list.add(bn);
+					   } 
+					   
+					   
+					   lst = sdao.viewRecord("SELECT keyphrase,iwl_process"
+		              						 + " FROM Stored_project_setup "
+		              						 + " where iwl_process in (2,1) order by keyphrase");
+			
+					   iwl_process	=new ArrayList<Stored_project_setup>();
+					   for(int i = 0; i < lst.size(); i++){
+						   Stored_project_setup bn = new Stored_project_setup();
+						   obj = (Object[]) lst.get(i);
+						   bn.setKeyphrase(obj[0].toString());
+						  					   
+						   if(obj[1] != null){
+							    if(Integer.parseInt(obj[1].toString()) == 2){
+									bn.setIwl_processVal("Started");
+								}else if(Integer.parseInt(obj[1].toString()) == 1){
+									bn.setIwl_processVal("Completed");
+								}
+						   }
+						   iwl_process.add(bn);
+					   }
+					   
+					    int k = new BotStarter().checkBotFree();
+						System.out.println("Current k value is ------------------------->"+k);
+					    HttpServletRequest request = ServletActionContext.getRequest();
+					    request.setAttribute("manual_bot", manual_bot);
+					    request.setAttribute("automate_bot", automate_bot);
+					    request.setAttribute("machine_list", machine_list);
+					    request.setAttribute("k", k);
+					    request.setAttribute("iwl_process", iwl_process);
+					   
+					//----------- new code added for display running current manual bot 07.03.2020
+					
 
 			} catch (Exception e) {
 				logger.error("project type data get ", e);
@@ -521,16 +827,19 @@ public class ProjSetup extends ActionSupport {
 	}
 
 	@SuppressWarnings("finally")
-	public String setupStore() {
+	public String setupStore() throws IOException, SQLException {
 		// System.out.println(projecttype + "== prop name pj..." + pid);
 		session2 = ServletActionContext.getRequest().getSession(false);
 
 		if (session2 == null || session2.getAttribute("login") == null) {
 			return LOGIN;
 		} else {
-
-			factory = LoginAndSession.getFactory();
+			String server_ip = "";
 			HttpServletRequest request = ServletActionContext.getRequest();
+			bstr = new BotStarter();
+			int k = bstr.checkProjectExistOrNot(propertyName);
+			if( k == 0){
+			factory = LoginAndSession.getFactory();
 			int count = Integer.parseInt(request.getParameter("count"));
 			int count1 = 0;
 			String keywords = request.getParameter("keyword1").trim();
@@ -595,10 +904,21 @@ public class ProjSetup extends ActionSupport {
 			
 			System.out.println("count1 value is -------------------->"+count1);
 			if (count1 == 1) {
-				System.out.println("********************count1*********" + count1);
-				bstr = new BotStarter();
+				//System.out.println("********************count1*********" + count1);
+				//bstr = new BotStarter();
 				try {
-					bstr.botRun("1");
+					 server_ip = bstr.botRun();
+					 System.out.println("server_ip value is -------------------->"+server_ip);
+					 int p = bstr.cheked(server_ip);
+					 if(p == 0){
+						 bstr.insertManualBotlogs(propertyName,server_ip,"9080");
+						 bstr.UpdateBOTMachine(server_ip);
+					 }else{
+						 request.setAttribute("msg", "No BOT machines available now.Another project is initialized for "+server_ip+" machine.");
+						  return SUCCESS;
+					 }	 
+					 
+					
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -609,9 +929,14 @@ public class ProjSetup extends ActionSupport {
 			factory = null;
 			session2 = null;
 			logger.info("*********************************done****************");
+			request.setAttribute("msg", "BOT Setup successfully done in "+server_ip+".You get notify mail when BOT Start..");
 			return SUCCESS;
-
-		}
+		 }else{
+			 request.setAttribute("msg", "Can not create this project because this project is already in BOT Setup..");
+			 return SUCCESS;
+		 }	 
+		 
+	    } //else part end here...........
 
 	} // return setupStore;
 	
@@ -636,6 +961,17 @@ public class ProjSetup extends ActionSupport {
 			keyph7 = null, keyph8 = null, keyph9 = null;
 
 	int uuid;
+	String dtype;
+	
+	public String getDtype() {
+		return dtype;
+	}
+
+	public void setDtype(String dtype) {
+		this.dtype = dtype;
+	}
+
+	
 
 	public int getBls1() {
 		return bls1;
@@ -1216,7 +1552,7 @@ public class ProjSetup extends ActionSupport {
 				{
 					System.out.println("*******************Condition1*****");
 					lst = dao.viewRecord(
-							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
+							"select mcu.id, distinct mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
 									+ " and mcu.project_id = pf.id and mcu.project_id=pf.id and pf.client_type= "+clientname);
 					
 				}
@@ -1224,7 +1560,7 @@ public class ProjSetup extends ActionSupport {
 				{
 					System.out.println("*******************Condition2*****");
 					lst = dao.viewRecord(
-							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
+							"select mcu.id, distinct mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
 									+ " and mcu.project_id = pf.id and mcu.project_id=pf.id and pf.client_type= "+clientname+" and ( mcu.created_on between '"+startdate+"' and '"+enddate+"' )");
 					
 				}
@@ -1233,7 +1569,7 @@ public class ProjSetup extends ActionSupport {
 				{
 					System.out.println("*******************Condition3*****");
 					lst = dao.viewRecord(
-							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
+							"select mcu.id, distinct mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
 								+ "and  mcu.project_id = pf.id and mcu.project_id =" + propertyName+" and (mcu.created_on between '"+startdate+"' and '"+enddate+"')");
 					
 				}
@@ -1241,7 +1577,7 @@ public class ProjSetup extends ActionSupport {
 				{
 					System.out.println("*******************Condition4*****");
 				lst = dao.viewRecord(
-						"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
+						"select mcu.id, distinct mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name from Crawle_url4 mcu, Project_info pf where mcu.iwl_failed=1 and mcu.iwl_downloaded=0 "
 								+ " and  mcu.project_id = pf.id and mcu.project_id =" + propertyName);
 				}
 				crawleUrl4 = new ArrayList<>();
@@ -1285,6 +1621,7 @@ public class ProjSetup extends ActionSupport {
 			return null;
 		}
 	}
+	/*
 	public String deleteFilter() {
 		// System.out.println("property name=== ++ " + propertyName);
 		delFilter = new ArrayList<>();
@@ -1352,7 +1689,7 @@ public class ProjSetup extends ActionSupport {
 				{
 					System.out.println("*******************Condition1*****");
 					lst = dao.viewRecord(
-							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+							"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
 							+ "ss.keyphrase,mcu.pipe_id,mcu.status from Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss "
 							+ "where mcu.df_perform=0"
 							+ " and mcu.w_list=0 and  mcu.project_id = pf.id and mcu.project_id=pf.id and ss.id = mcu.stored_project_setup_id "
@@ -1364,7 +1701,7 @@ public class ProjSetup extends ActionSupport {
 				{
 					System.out.println("*******************Condition2*****");
 					lst = dao.viewRecord(
-							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+							"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
 							+ "ss.keyphrase,mcu.pipe_id,mcu.status "
 							+ "from Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
 							+ " and mcu.w_list=0 and  mcu.project_id = pf.id and mcu.project_id=pf.id and ss.id = mcu.stored_project_setup_id  "
@@ -1377,7 +1714,7 @@ public class ProjSetup extends ActionSupport {
 				{
 					System.out.println("*******************Condition3*****");
 					lst = dao.viewRecord(
-										"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+										"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
 										+ "ss.keyphrase,mcu.pipe_id,mcu.status from "
 										+ "Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
 										+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = mcu.stored_project_setup_id and ss.completed=1 "
@@ -1392,7 +1729,8 @@ public class ProjSetup extends ActionSupport {
 							"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
 							+ "ss.keyphrase,mcu.pipe_id,mcu.status from "
 							+ "Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
-							+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = mcu.stored_project_setup_id and ss.completed=1 and mcu.status is not null and mcu.project_id =" + propertyName);
+							+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = "
+							+ "mcu.stored_project_setup_id and ss.completed=1 and mcu.status is not null and mcu.project_id =" + propertyName);
 				}
 				
 				masterCrawluurl = new ArrayList<>();
@@ -1422,6 +1760,7 @@ public class ProjSetup extends ActionSupport {
 						url2.setPage_no(obj[5].toString());
 						url2.setPage_rank(obj[6].toString());
 						url2.setKeyphrase(obj[7].toString());
+						
 						if(Integer.parseInt(obj[8].toString()) ==1){
 							url2.setSearchEngine("Google");
 						}else if(Integer.parseInt(obj[8].toString()) ==2){
@@ -1438,11 +1777,11 @@ public class ProjSetup extends ActionSupport {
 						
 						url2.setStatus(obj[9].toString());
 						masterCrawluurl.add(url2);
-						/**
+						*//**
 						 * BOT query will be return duplicate data; we can not
 						 * prevent the duplicate data due to link activation
 						 * surety .
-						 */
+						 *//*
 
 					}
 
@@ -1455,6 +1794,13 @@ public class ProjSetup extends ActionSupport {
 				}
 
 				System.out.println("----mster size two..." + masterCrawluurl.size());
+				
+				Set<Master_crawle_url> uniqueUrlStores = new HashSet<Master_crawle_url>(masterCrawluurl);
+				masterCrawluurl.clear();
+				masterCrawluurl.addAll(uniqueUrlStores);
+				
+				System.out.println("----remove duplicate..." + masterCrawluurl.size());
+				
 				downloadCSVFileAction();
 			} catch (Exception e) {
 				// System.err.println("=== error ==occure====");
@@ -1496,7 +1842,277 @@ public class ProjSetup extends ActionSupport {
 			return null;
 		}
 	}
+*/
+	
+	public String deleteFilter() {
+		// System.out.println("property name=== ++ " + propertyName);
+		delFilter = new ArrayList<>();
+		// System.out.println("..........1////........'" + twentyone);
+		// System.out.println("..........2////........'" + twentytwo);
+		// System.out.println("..........3////........'" + twentythree);
+		// System.out.println("..........4////........'" + twentyfour);
 
+		System.out.println(".........Client Name........'" + clientname);
+		System.out.println("--------------->"+dtype);
+		delFilter.add(one.trim());
+		delFilter.add(two.trim());
+		delFilter.add(three.trim());
+		delFilter.add(four.trim());
+		delFilter.add(five.trim());
+		delFilter.add(six.trim());
+		delFilter.add(seven.trim());
+		delFilter.add(eight.trim());
+		delFilter.add(nine.trim());
+		delFilter.add(ten.trim());
+		delFilter.add(eleven.trim());
+		delFilter.add(twelve.trim());
+		delFilter.add(thirteen.trim());
+		delFilter.add(fourteen.trim());
+		delFilter.add(fifteen.trim());
+		delFilter.add(sixteen.trim());
+		delFilter.add(seventeen.trim());
+		delFilter.add(eighteen.trim());
+		delFilter.add(nineteen.trim());
+		delFilter.add(twenty.trim());
+		System.out.println("*********************Start Date***************"+startdate+"abc");
+		System.out.println("*********************End Date***************"+enddate+"abc");
+
+
+		if (twentyone.trim().length() >= 1) {
+		delFilter.add(twentyone.trim());
+		}
+		if (twentytwo.trim().length() >= 1) {
+		delFilter.add(twentytwo.trim());
+		}
+		if (twentythree.trim().length() >= 1) {
+		delFilter.add(twentythree.trim());
+		}
+		if (twentyfour.trim().length() >= 1) {
+		delFilter.add(twentyfour.trim());
+		}
+
+		// System.out.println("--------------------------------------------------------"
+		// + delFilter);
+
+		session2 = ServletActionContext.getRequest().getSession();
+		logger.info(session2);
+		if (session2 == null || session2.getAttribute("login") == null) {
+		// System.out.println("if=====session error reporting===='");
+		logger.error("if=====session error reporting===='");
+		return LOGIN;
+		} else {
+		Master_crawle_urlDao dao = null;
+		Master_crawle_url url2 = null;
+		try {
+		int pj = 0;
+		factory = ActionPerform.getFactory();
+		dao = (Master_crawle_urlDao) factory.getBean("d12");
+		if(dtype.equalsIgnoreCase("Manual Bot")){
+		if((propertyName==0)&&(startdate.length()==0)&&(enddate.length()==0))
+		{
+		System.out.println("*******************Condition1*****");
+		lst = dao.viewRecord(
+		"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+		+ "ss.keyphrase,mcu.pipe_id,mcu.status from Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss "
+		+ "where mcu.df_perform=0"
+		+ " and mcu.w_list=0 and  mcu.project_id = pf.id and mcu.project_id=pf.id and ss.id = mcu.stored_project_setup_id "
+		+ " and ss.projectId = pf.id and ss.completed=1 and mcu.status is not null "
+		+ "and pf.client_type= "+clientname);
+
+		}
+		else if((propertyName==0) &&(startdate.length()!=0)&&(enddate.length()!=0) )
+		{
+		System.out.println("*******************Condition2*****");
+		lst = dao.viewRecord(
+		"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+		+ "ss.keyphrase,mcu.pipe_id,mcu.status "
+		+ "from Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
+		+ " and mcu.w_list=0 and  mcu.project_id = pf.id and mcu.project_id=pf.id and ss.id = mcu.stored_project_setup_id  "
+		+ " and ss.projectId = pf.id  and ss.completed=1 and mcu.status is not null "
+		+ "and pf.client_type= "+clientname+" and ( mcu.created_on between '"+startdate+"' and '"+enddate+"' )");
+
+		}
+
+		else if((propertyName!=0) &&(startdate.length()!=0)&&(enddate.length()!=0) )
+		{
+		System.out.println("*******************Condition3*****");
+		lst = dao.viewRecord(
+		"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+		+ "ss.keyphrase,mcu.pipe_id,mcu.status from "
+		+ "Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
+		+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = mcu.stored_project_setup_id and ss.completed=1 "
+		+ "and mcu.status is not null  and  "
+		+ "mcu.project_id =" + propertyName+" and (mcu.created_on between '"+startdate+"' and '"+enddate+"')");
+
+		}
+		else
+		{
+		System.out.println("*******************Condition4*****");
+		lst = dao.viewRecord(
+		"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+		+ "ss.keyphrase,mcu.pipe_id,mcu.status from "
+		+ "Master_crawle_url mcu, Project_info pf,Stored_project_setup1 ss where mcu.df_perform=0"
+		+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = "
+		+ "mcu.stored_project_setup_id and ss.completed=1 and mcu.status is not null and mcu.project_id =" + propertyName);
+		}
+		}else{
+		if((propertyName==0)&&(startdate.length()==0)&&(enddate.length()==0))
+		{
+		System.out.println("*******************Condition1*****");
+		lst = dao.viewRecord(
+		"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+		+ "ss.keyphrase,mcu.pipe_id,mcu.status from Master_crawle_url mcu, Project_info pf,Stored_project_setup ss "
+		+ "where mcu.df_perform=0"
+		+ " and mcu.w_list=0 and  mcu.project_id = pf.id and mcu.project_id=pf.id and ss.id = mcu.stored_project_setup_id "
+		+ " and ss.projectId = pf.id and ss.completed=1 and mcu.status is not null "
+		+ "and pf.client_type= "+clientname);
+
+		}
+		else if((propertyName==0) &&(startdate.length()!=0)&&(enddate.length()!=0) )
+		{
+		System.out.println("*******************Condition2*****");
+		lst = dao.viewRecord(
+		"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+		+ "ss.keyphrase,mcu.pipe_id,mcu.status "
+		+ "from Master_crawle_url mcu, Project_info pf,Stored_project_setup ss where mcu.df_perform=0"
+		+ " and mcu.w_list=0 and  mcu.project_id = pf.id and mcu.project_id=pf.id and ss.id = mcu.stored_project_setup_id  "
+		+ " and ss.projectId = pf.id  and ss.completed=1 and mcu.status is not null "
+		+ "and pf.client_type= "+clientname+" and ( mcu.created_on between '"+startdate+"' and '"+enddate+"' )");
+
+		}
+
+		else if((propertyName!=0) &&(startdate.length()!=0)&&(enddate.length()!=0) )
+		{
+		System.out.println("*******************Condition3*****");
+		lst = dao.viewRecord(
+		"select mcu.id,  mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+		+ "ss.keyphrase,mcu.pipe_id,mcu.status from "
+		+ "Master_crawle_url mcu, Project_info pf,Stored_project_setup ss where mcu.df_perform=0"
+		+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = mcu.stored_project_setup_id and ss.completed=1 "
+		+ "and mcu.status is not null  and  "
+		+ "mcu.project_id =" + propertyName+" and (mcu.created_on between '"+startdate+"' and '"+enddate+"')");
+
+		}
+		else
+		{
+		System.out.println("*******************Condition4*****");
+		lst = dao.viewRecord(
+		"select mcu.id, mcu.crawle_url2,mcu.created_on,mcu.user_id,pf.project_name,mcu.page_no,mcu.page_rank,"
+		+ "ss.keyphrase,mcu.pipe_id,mcu.status from "
+		+ "Master_crawle_url mcu, Project_info pf,Stored_project_setup ss where mcu.df_perform=0"
+		+ " and mcu.w_list=0  and  mcu.project_id = pf.id and ss.projectId = pf.id and ss.id = "
+		+ "mcu.stored_project_setup_id and ss.completed=1 and mcu.status is not null and mcu.project_id =" + propertyName);
+		}
+		}
+		masterCrawluurl = new ArrayList<>();
+		Boolean bb = false;
+		for (int i = 0; i < lst.size(); i++) {
+		bb = false;
+		url2 = new Master_crawle_url();
+		obj = (Object[]) lst.get(i);
+
+		for (String ppj : delFilter) {
+		bb = false;
+		pj = (Integer) obj[0];
+		if (obj[1].toString().toLowerCase().trim().contains(ppj.toLowerCase().trim())) {// delete
+		bb = true;
+		break;
+		}
+
+		}
+
+		if (bb == false) {
+		url2.setId(pj);
+		url2.setCrawle_url2(obj[1].toString());
+		url2.setCreated_on(obj[2].toString());
+		url2.setUser_id((Integer) obj[3]);
+		//url2.setProject_id(propertyName);
+		url2.setProjectName(obj[4].toString());
+		url2.setPage_no(obj[5].toString());
+		url2.setPage_rank(obj[6].toString());
+		url2.setKeyphrase(obj[7].toString());
+
+		if(Integer.parseInt(obj[8].toString()) ==1){
+		url2.setSearchEngine("Google");
+		}else if(Integer.parseInt(obj[8].toString()) ==2){
+		url2.setSearchEngine("Yahoo");
+		}else if(Integer.parseInt(obj[8].toString()) ==3){
+		url2.setSearchEngine("Bing");
+		}else if(Integer.parseInt(obj[8].toString()) ==4){
+		url2.setSearchEngine("DuckDuckGo");
+		}else if(Integer.parseInt(obj[8].toString()) ==5){
+		url2.setSearchEngine("Go.mail.ru");
+		}else{
+		url2.setSearchEngine("Google Overseas");
+		}
+
+		url2.setStatus(obj[9].toString());
+		masterCrawluurl.add(url2);
+		/**
+		* BOT query will be return duplicate data; we can not
+		* prevent the duplicate data due to link activation
+		* surety .
+		*/
+
+		}
+
+		dao.customUpdateProject("update Master_crawle_url set df_perform=1, link_logger="
+		+ (int) session2.getAttribute("uid") + " , surl_status='" + nowTime() + "'   where id="
+		+ pj);
+
+		obj = null;
+		url2 = null;
+		}
+
+		System.out.println("----mster size two..." + masterCrawluurl.size());
+
+		Set<Master_crawle_url> uniqueUrlStores = new HashSet<Master_crawle_url>(masterCrawluurl);
+		masterCrawluurl.clear();
+		masterCrawluurl.addAll(uniqueUrlStores);
+
+		System.out.println("----remove duplicate..." + masterCrawluurl.size());
+
+		downloadCSVFileAction();
+		} catch (Exception e) {
+		// System.err.println("=== error ==occure====");
+		e.printStackTrace();
+		return ERROR;
+		} finally {
+		obj = null;
+		url2 = null;
+		dao = null;
+		factory = null;
+		session2 = null;
+		delFilter = null;
+
+		one = null;
+		two = null;
+		three = null;
+		four = null;
+		five = null;
+		six = null;
+		seven = null;
+		eight = null;
+		nine = null;
+		ten = null;
+		eleven = null;
+		twelve = null;
+		thirteen = null;
+		fourteen = null;
+		fifteen = null;
+		sixteen = null;
+		seventeen = null;
+		eighteen = null;
+		nineteen = null;
+		twenty = null;
+
+
+		}
+
+		deleteFilterPre();
+		return null;
+		}
+		}	
 	public void downloadCSVFileAction() throws Exception {
 
 		HttpServletResponse response = ServletActionContext.getResponse();

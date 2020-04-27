@@ -22,9 +22,15 @@ h4
    color:green;
 }
 </style>
-<title>Insert title here</title>
+<title>Bot Success Page</title>
 </head>
 <body>
-<h4>Bot Setup successfully........</h4>
+<h4>
+<% if(request.getAttribute("msg") != null){
+    
+%>
+<%=request.getAttribute("msg").toString() %>
+<% }%>
+</h4>
 </body>
 </html>

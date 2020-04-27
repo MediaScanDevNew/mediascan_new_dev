@@ -15,6 +15,7 @@
 		<property name="keyphrase" />
 		<property name="projectType" />
 		<property name="created_on" />
+		<property name="isactive" />
 
 	</class>
 

@@ -18,7 +18,7 @@ public class Markscan_machine {
 	}
 
 	int id;
-	String name, ip_address, db_name, user_name, password, port, bot_version;
+	String name, ip_address, db_name, user_name, password, port, bot_version,status_display,project_nm;
 	public String getBot_version() {
 		return bot_version;
 	}
@@ -101,4 +101,22 @@ public class Markscan_machine {
 		this.status = status;
 	}
 
+	public String getStatus_display() {
+		return status_display;
+	}
+
+	public void setStatus_display(String status_display) {
+		this.status_display = status_display;
+	}
+
+	public String getProject_nm() {
+		return project_nm;
+	}
+
+	public void setProject_nm(String project_nm) {
+		this.project_nm = project_nm;
+	}
+
+	
+	
 }

@@ -6,26 +6,31 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 	<class name="com.markscan.project.beans.Stored_project_setup"
-		table="stored_project_setup">
+		table="stored_project_setup1">
 		<id name="id">
 			<generator class="increment"></generator>
 		</id>
 
 		<property name="keyphrase"></property>
-		<property name="machine"></property>
+		<!-- <property name="machine"></property> -->
 		<property name="pipe"></property>
 		<property name="preority"></property>
 		<property name="userId"></property>
 		<property name="projectId"></property>
 		<property name="created_on"></property>
 		<property name="completed"></property>
-		<property name="deleted"></property>
+		<!-- <property name="deleted"></property> -->
 
 		<property name="google"></property>
 		<property name="yahoo"></property>
 		<property name="bing"></property>
-		<property name="bls"></property>
-
+		<property name="duckduckgo"></property>
+		<property name="russiago"></property>
+		
+		<property name="whitelist"></property>
+		<property name="greylist"></property>
+		<property name="blacklist"></property>
+		<property name="iwl_process"></property>
 	</class>
 
 </hibernate-mapping>

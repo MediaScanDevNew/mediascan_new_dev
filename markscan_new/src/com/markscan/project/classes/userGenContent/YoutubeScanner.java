@@ -280,7 +280,7 @@ public class YoutubeScanner extends ActionSupport {
 				factory = LoginAndSession.getFactory();
 				Crawl_youtubeDao dao4 = (Crawl_youtubeDao) factory.getBean("d43");
 				lst = dao4.viewRecord("SELECT id,thumbnail_url,video_name,url_link FROM Crawl_youtube WHERE user_id="+userId+" "
-									+ "AND project_type="+getProjecttype()+" AND client_id="+getClientname()+" AND keyword LIKE'%"
+									+ "AND source_type="+getSource()+" AND project_type="+getProjecttype()+" AND client_id="+getClientname()+" AND keyword LIKE'%"
 									+ ""+getSearch()+"%' AND analysis_done =0 AND deleted_flag =0");
 
 				logger.info(".......crawlsizeeeeeeeeeeee........" + lst.size());
@@ -305,35 +305,69 @@ public class YoutubeScanner extends ActionSupport {
 					addActionMessage("All data fetched !");			
 				return SUCCESS;	
 				}else{
-					logger.info("XXXXXXXXXXXXXX----ELSE-----------XXXXXXXXX");
-					Thread t1 = new Thread(new Runnable() {
-					    @Override
-					    public void run() {
-                            try{
-            					ProcessBuilder pb = new ProcessBuilder("java", "-jar", "/var/www/eclipse/youtubeScanner.jar",project_name+" "+getSearch(),""+userId+"",getSource(),getProjecttype(),getClientname(),getPinfo(),getDtime(),getUtime(),getSearch() );       
-            					Process p = pb.start();	
+					logger.info("XXXXXXXXXXXXXX----ELSE-----------XXXXXXXXX");				
+					if(getSource().equals("1")){
+						logger.info("XXXXXXXXXXXXXX----YOUTUBEEEEEE-----------XXXXXXXXX");
+						Thread t1 = new Thread(new Runnable() {
+						    @Override
+						    public void run() {
+	                            try{
+	            					ProcessBuilder pb = new ProcessBuilder("java", "-jar", "/var/www/eclipse/youtubeScanner.jar",project_name+" "+getSearch(),""+userId+"",getSource(),getProjecttype(),getClientname(),getPinfo(),getDtime(),getUtime(),getSearch() );       
+	            					Process p = pb.start();	
 
-            					// blocked :(
-            		            BufferedReader reader =
-            		                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+	            					// blocked :(
+	            		            BufferedReader reader =
+	            		                    new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-            		            String line;
-            		            while ((line = reader.readLine()) != null) {
-            		                System.out.println(line);
-            		            }
+	            		            String line;
+	            		            while ((line = reader.readLine()) != null) {
+	            		                System.out.println(line);
+	            		            }
 
-            		            int exitCode = p.waitFor();
-            		            System.out.println("\nExited with error code : " + exitCode);
-                            }catch(Exception e){
-                				logger.error("Thread Error ", e);
-                				
-                            }
-					    }
-					});  
-					t1.start();
-					System.out.println("XXXXXXXXXXXXXXXXXx execution done XXXXXXXXXXXXXXXXXXXXXx ");
-					addActionMessage("Please Wait 15 min to process.You will get a mail with search param!");
-					return SUCCESS;
+	            		            int exitCode = p.waitFor();
+	            		            System.out.println("\nExited with error code : " + exitCode);
+	                            }catch(Exception e){
+	                				logger.error("Thread Error ", e);
+	                				
+	                            }
+						    }
+						});  
+						t1.start();
+						System.out.println("XXXXXXXXXXXXXXXXXx execution done XXXXXXXXXXXXXXXXXXXXXx ");
+						addActionMessage("Please Wait 15 min to process.You will get a mail with search param!");
+						return SUCCESS;						
+					}else if(getSource().equals("3")){
+						logger.info("XXXXXXXXXXXXXX----TWTER-----------XXXXXXXXX");
+						Thread t1 = new Thread(new Runnable() {
+						    @Override
+						    public void run() {
+	                            try{
+	            					ProcessBuilder pb = new ProcessBuilder("java", "-jar", "/var/www/eclipse/twitterScanner.jar",project_name+" "+getSearch(),""+userId+"",getSource(),getProjecttype(),getClientname(),getPinfo(),getSearch() );       
+	            					Process p = pb.start();	
+
+	            					// blocked :(
+	            		            BufferedReader reader =
+	            		                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+	            		            String line;
+	            		            while ((line = reader.readLine()) != null) {
+	            		                System.out.println(line);
+	            		            }
+
+	            		            int exitCode = p.waitFor();
+	            		            System.out.println("\nExited with error code : " + exitCode);
+	                            }catch(Exception e){
+	                				logger.error("Thread Error ", e);
+	                				
+	                            }
+						    }
+						});  
+						t1.start();
+						System.out.println("XXXXXXXXXXXXXXXXXx execution done XXXXXXXXXXXXXXXXXXXXXx ");
+						addActionMessage("Please Wait 15 min to process.You will get a mail with search param!");
+						return SUCCESS;						
+					}
+
 				}
 			} catch (Exception e) {
 				logger.error("get user error ", e);
@@ -341,7 +375,8 @@ public class YoutubeScanner extends ActionSupport {
 			}	
 			
 
-		}		
+		}
+		return SUCCESS;		
 
 		
 	

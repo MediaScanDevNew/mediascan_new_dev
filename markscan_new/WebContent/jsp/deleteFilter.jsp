@@ -184,6 +184,16 @@ tr.as {
 							list="{'Select Property'}" label="Select Property"
 							cssStyle="width: 170px;" /></td>
 				</tr>
+				
+				<tr>
+					<td>Download Type</td>
+				<td><s:select id="dtype" name="dtype"
+                  list="{'Manual Bot','Auto Bot '}"
+                  label="Select Download Type"
+                  cssStyle="width: 170px;" value="%{dtype}"> </s:select>
+        			</td>
+        		</tr>
+        		
 				<%--Date  --%>
 				<tr>
 				<td>Start Date</td>

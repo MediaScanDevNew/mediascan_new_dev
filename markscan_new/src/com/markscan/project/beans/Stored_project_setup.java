@@ -16,9 +16,11 @@ public class Stored_project_setup {
 		// TODO Auto-generated constructor stub
 	}
 
-	int id, preority, userId, projectId, completed, deleted, pipe, google, yahoo, bing, bls ;
+	int id, preority, userId, projectId, completed, deleted, pipe, google, yahoo, bing, bls ,
+	duckduckgo,russiago,whitelist,greylist,blacklist,iwl_process;
 	String keyphrase, machine, created_on;
-
+	String completedVal,googleVal,yahooVal,bingVal,duckduckgoVal,russiagoVal,whitelistVal,
+	greylistVal,blacklistVal,iwl_processVal;
 	
 
 	
@@ -134,5 +136,137 @@ public class Stored_project_setup {
 	public void setCreated_on(String created_on) {
 		this.created_on = created_on;
 	}
+
+	public int getDuckduckgo() {
+		return duckduckgo;
+	}
+
+	public void setDuckduckgo(int duckduckgo) {
+		this.duckduckgo = duckduckgo;
+	}
+
+	public int getRussiago() {
+		return russiago;
+	}
+
+	public void setRussiago(int russiago) {
+		this.russiago = russiago;
+	}
+
+	public String getCompletedVal() {
+		return completedVal;
+	}
+
+	public void setCompletedVal(String completedVal) {
+		this.completedVal = completedVal;
+	}
+
+	public String getGoogleVal() {
+		return googleVal;
+	}
+
+	public void setGoogleVal(String googleVal) {
+		this.googleVal = googleVal;
+	}
+
+	public String getYahooVal() {
+		return yahooVal;
+	}
+
+	public void setYahooVal(String yahooVal) {
+		this.yahooVal = yahooVal;
+	}
+
+	public String getBingVal() {
+		return bingVal;
+	}
+
+	public void setBingVal(String bingVal) {
+		this.bingVal = bingVal;
+	}
+
+	public String getDuckduckgoVal() {
+		return duckduckgoVal;
+	}
+
+	public void setDuckduckgoVal(String duckduckgoVal) {
+		this.duckduckgoVal = duckduckgoVal;
+	}
+
+	public String getRussiagoVal() {
+		return russiagoVal;
+	}
+
+	public void setRussiagoVal(String russiagoVal) {
+		this.russiagoVal = russiagoVal;
+	}
+
+	public int getWhitelist() {
+		return whitelist;
+	}
+
+	public void setWhitelist(int whitelist) {
+		this.whitelist = whitelist;
+	}
+
+	public int getGreylist() {
+		return greylist;
+	}
+
+	public void setGreylist(int greylist) {
+		this.greylist = greylist;
+	}
+
+	public int getBlacklist() {
+		return blacklist;
+	}
+
+	public void setBlacklist(int blacklist) {
+		this.blacklist = blacklist;
+	}
+
+	public String getWhitelistVal() {
+		return whitelistVal;
+	}
+
+	public void setWhitelistVal(String whitelistVal) {
+		this.whitelistVal = whitelistVal;
+	}
+
+	public String getGreylistVal() {
+		return greylistVal;
+	}
+
+	public void setGreylistVal(String greylistVal) {
+		this.greylistVal = greylistVal;
+	}
+
+	public String getBlacklistVal() {
+		return blacklistVal;
+	}
+
+	public void setBlacklistVal(String blacklistVal) {
+		this.blacklistVal = blacklistVal;
+	}
+
+	public int getIwl_process() {
+		return iwl_process;
+	}
+
+	public void setIwl_process(int iwl_process) {
+		this.iwl_process = iwl_process;
+	}
+
+	public String getIwl_processVal() {
+		return iwl_processVal;
+	}
+
+	public void setIwl_processVal(String iwl_processVal) {
+		this.iwl_processVal = iwl_processVal;
+	}
+
+	
+	
+	
 
 }

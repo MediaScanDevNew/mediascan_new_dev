@@ -41,78 +41,7 @@
     <script type="text/javascript" language="javascript"
             src="js/DataTables_example/demo.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>            
-            
-    <script type="text/javascript" class="init">
-        $(document).ready(function () {
-            $('#example').DataTable();
-        });
-    </script>            
-            
-<script>
-
-
-function printError(elemId, hintMsg) {
-    document.getElementById(elemId).innerHTML = hintMsg;
-}
-function removeError(elemId){
-	var x = document.getElementById(elemId);
-	 x.style.display = "none";
-}
-function validateform(){  
-	console.log("-------------HIT validateform -------------------");
-	var returnvalue =true;
-var source=document.myform.source.value;  
-var projecttype=document.myform.projecttype.value; 
-var clientname=document.myform.clientname.value; 
-var pinfo=document.myform.pinfo.value; 
-var search=document.myform.search.value;
-var dtime=document.myform.dtime.value;
-var utime=document.myform.utime.value;
-console.log("var:: "+clientname);
-
-  
-if (source==null || source==""){  
-	printError("sourceErr", "Please select Source Type"); 
-	returnvalue= false;  
-}else{
-	removeError("sourceErr");
-} 
-if (projecttype==null || projecttype==""){  
-	printError("proErr", "Please select Project Type"); 
-	returnvalue= false; 
-}else{
-	removeError("proErr");
-} 
-if (clientname==null || clientname==""){  
-	printError("cnameErr", "Please select Client Name"); 
-	returnvalue= false; 
-}else{
-	removeError("cnameErr");
-} 
-
-if (pinfo==null || pinfo==""){  
-	printError("pinfoErr", "Please select Property Name"); 
-	returnvalue= false; 
-}else{
-	removeError("pinfoErr");
-} 
-if (search==null || search==""){  
-	printError("srchErr", "Please type search text"); 
-	returnvalue= false; 
-}else{
-	removeError("srchErr");
-} 
-
-if ((dtime==null || dtime=="")&&(utime==null || utime=="")){  
-	printError("filterErr", "Please select any one filter"); 
-	returnvalue= false; 
-}else{
-	removeError("filterErr");
-} 
-
-return returnvalue;
-}  
-</script>  
+ 
 
     <style type="text/css">
     .welcome {
@@ -191,10 +120,11 @@ padding: 10px 10px 10px 16px;
 	<s:form name="myform" action="youtubehit" cssClass="mar-top-6 font-14" theme="simple" onsubmit="return validateform()" method="post">
             <label for="p_type" class="col-sm-1 col-md-1 control-label">Source Type:</label>
             <div class="col-sm-2 col-md-2">
-                <select name="source"  >
+                <select name="source" id="source" >
                    <option value="">Select Source Type</option>
                    <option value="1">Youtube</option>
-                   <option value="2">Facebook</option>
+                   <!-- <option value="2">Facebook</option> -->
+                   <option value="3">Twitter</option>
                 </select>
                 <div class="error" id="sourceErr"></div>
             </div>
@@ -231,7 +161,7 @@ padding: 10px 10px 10px 16px;
                 
         
             <div class="col-lg-12 font-14" style="margin: 40px auto;"> 
-	            <div class="col-sm-6" style="display: block;
+	            <div class="col-sm-6 filterdiv" style="display: block;
 							position: relative;
 							border: 1px solid black;background: darkgray;">
 	            <h4 class="filter">Filter:</h4>
@@ -248,7 +178,7 @@ padding: 10px 10px 10px 16px;
 		            </div>
 		            <div class="col-sm-6">
 			            <label for="client_name" class="col-sm-2 col-md-2 control-label">Uploaded Time:</label>
-			            <div class="col-sm-2 col-md-2" style="display: inline-block;">
+			            <div class="col-sm-2 col-md-2 utime" style="display: inline-block;">
 			                 <select name="utime">
 			                   <option value="">Select Uploaded Time</option>
 			                   <option value="lastHour">Last hour</option>
@@ -347,7 +277,7 @@ padding: 10px 10px 10px 16px;
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close mclose" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Youtube video</h4>
+          <h4 class="modal-title">Play video</h4>
         </div>
         <div class="modal-body">
           <iframe  id ="video" style ="height:400px; width:100%;"src="">
@@ -371,6 +301,18 @@ padding: 10px 10px 10px 16px;
 <script>
 	var movieIds = [];
 $(document).ready(function() {
+	
+	$("#source").change(function(e){
+		console.log("okkkkk");
+		var value = $(this).val();
+		if(value!="1"){
+			$(".filterdiv").fadeOut(1000);
+		}else{
+			$(".filterdiv").fadeIn(1000);
+		} 
+	});
+	
+	
 	$(".welcome").fadeOut(7000);
 	$(".close").click(function(){
 		
@@ -381,28 +323,37 @@ $(document).ready(function() {
 		var clientname = $("#clientname").val();
 		var projecttype = $("#projecttype").val();
 		console.log(clientname+"-----"+projecttype);
-		$.ajax({
-		    url : "getproperty",
-		    type: "POST",
-		    data : {clientname:clientname,projecttype:projecttype},
-		    success: function(data, textStatus, jqXHR)
-		    {
-		        var value = data.proinfoData
-		        var result = '<select name="pinfo"><option value="">Select Property</option>';
-		        if(value.length>0){
-		        	for(var i=0;i<value.length;i++){
-		        		console.log(value[i].project_name);
-		        		result += "<option value="+value[i].id+">"+value[i].project_name+"</option>";
-		        	}
-		        }
-		        result += "</select>";
-		        $(".pinfo").html(result);
-		    },
-		    error: function (jqXHR, textStatus, errorThrown)
-		    {
-		 
-		    }
-		});
+		if(clientname==null || clientname==""){
+			var result = '<select name="pinfo"><option value="">Select Property</option>';
+	        result += "</select>";
+	        result += '<div class="error" id="pinfoErr"></div>';
+	        $(".pinfo").html(result);
+		}else{
+			$.ajax({
+			    url : "getproperty",
+			    type: "POST",
+			    data : {clientname:clientname,projecttype:projecttype},
+			    success: function(data, textStatus, jqXHR)
+			    {
+			        var value = data.proinfoData
+			        var result = '<select name="pinfo"><option value="">Select Property</option>';
+			        if(value.length>0){
+			        	for(var i=0;i<value.length;i++){
+			        		console.log(value[i].project_name);
+			        		result += "<option value="+value[i].id+">"+value[i].project_name+"</option>";
+			        	}
+			        }
+			        result += "</select>";
+			        result += '<div class="error" id="pinfoErr"></div>';
+			        $(".pinfo").html(result);
+			    },
+			    error: function (jqXHR, textStatus, errorThrown)
+			    {
+			 
+			    }
+			});			
+		}
+
 	});
 
 	
@@ -495,12 +446,93 @@ $(document).ready(function() {
   
   function openmodal(videoUrl){ 
 	  console.log("videoUrl:: "+videoUrl);
-	let array = videoUrl.replace("watch?v=","embed/");
-  	$("#video").attr("src",array);
-  	$("#myModal").modal("show");
+	  if (videoUrl.indexOf('youtube') > -1) {
+		  let array = videoUrl.replace("watch?v=","embed/");
+		  	$("#video").attr("src",array);
+		  	$("#myModal").modal("show"); 
+	  } else {
+		  window.open(videoUrl, '_blank');
+	  }
   }
 
 
 
 
 </script>
+            
+    <script type="text/javascript" class="init">
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+    </script>            
+            
+<script>
+
+
+function printError(elemId, hintMsg) {
+
+    document.getElementById(elemId).innerHTML = hintMsg;
+}
+function removeError(elemId){
+/* 	var x = document.getElementById(elemId);
+	 x.style.display = "none"; */
+	document.getElementById(elemId).innerHTML = "";
+}
+function validateform(){  
+	console.log("-------------HIT validateform -------------------");
+	var returnvalue =true;
+var source=document.myform.source.value;  
+var projecttype=document.myform.projecttype.value; 
+var clientname=document.myform.clientname.value; 
+var pinfo=document.myform.pinfo.value; 
+var search=document.myform.search.value;
+var dtime=document.myform.dtime.value;
+var utime=document.myform.utime.value;
+console.log("source:: "+source);
+
+  
+if (source==null || source==""){  
+	console.log("SOURCE NAIIIIII");
+	printError("sourceErr", "Please select Source Type"); 
+	returnvalue= false;  
+}else{
+	removeError("sourceErr");
+} 
+if (projecttype==null || projecttype==""){  
+	printError("proErr", "Please select Project Type"); 
+	returnvalue= false; 
+}else{
+	removeError("proErr");
+} 
+if (clientname==null || clientname==""){  
+	printError("cnameErr", "Please select Client Name"); 
+	returnvalue= false; 
+}else{
+	removeError("cnameErr");
+} 
+
+if (pinfo==null || pinfo==""){ 
+
+	printError("pinfoErr", "Please select Property Name"); 
+
+	returnvalue= false; 
+}else{
+	removeError("pinfoErr");
+} 
+ if (search==null || search==""){  
+	printError("srchErr", "Please type search text"); 
+	returnvalue= false; 
+}else{
+	removeError("srchErr");
+} 
+
+if ((dtime==null || dtime=="")&&(utime==null || utime=="") && (source=="1") ){  
+	printError("filterErr", "Please select any one filter"); 
+	returnvalue= false; 
+}else{
+	removeError("filterErr");
+}  
+
+return returnvalue;
+}  
+</script> 

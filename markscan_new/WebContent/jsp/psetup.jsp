@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
-
+<%@ page import="java.util.*" %>
+<%@ page import="com.markscan.project.beans.Stored_project_setup1" %>
+<%@ page import="com.markscan.project.beans.Stored_project_setup" %>
+<%@ page import="com.markscan.project.beans.Markscan_machine" %>
 <%@include file="header.jsp"%>
 <%-- <s:set name="theme" value="'simple'" scope="page" /> --%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -182,9 +185,12 @@ table.three {
 				//alert("Reponse data............."+jsonResponse.stateMap1);
 				//alert("Reponse data1............");
 				var count =1;
-				var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>DuckDuckGo</option><option value=5>RussiaGo</option><option value=6>Google India</option>'
+				/* var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>DuckDuckGo</option><option value=5>RussiaGo</option><option value=6>Google India</option>'
 					+'<option value=7>Google Canada</option><option value=8>Google Com</option><option value=9>Google Spane</option><option value=10>Google Nepal</option><option value=11>Google Bangladesh</option><option value=12>Google UAE</option><option value=13>Google Australia</option><option value=14>Google japan</option>'
-					+'<option value=15>Google USA</option><option value=16>Google Pakistan</option><option value=17>Google UK</option><option value=18>Google Netherlands</option>'
+					+'<option value=15>Google USA</option><option value=16>Google Pakistan</option><option value=17>Google UK</option><option value=18>Google Netherlands</option>' */
+				
+					var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>DuckDuckGo</option><option value=5>Go.mail.ru</option>'
+							
 				$.each(jsonResponse.stateMap1, function(key, value) {
 					var keys1 =pname1+' '+value;
 					data1 ='<tr><td><input type ="checkbox" id='+count+' size=50 name= '+count+' value= "'+keys1+ '" />'+keys1+'</td><td><select name="'+keys1+ '">'+optiondata+'</select></td></tr>';
@@ -205,10 +211,8 @@ table.three {
 			{
 				var data1='';
 				var data2 ='';
-				var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>DuckDuckGo</option><option value=5>RussiaGo</option><option value=6>Google India</option>'
-					+'<option value=7>Google Canada</option><option value=8>Google Com</option><option value=9>Google Spane</option><option value=10>Google Nepal</option><option value=11>Google Bangladesh</option><option value=12>Google UAE</option><option value=13>Google Australia</option><option value=14>Google japan</option>'
-					+'<option value=15>Google USA</option><option value=16>Google Pakistan</option><option value=17>Google UK</option><option value=18>Google Netherlands</option>'
-				    var count =15;
+				var optiondata='<option value=0>Select Pipe</option><option value=1>Google</option><option value=2>Yahoo</option><option value=3>Bing</option><option value=4>DuckDuckGo</option><option value=5>Go.mail.ru</option>'
+					var count =15;
 					for(var i=1;i<=count;i++)
 						{
 						var pi="pip"+i;
@@ -254,7 +258,7 @@ table.three {
 
   
   <!-- keywrdSetup keywrdStore -->
-	<s:form method="post" name="psetup" action="keywrdStore" theme="simple">
+	<s:form method="post" name="psetup" action="keywrdStore" theme="simple" onsubmit="return validateForm();">
 	
 	
 		<div style="margin-left: 170px;">
@@ -321,32 +325,224 @@ table.three {
 			</fieldset>
 		</div>
 -->
-      
-		<div>
-			<s:submit value="create project setup!!"></s:submit>
-		</div>
-
+     	 <%
+			if(request.getAttribute("k") != null) {
+				int k = (Integer)request.getAttribute("k");
+				if(k != 2){
+		%>
+				<div>
+					<s:submit value="create project setup!!"></s:submit>
+				</div>
+			<%}else{ %>
+				<h3><font color="red">Currently All BotMachines Are Busy.Please Try After Some Times..</font></h3>
+		<%	} 
+		  }
+		%>
+		
+		
 	</s:form>
 <div>
-<h3>
-If you are using Google on country wise, and running query on regional language,  
-</h3>
+<h2><font color="red">For Dynamic Scan, please enter the property and the keyphrase in the Fields given below</font></h2>
 </div>
 <div id ="ajaxResponse"></div>
 
-<!-- <table border="1">
-<tr>
-  <td>Project Name</td>
-  <td>Completed Flag</td>
-  <td>Google</td>
-  <td>Yahoo</td>
-  <td>Bing</td>
-  <td>DuckDuckGo</td>
-  <td>Go.mail.ru</td>
-  <td>BOT Type</td>
-  <td>Machine No</td>
-</tr>
-</table> -->
+<table border="1" align="center">
+	<tr>
+		<td><%
+			if(request.getAttribute("manual_bot") != null) {
+		%>
+				<table style="width: 100%;">
+					<tr>
+						<td><b>Manual BOT Logs</b></td>
+					</tr>
+					<tr>
+						<td>
+							<table style="width: 100%;">
+								<tr>
+									<td><b>Project Name</b></td>
+									<td><b>Completed Flag</b></td>
+									<td><b>Google</b></td>
+									<td><b>Yahoo</b></td>
+									<td><b>Bing</b></td>
+									<td><b>DuckDuckGo</b></td>
+									<td><b>Go.mail.ru</b></td>
+									<td><b>WhiteList</b></td>
+									<td><b>GreyList</b></td>
+									<td><b>BlackList</b></td>
+								</tr>
+								<%
+									ArrayList<Stored_project_setup1> manual_bot = (ArrayList<Stored_project_setup1>) request
+												.getAttribute("manual_bot");
+										for (Stored_project_setup1 bn : manual_bot) {
+								%>
+								<tr>
+									<td><%=bn.getKeyphrase()%></td>
+									<td><%=bn.getCompletedVal()%></td>
+									<td><%=bn.getGoogleVal()%></td>
+									<td><%=bn.getYahooVal()%></td>
+									<td><%=bn.getBingVal()%></td>
+									<td><%=bn.getDuckduckgoVal()%></td>
+									<td><%=bn.getRussiagoVal()%></td>
+									<td><%=bn.getWhitelistVal()%></td>
+									<td><%=bn.getGreylistVal()%></td>
+									<td><%=bn.getBlacklistVal()%></td>
+
+								</tr>
+								<% }%>
+
+							</table>
+						</td>
+					</tr>
+				</table> <% }%>
+			</td>
+	</tr>
+	
+	<tr>
+	    <td>
+				<%
+					if (request.getAttribute("automate_bot") != null) {
+				%>
+				<table style="width: 100%;">
+					<tr>
+						<td><b>Automated BOT Logs</b></td>
+					</tr>
+					<tr>
+						<td>
+							<table  style="width: 100%;">
+								<tr>
+									<td><b>Project Name</b></td>
+									<td><b>Completed Flag</b></td>
+									<td><b>Google</b></td>
+									<td><b>Yahoo</b></td>
+									<td><b>Bing</b></td>
+									<td><b>DuckDuckGo</b></td>
+									<td><b>Go.mail.ru</b></td>
+									<td><b>WhiteList</b></td>
+									<td><b>GreyList</b></td>
+									<td><b>BlackList</b></td>
+								</tr>
+								<%
+									ArrayList<Stored_project_setup> automate_bot = (ArrayList<Stored_project_setup>) request
+												.getAttribute("automate_bot");
+										for (Stored_project_setup bn : automate_bot) {
+								%>
+								<tr>
+									<td><%=bn.getKeyphrase()%></td>
+									<td><%=bn.getCompletedVal()%></td>
+									<td><%=bn.getGoogleVal()%></td>
+									<td><%=bn.getYahooVal()%></td>
+									<td><%=bn.getBingVal()%></td>
+									<td><%=bn.getDuckduckgoVal()%></td>
+									<td><%=bn.getRussiagoVal()%></td>
+									<td><%=bn.getWhitelistVal()%></td>
+									<td><%=bn.getGreylistVal()%></td>
+									<td><%=bn.getBlacklistVal()%></td>
+
+								</tr>
+								<% }%>
+
+							</table>
+						</td>
+					</tr>
+				</table> <% }%>
+ 
+	    </td>
+	</tr>
+	
+	
+	<tr>
+	  <td>
+				<%
+					if (request.getAttribute("machine_list") != null) {
+				%>
+				<table style="width: 100%;">
+					<tr>
+						<td><b>BOT Machine INFO</b></td>
+					</tr>
+					<tr>
+						<td>
+							<table style="width: 100%;">
+								<tr>
+									<td><b>IP Address</b></td>
+									<td><b>Description</b></td>
+									<td><b>BOT Status</b></td>
+									<td><b>Project Name</b></td>
+
+								</tr>
+								<%
+									ArrayList<Markscan_machine> machine_list = (ArrayList<Markscan_machine>) request
+												.getAttribute("machine_list");
+										for (Markscan_machine bn : machine_list) {
+								%>
+								<tr>
+									<td><%=bn.getIp_address()%></td>
+									<td><%=bn.getBot_version()%></td>
+									<td><%=bn.getStatus_display()%></td>
+									<td><%=bn.getProject_nm()%></td>
+
+								</tr>
+								<% }%>
+
+							</table>
+						</td>
+					</tr>
+				</table> <% }%>
+			</td>
+	</tr>
+	
+	  <tr>
+	      <td>
+				<%
+					if (request.getAttribute("iwl_process") != null) {
+				%>
+				<table style="width: 100%;">
+					<tr>
+						<td><b>IWL Process Logs</b></td>
+					</tr>
+					<tr>
+						<td>
+							<table  style="width: 100%;">
+								<tr>
+									<td><b>Project Name</b></td>
+									<td><b>IWL Process</b></td>
+									
+								</tr>
+								<%
+									ArrayList<Stored_project_setup> iwl_process = (ArrayList<Stored_project_setup>) request
+												.getAttribute("iwl_process");
+										for (Stored_project_setup bn : iwl_process) {
+								%>
+								<tr>
+									<td><%=bn.getKeyphrase()%></td>
+									<td><%=bn.getIwl_processVal()%></td>
+									
+
+								</tr>
+								<% }%>
+
+							</table>
+						</td>
+					</tr>
+				</table> 
+			 <% }%>
+ 		 </td>
+	</tr>
+	
+</table>
+
+<script type="text/javascript">
+
+function validateForm(){
+	return true;
+}
+
+</script>
+
+
+ 
+ 
+ 
+ 
 
 </body>
 </html>

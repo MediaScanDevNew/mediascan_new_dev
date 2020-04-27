@@ -10,7 +10,7 @@
           <hibernate-mapping>
           <class name="com.markscan.project.beans.Blacklist_sites" table="blacklist_sites">
           <id name="id">
-          <generator class="uuid"></generator>
+          <generator class="increment"></generator>
           </id>
           <property name="domain"></property>
           <property name="created_on" ></property>

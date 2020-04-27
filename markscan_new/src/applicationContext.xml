@@ -17,22 +17,19 @@
 		<property name="password" value="password"></property>      
        -->
 
-           <property name="url"
+        <property name="url"
 			value="jdbc:mysql://localhost:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
 
 			<property name="username" value="testuser"></property>
-
-			<property name="password" value="M@123rkscan"></property>      
+			<property name="password" value="M@123rkscan"></property>    
 		
 		
-		 
-      
-     <!-- <property name="url"
+	      <!-- <property name="url"
 			value="jdbc:mysql://182.73.134.27:3306/webinforcement_demo?useUnicode=true&amp;character_set_server=utf8mb4&amp;autoReconnect=true&amp;CharSet=utf8mb4&amp;characterEncoding=utf8" />
 
 		<property name="username" value="root"></property>
 
-		<property name="password" value="M@1234rkscan"></property>   -->
+		<property name="password" value="M@1234rkscan"></property>  -->    
       
 
 		<property name="maxActive" value="35" />
@@ -108,7 +105,7 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 				<!-- <prop key="hibernate.cache.use_query_cache">false</prop> -->
 
 			</props>
@@ -159,11 +156,11 @@
 		<property name="template" ref="template"></property>
 	</bean>
 	
-	<!--  
-	<bean id="d7" class="com.markscan.project.dao.Stored_project_setupDao">
+	  
+	<bean id="d99" class="com.markscan.project.dao.Stored_project_setupDao">
 		<property name="template" ref="template"></property>
 	</bean>
-	-->
+	
 	<bean id="d7" class="com.markscan.project.dao.Stored_project_setup1Dao">
 		<property name="template" ref="template"></property>
 	</bean>

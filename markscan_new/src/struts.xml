@@ -7,7 +7,7 @@
 <struts>
 	<constant name="struts.multipart.maxSize" value="12485760" />
 	<constant name="struts.multipart.saveDir" value="/home/botserver3/IWL1/" />
-	
+
 	<include file="struts-default.xml" />
 	<package name="default" extends="struts-default, json-default">
 
@@ -284,7 +284,7 @@
 		<action name="ajaxAction0" class="com.markscan.project.classes.AjaxJsonAction">
 			<result type="json">/jsp/reporting.jsp</result>
 		</action>
-		
+
 		<action name="ajaxAction1" class="com.markscan.project.classes.AjaxJsonAction"
 			method="execute1">
 			<result type="json">/jsp/reporting.jsp</result>
@@ -293,11 +293,11 @@
 			method="execute3">
 			<result type="json">/jsp/reporting.jsp</result>
 		</action>
-		
+
 		<!-- ****************************Static keyword********************* -->
 		<action name="ajaxAction3" class="com.markscan.project.classes.AjaxJsonAction"
 			method="execute4">
-			 <result type="json">/jsp/reporting.jsp</result> 
+			<result type="json">/jsp/reporting.jsp</result>
 		</action>
 
 		<!-- **** data import***** -->
@@ -306,8 +306,8 @@
 			<result name="success">/jsp/fileUpload.jsp</result>
 			<result name="login">/jsp/sessionOut.jsp</result>
 		</action>
-		
-		
+
+
 		<!-- <action name="dataImport_old" class="com.markscan.project.classes.ActionPerform" 
 			method="dataImport"> <result name="success">/jsp/fileUpload2.jsp</result> 
 			<result name="login">/jsp/sessionOut.jsp</result> </action> -->
@@ -378,14 +378,10 @@
 			<result name="login">/jsp/sessionOut.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action>
-		<!-- 
-		<action name="keywrdSetup" class="com.markscan.project.classes.ProjSetup"
-			method="pSetup">
-			<result name="success">/jsp/psetup1.jsp</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-		 -->
+		<!-- <action name="keywrdSetup" class="com.markscan.project.classes.ProjSetup" 
+			method="pSetup"> <result name="success">/jsp/psetup1.jsp</result> <result 
+			name="login">/jsp/sessionOut.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			</action> -->
 		<action name="keywrdStore" class="com.markscan.project.classes.ProjSetup"
 			method="setupStore">
 			<result name="success">/jsp/botSuccess.jsp</result> <!-- here we add next page of bot start. -->
@@ -690,42 +686,24 @@
 			<result name="error">/jsp/error.jsp</result>
 		</action>
 
-		<!-- <action name="addwlist" class="com.markscan.project.classes.AdminControl"
-			method="addWhiteList">
-			<result name="success">/jsp/admin/graywhite.jsp</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action> 
-       <action name="addwlist2" class="com.markscan.project.classes.AdminControl"
-			method="addWhiteList_two">
-			<result name="success">/jsp/admin/graywhite.jsp</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-		<action name="glist" class="com.markscan.project.classes.AdminControl"
-			method="addGrayList">
-			<result name="success">/jsp/admin/graywhite.jsp</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-		<action name="wInsta" class="com.markscan.project.classes.AdminControl"
-			method="addInstaList">
-			<result name="success">/jsp/admin/graywhite.jsp</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-
-		<action name="wYT" class="com.markscan.project.classes.AdminControl"
-			method="addYTList">
-			<result name="success">/jsp/admin/graywhite.jsp</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>-->
+		<!-- <action name="addwlist" class="com.markscan.project.classes.AdminControl" 
+			method="addWhiteList"> <result name="success">/jsp/admin/graywhite.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="perror">/jsp/privilegeError.jsp</result> 
+			<result name="error">/jsp/error.jsp</result> </action> <action name="addwlist2" 
+			class="com.markscan.project.classes.AdminControl" method="addWhiteList_two"> 
+			<result name="success">/jsp/admin/graywhite.jsp</result> <result name="login">/jsp/sessionOut.jsp</result> 
+			<result name="perror">/jsp/privilegeError.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			</action> <action name="glist" class="com.markscan.project.classes.AdminControl" 
+			method="addGrayList"> <result name="success">/jsp/admin/graywhite.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="perror">/jsp/privilegeError.jsp</result> 
+			<result name="error">/jsp/error.jsp</result> </action> <action name="wInsta" 
+			class="com.markscan.project.classes.AdminControl" method="addInstaList"> 
+			<result name="success">/jsp/admin/graywhite.jsp</result> <result name="login">/jsp/sessionOut.jsp</result> 
+			<result name="perror">/jsp/privilegeError.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			</action> <action name="wYT" class="com.markscan.project.classes.AdminControl" 
+			method="addYTList"> <result name="success">/jsp/admin/graywhite.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="perror">/jsp/privilegeError.jsp</result> 
+			<result name="error">/jsp/error.jsp</result> </action> -->
 
 
 
@@ -915,7 +893,7 @@
 			method="blackListDataExport"> <result name="success">/jsp/exportblacklist.jsp</result> 
 			<result name="login">/jsp/sessionOut.jsp</result> <result name="error">/jsp/error.jsp</result> 
 			<result name="errorMsg">/jsp/errorMessage.jsp</result> </action> -->
-		
+
 
 		<!-- admin dashboard -->
 
@@ -1114,22 +1092,23 @@
 		<action name="two" class="com.pj.test.NewTest">
 			<result name="perror">/jsp/privilegeError.jsp</result>
 		</action>
-		
-		
-		
-		<!-- New Addition start  -->
-		
-		<action name="getDetailsTypeWise" class="com.markscan.project.classes.GetDetailsClientPTWise">
+
+
+
+		<!-- New Addition start -->
+
+		<action name="getDetailsTypeWise"
+			class="com.markscan.project.classes.GetDetailsClientPTWise">
 			<result name="success">/jsp/showClients.jsp</result>
 		</action>
-		
+
 		<action name="deletemail" method="deletemail"
 			class="com.markscan.project.classes.enforcement.Enforcement">
 			<result name="success">/jsp/emailAddUpdate.jsp</result>
 			<result name="login">/jsp/sessionOut.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action>
-		
+
 		<action name="getdashboardDtls" class="com.markscan.project.classes.ProjectDashBoard"
 			method="getdashboardDtls">
 			<!-- <interceptor-ref name="params" /> <interceptor-ref name="execAndWait" 
@@ -1139,87 +1118,72 @@
 			<result name="wait">/intercepter/process.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action>
-		
-		
-		
+
+
+
 		<action name="getAllClient" class="com.markscan.project.classes.ClientDetailsAction"
-		method="getAllClient">
+			method="getAllClient">
 			<result type="json">/js/custom/custom.js</result>
 		</action>
-	<!-- Subham 27.11.2019 -->
-	
+		<!-- Subham 27.11.2019 -->
+
 		<action name="getWhiteListClientWise" class="com.markscan.project.classes.AdminControlNew"
 			method="getWhiteListClientWise">
-			 <result name="success" type="json">/jsp/whitelist.jsp</result> 
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-		
-		<action name="getGreylistClientWise" class="com.markscan.project.classes.AdminControlGreyList"
-			method="getGreylistClientWise">
-			 <result name="success" type="json">/jsp/graylist.jsp</result> 
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-		
-		<action name="getSocialMediaClientWise" class="com.markscan.project.classes.AdminControlSocialList"
-			method="getSocialMediaClientWise">
 			<result name="success" type="json">/jsp/whitelist.jsp</result>
 			<result name="login">/jsp/sessionOut.jsp</result>
 			<result name="perror">/jsp/privilegeError.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action>
-		 
-		<action name="getInstaClientWise" class="com.markscan.project.classes.AdminControlInstagramList"
+
+		<action name="getGreylistClientWise"
+			class="com.markscan.project.classes.AdminControlGreyList" method="getGreylistClientWise">
+			<result name="success" type="json">/jsp/graylist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="getSocialMediaClientWise"
+			class="com.markscan.project.classes.AdminControlSocialList" method="getSocialMediaClientWise">
+			<result name="success" type="json">/jsp/whitelist.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="getInstaClientWise"
+			class="com.markscan.project.classes.AdminControlInstagramList"
 			method="getInstaClientWise">
 			<result name="success" type="json">/jsp/whitelist.jsp</result>
 			<result name="login">/jsp/sessionOut.jsp</result>
 			<result name="perror">/jsp/privilegeError.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action>
-		<action name="getYTClientWise" class="com.markscan.project.classes.AdminControlYoutubeList"
-			method="getYTClientWise">
+		<action name="getYTClientWise"
+			class="com.markscan.project.classes.AdminControlYoutubeList" method="getYTClientWise">
 			<result name="success" type="json">/jsp/whitelist.jsp</result>
 			<result name="login">/jsp/sessionOut.jsp</result>
 			<result name="perror">/jsp/privilegeError.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action>
-		
-		<!--
-		 <action name="getGreylistClientWise" class="com.markscan.project.classes.AdminControl"
-			method="getGreylistClientWise">
-			<result name="success" type="json">/js/custom.js</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-		
-		
-		<action name="getSocialMediaClientWise" class="com.markscan.project.classes.AdminControl"
-			method="getSocialMediaClientWise">
-			<result name="success" type="json">/js/custom.js</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-		<action name="getInstaClientWise" class="com.markscan.project.classes.AdminControl"
-			method="getInstaClientWise">
-			<result name="success" type="json">/js/custom.js</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action>
-		<action name="getYTClientWise" class="com.markscan.project.classes.AdminControl"
-			method="getYTClientWise">
-			<result name="success" type="json">/js/custom.js</result>
-			<result name="login">/jsp/sessionOut.jsp</result>
-			<result name="perror">/jsp/privilegeError.jsp</result>
-			<result name="error">/jsp/error.jsp</result>
-		</action> -->
-		
-		
+
+		<!-- <action name="getGreylistClientWise" class="com.markscan.project.classes.AdminControl" 
+			method="getGreylistClientWise"> <result name="success" type="json">/js/custom.js</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="perror">/jsp/privilegeError.jsp</result> 
+			<result name="error">/jsp/error.jsp</result> </action> <action name="getSocialMediaClientWise" 
+			class="com.markscan.project.classes.AdminControl" method="getSocialMediaClientWise"> 
+			<result name="success" type="json">/js/custom.js</result> <result name="login">/jsp/sessionOut.jsp</result> 
+			<result name="perror">/jsp/privilegeError.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			</action> <action name="getInstaClientWise" class="com.markscan.project.classes.AdminControl" 
+			method="getInstaClientWise"> <result name="success" type="json">/js/custom.js</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="perror">/jsp/privilegeError.jsp</result> 
+			<result name="error">/jsp/error.jsp</result> </action> <action name="getYTClientWise" 
+			class="com.markscan.project.classes.AdminControl" method="getYTClientWise"> 
+			<result name="success" type="json">/js/custom.js</result> <result name="login">/jsp/sessionOut.jsp</result> 
+			<result name="perror">/jsp/privilegeError.jsp</result> <result name="error">/jsp/error.jsp</result> 
+			</action> -->
+
+
 		<action name="addwlist" class="com.markscan.project.classes.AdminControl"
 			method="addWhiteList">
 			<result name="success">/jsp/whitelist.jsp</result>
@@ -1256,14 +1220,14 @@
 			<result name="perror">/jsp/privilegeError.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action>
-		
+
 		<action name="getProjectDtlsIdWise" class="com.markscan.project.classes.ProjectDashBoard"
 			method="getProjectDtlsIdWise">
 			<result name="success">/jsp/EditNewProject.jsp</result>
 			<result name="login">/jsp/sessionOut.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
 		</action>
-		
+
 		<action name="updateProject" class="com.markscan.project.classes.Reporting"
 			method="updateProject">
 			<result name="success">/jsp/EditNewProject.jsp</result>
@@ -1271,128 +1235,260 @@
 			<result name="error">/jsp/error.jsp</result>
 			<!-- <result name="wait">/intercepter/load.jsp</result> -->
 		</action>
-		<!--  Subham 10.12.2019 -->
+		<!-- Subham 10.12.2019 -->
 		<action name="editInternetWhiteList" class="com.markscan.project.classes.EditWhiteList"
-		method="editInternetWhiteList">
-		<result name="success" type="json" >/js/custom/custom.js</result>
-		<result name="login">/jsp/sessionOut.jsp</result>
-		<result name="perror">/jsp/privilegeError.jsp</result>
-		<result name="error">/jsp/error.jsp</result>
-		</action>
-		<action name="deleteInternetWhiteList" class="com.markscan.project.classes.DeleteWhiteList"
-		method="deleteInternetWhiteList">
-		<result name="success" type="json" >/js/custom/custom.js</result>
-		<result name="login">/jsp/sessionOut.jsp</result>
-		<result name="perror">/jsp/privilegeError.jsp</result>
-		<result name="error">/jsp/error.jsp</result>
-		</action>
-		<action name="editGreyList" class="com.markscan.project.classes.EditGreyList"
-		method="editGreyList">
-		<result name="success" type="json" >/js/custom/custom.js</result>
-		<result name="login">/jsp/sessionOut.jsp</result>
-		<result name="perror">/jsp/privilegeError.jsp</result>
-		<result name="error">/jsp/error.jsp</result>
-		</action>
-		<action name="deleteGreyList" class="com.markscan.project.classes.DeleteGreyList"
-		method="deleteGreyList">
-		<result name="success" type="json" >/js/custom/custom.js</result>
-		<result name="login">/jsp/sessionOut.jsp</result>
-		<result name="perror">/jsp/privilegeError.jsp</result>
-		<result name="error">/jsp/error.jsp</result>
-		</action>
-		
-		
-		<!-- My addition  -->
-		<!-- <action name="getWhiteListClientWise1" class="com.markscan.project.classes.AdminControlNew"
-			method="getWhiteListClientWise">
-			 <result name="success">/jsp/whitelist.jsp</result> 
+			method="editInternetWhiteList">
+			<result name="success" type="json">/js/custom/custom.js
+			</result>
 			<result name="login">/jsp/sessionOut.jsp</result>
 			<result name="perror">/jsp/privilegeError.jsp</result>
 			<result name="error">/jsp/error.jsp</result>
-		</action> -->
-		
+		</action>
+		<action name="deleteInternetWhiteList" class="com.markscan.project.classes.DeleteWhiteList"
+			method="deleteInternetWhiteList">
+			<result name="success" type="json">/js/custom/custom.js
+			</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="editGreyList" class="com.markscan.project.classes.EditGreyList"
+			method="editGreyList">
+			<result name="success" type="json">/js/custom/custom.js
+			</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+		<action name="deleteGreyList" class="com.markscan.project.classes.DeleteGreyList"
+			method="deleteGreyList">
+			<result name="success" type="json">/js/custom/custom.js
+			</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="perror">/jsp/privilegeError.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+
+		<!-- My addition -->
+		<!-- <action name="getWhiteListClientWise1" class="com.markscan.project.classes.AdminControlNew" 
+			method="getWhiteListClientWise"> <result name="success">/jsp/whitelist.jsp</result> 
+			<result name="login">/jsp/sessionOut.jsp</result> <result name="perror">/jsp/privilegeError.jsp</result> 
+			<result name="error">/jsp/error.jsp</result> </action> -->
+
 		<action name="iwl_upload"
-				class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
-				method="iwl_upload">
-				<result name="login">/jsp/sessionOut.jsp</result>
-				<result name="error">/jsp/error.jsp</result>
-				<result name="errorMsg">/jsp/errorMessage.jsp</result>
-				<result name="success">/jsp/IWL_Upload.jsp</result>
-			</action>
-			<action name="iwl_error_download"
-				class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
-				method="iwl_error_download">
-				<result name="login">/jsp/sessionOut.jsp</result>
-				<result name="error">/jsp/error.jsp</result>
-				<result name="errorMsg">/jsp/errorMessage.jsp</result>
-				<result name="success">/jsp/IWL_Error_Download.jsp</result>
-			</action>
-			<action name="iwl_error_download_file" class="com.markscan.project.classes.ProjSetup"
-				method="downloadIWLFailedFile">
-				<result name="success">/jsp/deleteFilter.jsp</result>
-				<result name="login">/jsp/sessionOut.jsp</result>
-				<result name="error">/jsp/error.jsp</result>
-		   </action>
-		   
-		   <action name="IWLuploadCSV" class="com.markscan.project.classes.ProjSetup"
-				method="IWLUploadCSV">
-				<result name="success">/jsp/IWL_Upload.jsp</result>
-				<result name="login">/jsp/sessionOut.jsp</result>
-				<result name="error">/jsp/error.jsp</result>
-		   </action>
-		   
-		   <action name="getGenre" class="com.markscan.project.classes.Genre">
-				<result type="json">/jsp/addNewProject.jsp</result>
-		   </action>
-		 <action name="reportdownload"
+			class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+			method="iwl_upload">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/IWL_Upload.jsp</result>
+		</action>
+		<action name="iwl_error_download"
+			class="com.markscan.project.classes.blacklisttool.BlackList_Tool"
+			method="iwl_error_download">
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+			<result name="errorMsg">/jsp/errorMessage.jsp</result>
+			<result name="success">/jsp/IWL_Error_Download.jsp</result>
+		</action>
+		<action name="iwl_error_download_file" class="com.markscan.project.classes.ProjSetup"
+			method="downloadIWLFailedFile">
+			<result name="success">/jsp/deleteFilter.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="IWLuploadCSV" class="com.markscan.project.classes.ProjSetup"
+			method="IWLUploadCSV">
+			<result name="success">/jsp/IWL_Upload.jsp</result>
+			<result name="login">/jsp/sessionOut.jsp</result>
+			<result name="error">/jsp/error.jsp</result>
+		</action>
+
+		<action name="getGenre" class="com.markscan.project.classes.Genre">
+			<result type="json">/jsp/addNewProject.jsp</result>
+		</action>
+		<action name="reportdownload"
 			class="com.markscan.project.classes.userGenContent.UgcReport" method="reportdownload">
 			<result name="success">/jsp/ugcreport.jsp</result>
 			<result name="login">/jsp/wronglogin.jsp</result>
 			<result name="maintenance">/jsp/maintenance.jsp</result>
-			</action>			   
-		   
-		 <action name="ugcReport"
+		</action>
+
+		<action name="ugcReport"
 			class="com.markscan.project.classes.userGenContent.UgcReport" method="start">
 			<result name="success">/jsp/ugcreport.jsp</result>
 			<result name="login">/jsp/wronglogin.jsp</result>
 			<result name="maintenance">/jsp/maintenance.jsp</result>
-			</action>			   
-		   
-		 <action name="userGenContent"
-			class="com.markscan.project.classes.userGenContent.UserGenContent" method="start">
+		</action>
+
+		<action name="userGenContent"
+			class="com.markscan.project.classes.userGenContent.UserGenContent"
+			method="start">
 			<result name="success">/jsp/userGenContent.jsp</result>
 			<result name="login">/jsp/wronglogin.jsp</result>
 			<result name="maintenance">/jsp/maintenance.jsp</result>
-			</action>	
-			
-			
-			<action name="youtubehit"
-			class="com.markscan.project.classes.userGenContent.YoutubeScanner" method="youtubehit">
+		</action>
+
+
+		<action name="youtubehit"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner"
+			method="youtubehit">
 			<result name="success">/jsp/userGenContent.jsp</result>
 			<result name="login">/jsp/wronglogin.jsp</result>
 			<result name="maintenance">/jsp/maintenance.jsp</result>
-			</action>	
-			
-			  <action name="getproperty"
-			class="com.markscan.project.classes.userGenContent.UserGenContent" method="getproperty">
+		</action>
+
+		<action name="getproperty"
+			class="com.markscan.project.classes.userGenContent.UserGenContent"
+			method="getproperty">
 			<result name="success" type="json">/jsp/userGenContent.jsp</result>
 			<result name="login">/jsp/wronglogin.jsp</result>
 			<result name="maintenance">/jsp/maintenance.jsp</result>
-			</action>
-			
-			  <action name="delcrawlrow"
-			class="com.markscan.project.classes.userGenContent.YoutubeScanner" method="deleterowdeleterow">
+		</action>
+
+		<action name="delcrawlrow"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner"
+			method="deleterowdeleterow">
 			<result name="success" type="json">/jsp/userGenContent.jsp</result>
 			<result name="login">/jsp/wronglogin.jsp</result>
 			<result name="maintenance">/jsp/maintenance.jsp</result>
-			</action>	
-			
-			   <action name="updatecyrow"
-			class="com.markscan.project.classes.userGenContent.YoutubeScanner" method="updatecyrow">
+		</action>
+
+		<action name="updatecyrow"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner"
+			method="updatecyrow">
 			<result name="success" type="json">/jsp/userGenContent.jsp</result>
 			<result name="login">/jsp/wronglogin.jsp</result>
 			<result name="maintenance">/jsp/maintenance.jsp</result>
-		</action>	
+		</action>
+
+		<action name="createkp" class="com.markscan.project.classes.KeyPhrase"
+			method="start">
+			<result name="success">/jsp/createkp.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="updatekeyphrase" class="com.markscan.project.classes.KeyPhrase"
+			method="updatekeyphrase">
+			<result name="success">/jsp/createkp.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="updateactivewhitelist" class="com.markscan.project.classes.KeyPhrase"
+			method="updateactivewhitelist">
+			<result name="success" type="json">/jsp/createkp.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="addkeyphrasewhitelist" class="com.markscan.project.classes.KeyPhrase"
+			method="addkeyphrasewhitelist">
+			<result name="success">/jsp/createkp.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="getkeyphrase" class="com.markscan.project.classes.KeyPhrase"
+			method="getkeyphrase">
+			<result name="success" type="json">/jsp/createkp.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="createblacklist" class="com.markscan.project.classes.Blacklist"
+			method="start">
+			<result name="success">/jsp/createblacklist.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="updateblacklist" class="com.markscan.project.classes.Blacklist"
+			method="updateblacklist">
+			<result name="success">/jsp/createblacklist.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="addblacklist" class="com.markscan.project.classes.Blacklist"
+			method="addblacklist">
+			<result name="success">/jsp/createblacklist.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="getdomains" class="com.markscan.project.classes.Blacklist"
+			method="getdomains">
+			<result name="success" type="json">/jsp/createblacklist.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="updateactiveblacklist" class="com.markscan.project.classes.Blacklist"
+			method="updateactiveblacklist">
+			<result name="success" type="json">/jsp/createblacklist.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="reportdownload"
+			class="com.markscan.project.classes.userGenContent.UgcReport" method="reportdownload">
+			<result name="success">/jsp/ugcreport.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="ugcReport"
+			class="com.markscan.project.classes.userGenContent.UgcReport" method="start">
+			<result name="success">/jsp/ugcreport.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="userGenContent"
+			class="com.markscan.project.classes.userGenContent.UserGenContent"
+			method="start">
+			<result name="success">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+
+		<action name="youtubehit"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner"
+			method="youtubehit">
+			<result name="success">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="getproperty"
+			class="com.markscan.project.classes.userGenContent.UserGenContent"
+			method="getproperty">
+			<result name="success" type="json">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="delcrawlrow"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner"
+			method="deleterowdeleterow">
+			<result name="success" type="json">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
+		<action name="updatecyrow"
+			class="com.markscan.project.classes.userGenContent.YoutubeScanner"
+			method="updatecyrow">
+			<result name="success" type="json">/jsp/userGenContent.jsp</result>
+			<result name="login">/jsp/wronglogin.jsp</result>
+			<result name="maintenance">/jsp/maintenance.jsp</result>
+		</action>
+
 
 	</package>
 </struts>

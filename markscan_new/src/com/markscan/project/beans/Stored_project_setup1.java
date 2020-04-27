@@ -1,8 +1,10 @@
 package com.markscan.project.beans;
 
 public class Stored_project_setup1 {
-	int id,  userId, projectId, completed,   google, yahoo, bing,pipe,duckduckgo,russiago,priority;
+	int id,  userId, projectId, completed,   google, yahoo, bing,pipe,duckduckgo,russiago,priority,whitelist,greylist,blacklist;
 	String keyphrase,  created_on;
+	
+	String completedVal,googleVal,yahooVal,bingVal,duckduckgoVal,russiagoVal,whitelistVal,greylistVal,blacklistVal;
 
 	public Stored_project_setup1() {
 		// TODO Auto-generated constructor stub
@@ -110,6 +112,104 @@ public class Stored_project_setup1 {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	public String getCompletedVal() {
+		return completedVal;
+	}
+
+	
+	
+	public void setCompletedVal(String completedVal) {
+		this.completedVal = completedVal;
+	}
+
+	public String getGoogleVal() {
+		return googleVal;
+	}
+
+	public void setGoogleVal(String googleVal) {
+		this.googleVal = googleVal;
+	}
+
+	public String getYahooVal() {
+		return yahooVal;
+	}
+
+	public void setYahooVal(String yahooVal) {
+		this.yahooVal = yahooVal;
+	}
+
+	public String getBingVal() {
+		return bingVal;
+	}
+
+	public void setBingVal(String bingVal) {
+		this.bingVal = bingVal;
+	}
+
+	public String getDuckduckgoVal() {
+		return duckduckgoVal;
+	}
+
+	public void setDuckduckgoVal(String duckduckgoVal) {
+		this.duckduckgoVal = duckduckgoVal;
+	}
+
+	public String getRussiagoVal() {
+		return russiagoVal;
+	}
+
+	public void setRussiagoVal(String russiagoVal) {
+		this.russiagoVal = russiagoVal;
+	}
+
+	public int getWhitelist() {
+		return whitelist;
+	}
+
+	public void setWhitelist(int whitelist) {
+		this.whitelist = whitelist;
+	}
+
+	public int getGreylist() {
+		return greylist;
+	}
+
+	public void setGreylist(int greylist) {
+		this.greylist = greylist;
+	}
+
+	public int getBlacklist() {
+		return blacklist;
+	}
+
+	public void setBlacklist(int blacklist) {
+		this.blacklist = blacklist;
+	}
+
+	public String getWhitelistVal() {
+		return whitelistVal;
+	}
+
+	public void setWhitelistVal(String whitelistVal) {
+		this.whitelistVal = whitelistVal;
+	}
+
+	public String getGreylistVal() {
+		return greylistVal;
+	}
+
+	public void setGreylistVal(String greylistVal) {
+		this.greylistVal = greylistVal;
+	}
+
+	public String getBlacklistVal() {
+		return blacklistVal;
+	}
+
+	public void setBlacklistVal(String blacklistVal) {
+		this.blacklistVal = blacklistVal;
 	}
 
 	

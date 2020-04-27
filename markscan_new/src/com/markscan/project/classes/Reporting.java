@@ -66,6 +66,10 @@ import com.markscan.project.dao.Url_emailDao;
 import com.opensymphony.xwork2.ActionSupport;
 
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 
 
 public class Reporting extends ActionSupport {
@@ -471,6 +475,39 @@ public class Reporting extends ActionSupport {
 						property_category = "0";
 						projecttype =0;
 					}
+					
+					String htmlpage="The Project "+propertyName_name_initial+" has been registered for Auto Scanning. You shall recieve a separate email when the Scan Begins.<br/><br/>Thank you for choosing <br/>MediaScan Team";
+					Properties props = new Properties();
+					props.put("mail.smtp.auth", "true");
+					props.put("mail.smtp.starttls.enable", "true");
+					props.put("mail.smtp.host", "111.118.215.222");
+					props.put("mail.smtp.port", "25");
+					javax.mail.Session session = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
+						protected PasswordAuthentication getPasswordAuthentication() {
+							return new PasswordAuthentication("mediascan@markscan.co.in", "M@123rkscan");
+						}
+					});
+					try {
+
+						Message message = new MimeMessage(session);
+						message.setFrom(new InternetAddress("mediascan@markscan.co.in"));
+						message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("smohindru@markscan.co.in")); //userMail
+
+						message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(""));
+						message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("pradipta.maitra@gmail.com,dutta.simanta83@gmail.com,gray1@markscan.co.in"));// pradipta.maitra@gmail.com
+						message.setSubject(""+propertyName_name_initial+" created successfully ");
+
+						message.setContent(htmlpage, "text/html");
+
+						// Send message
+
+						Transport.send(message);
+						
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
 					msg = "project created successfully...";
 				}
 			
