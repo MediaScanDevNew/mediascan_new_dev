@@ -37,9 +37,9 @@ public class BOTStarterJob implements Job {
 			 con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo?useSSL=false","testuser","M@123rkscan"); 
 			if(con != null){
 				
-				String sql = "select sps.keyphrase  from stored_project_setup1 sps where completed=0 "
-						     + "and (sps.created_on "
-							 + "between '"+cdate+" 00:00:00' and '"+cdate+" 23:59:59')";
+				String sql = "select count(id) countVal  from stored_project_setup1 sps where completed in (0,2) "
+						     /*+ "and (sps.created_on "
+							 + "between '"+cdate+" 00:00:00' and '"+cdate+" 23:59:59')"*/;
 				ps = con.prepareStatement(sql);
 				rs = ps.executeQuery();
 				if(rs.next()){

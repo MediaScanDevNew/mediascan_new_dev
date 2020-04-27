@@ -37,6 +37,9 @@ public class CreateKeyPhaseForTV implements Job {
 	private Date eDate;
 	private Date date;
 	private String days = "";
+	
+	private PreparedStatement psmt5 = null;
+	private ResultSet rs5 = null;
 
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -49,11 +52,12 @@ public class CreateKeyPhaseForTV implements Job {
 	    	//con=DriverManager.getConnection("jdbc:mysql://182.73.134.27:3306/webinforcement_demo","root","M@1234rkscan"); 
 			 con=DriverManager.getConnection("jdbc:mysql://localhost:3306/webinforcement_demo?useSSL=false","testuser","M@123rkscan"); 
 			 
-			String query = "select DISTINCT pif.id, pif.project_name, pif.start_date, pif.end_date, pif.ttime from project_info pif, tv_content_tdays tvc "
-					+ "where pif.id=tvc.projectId and pif.ttime is not null and pif.closed=0 and pif.id not in "
-					+ "(SELECT distinct projectId FROM webinforcement_demo.stored_project_setup1 where "
+			String query = "select DISTINCT pif.id, pif.project_name, pif.start_date, pif.end_date, pif.ttime "
+					+ "from project_info pif, tv_content_tdays tvc "
+					+ "where pif.id=tvc.projectId and pif.ttime is not null and pif.project_complete=0 and pif.closed=0 and pif.id not in "
+					+ "(SELECT distinct projectId FROM stored_project_setup1 where "
 					+ "date_format(created_on,'%d-%-m-%y') = date_format(now(),'%d-%-m-%y'))";
-			//System.out.println("============>" + query);
+			
 			psmt = con.prepareStatement(query);
 			rs = psmt.executeQuery();
 			while (rs.next()) {
@@ -62,25 +66,36 @@ public class CreateKeyPhaseForTV implements Job {
 				start_date = rs.getString(3);
 				end_date = rs.getString(4);
 				ttime = rs.getString(5);
-				//System.out.println("====1111111111111111111111111111========>" );
-				SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MMMM-yyyy");
-				String curdate = sdf1.format(date);
-				keyphrase = project_name + " episode " + curdate;
-				String query1 = "select telecast_days from  tv_content_tdays where projectId =" + projectId;
-				//System.out.println("query1========>"+query1 );
-				ps1 = con.prepareStatement(query1);
-				rs1 = ps1.executeQuery();
-				while (rs1.next()) {
-					String day = rs1.getString(1);
-					//System.out.println("day is ------->"+day);
-					//System.out.println("days is ------->"+days);
-					if (day.equals(days)) {
-						//System.out.println("Time............." + ttime);
-						setTelecastTime(ttime,con);
-					}
-				}
+				System.out.println("projectId is ========>"+projectId );
 				
-			}
+				String sql2 = "SELECT projectId,count(id) value FROM stored_project_setup1 where completed in (0,2) and projectId="+projectId+" group by projectId ";
+				System.out.println("query1========>"+sql2 );
+				psmt5 = con.prepareStatement(sql2);
+				rs5 = psmt5.executeQuery();
+				int p = 0;
+				if(rs5.next()){p = rs5.getInt("value");}
+				System.out.println("K ========>"+p );
+				
+				if(p < 1 || p == 0){
+					SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MMMM-yyyy");
+					String curdate = sdf1.format(date);
+					keyphrase = project_name + " episode " + curdate;
+					String query1 = "select telecast_days from  tv_content_tdays where projectId =" + projectId;
+					//System.out.println("query1========>"+query1 );
+					ps1 = con.prepareStatement(query1);
+					rs1 = ps1.executeQuery();
+					while (rs1.next()) {
+						String day = rs1.getString(1);
+						//System.out.println("day is ------->"+day);
+						//System.out.println("days is ------->"+days);
+						if (day.equals(days)) {
+							//System.out.println("Time............." + ttime);
+							setTelecastTime(ttime,con);
+						}
+					}
+			    }	
+				
+			} // First while loop end here..........
 
 		} catch (Exception e) {
             e.printStackTrace();
@@ -90,8 +105,10 @@ public class CreateKeyPhaseForTV implements Job {
 			try {
 				if(con != null){con.close();}
 				if(ps1 != null){ps1.close();}
+				if(psmt5 != null){psmt5.close();}
 				if(rs != null){rs.close();}
 				if(rs1 != null){rs1.close();}
+				if(rs5 != null){rs5.close();}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
@@ -119,8 +136,8 @@ public class CreateKeyPhaseForTV implements Job {
 			int getHour = hoursConvertor(myTime);
 			int getHour1 = getHour + 2;
 			int getHour2 = getHour + 4;
-			System.out.println("getHour1 value is ----------------->"+getHour1);
-			System.out.println("getHour1 value is ----------------->"+cthour);
+			//System.out.println("getHour1 value is ----------------->"+getHour1);
+			//System.out.println("getHour1 value is ----------------->"+cthour);
 			if (getHour1 == cthour) {
 				setQueryToProjectSetup(projectId, keyphrase,con);
 			}
